@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Feather, BookOpen, Sparkles, ArrowRight, ArrowLeft,
   Quote, Phone, Mail, MapPin, MessageCircle, Calendar, Clock,
-  ScrollText, Palette, Play, ExternalLink, ChevronLeft, ChevronRight,
+  ScrollText, Palette, Play, ExternalLink,
 } from "lucide-react";
 import {
   quotes, philosophyPillars, chapters, articles, events, gallery,
@@ -444,7 +443,6 @@ export function About({ navigate }: { navigate: Nav }) {
 
 export function Book({ navigate }: { navigate: Nav }) {
   const language = useLanguage();
-  const [previewPage, setPreviewPage] = useState(1);
   const reasons = [
     "मूल प्रश्नों पर एक निर्भीक एवं स्वतंत्र दृष्टि",
     "किसी मत का प्रचार नहीं, विवेक जगाने का प्रयास",
@@ -462,14 +460,9 @@ export function Book({ navigate }: { navigate: Nav }) {
             <Kicker>{language === "hi" ? "ऑनलाइन पाठ" : "Read online"}</Kicker>
             <h2>{language === "hi" ? "ग्रंथ के प्रथम दस पृष्ठ" : "The first ten pages"}</h2>
           </div>
-          <div className="reader-controls">
-            <button onClick={() => setPreviewPage((page) => Math.max(1, page - 1))} disabled={previewPage === 1} aria-label="Previous page"><ChevronLeft /></button>
-            <span>{language === "hi" ? "पृष्ठ" : "Page"} {previewPage} / 10</span>
-            <button onClick={() => setPreviewPage((page) => Math.min(10, page + 1))} disabled={previewPage === 10} aria-label="Next page"><ChevronRight /></button>
-          </div>
         </div>
         <div className="reader-frame">
-          <object key={previewPage} data={`/book-preview.pdf#page=${previewPage}&toolbar=0&navpanes=0&scrollbar=0&view=FitH`} type="application/pdf" aria-label={`प्राप्तस्य प्राप्ति — पृष्ठ ${previewPage}`}>
+          <object data="/book-preview.pdf#toolbar=0&navpanes=0&view=FitH" type="application/pdf" aria-label="प्राप्तस्य प्राप्ति के प्रथम दस पृष्ठ">
             <p>{language === "hi" ? "इस ब्राउज़र में PDF पूर्वावलोकन उपलब्ध नहीं है।" : "PDF preview is not available in this browser."}</p>
           </object>
         </div>

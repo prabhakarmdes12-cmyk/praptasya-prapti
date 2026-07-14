@@ -502,23 +502,6 @@ html { scroll-behavior: smooth; }
   font-size: clamp(1.6rem, 3vw, 2.5rem);
 }
 
-.reader-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: max-content;
-}
-
-.reader-controls button {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 1px solid rgba(239, 231, 214, 0.35);
-}
-
-.reader-controls button:disabled { opacity: 0.3; }
-
 .reader-frame {
   height: min(76vh, 900px);
   min-height: 560px;
@@ -634,5 +617,4 @@ html { scroll-behavior: smooth; }
   .language-switch { min-width: 38px; margin-left: 0; }
   .hero-copy h1 { font-size: 3.35rem; }
   .sanctuary-copy { padding-top: 300px; }
-  .reader-controls { width: 100%; justify-content: space-between; }
 }
