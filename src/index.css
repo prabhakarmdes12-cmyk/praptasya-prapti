@@ -751,6 +751,20 @@ html { scroll-behavior: smooth; }
 
 .gondi-review-en { font-size: 0.9rem !important; opacity: 0.72; }
 
+.gondi-draft-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(168, 106, 43, 0.45);
+  color: #7d4d20;
+  background: rgba(168, 106, 43, 0.08);
+}
+
+.gondi-draft-note span { color: #4b443a; font-size: 0.8rem; }
+
 .culture-sources {
   margin-top: 5rem;
   padding: clamp(2rem, 5vw, 4rem);
@@ -829,4 +843,5 @@ html { scroll-behavior: smooth; }
   .culture-language { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
   .culture-language button { min-width: 0; padding-inline: 0.5rem; }
   .culture-section { grid-template-columns: 1fr; gap: 0.75rem; padding-block: 2.25rem; }
+  .gondi-draft-note { align-items: flex-start; flex-direction: column; }
 }

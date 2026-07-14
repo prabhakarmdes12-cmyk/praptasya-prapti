@@ -665,38 +665,50 @@ const cultureSections = [
   {
     titleHi: "एक जीवित और विविध परंपरा",
     titleEn: "A living and diverse tradition",
+    titleGon: "जीवा अर अलग-अलग रीति",
     bodyHi: "गोंड समुदाय मध्य भारत के विस्तृत भूभाग में अनेक क्षेत्रीय समूहों, बोलियों और स्थानीय परंपराओं के साथ निवास करता है। इस पृष्ठ का केंद्र मध्य प्रदेश और छत्तीसगढ़ है; इसलिए यहाँ प्रस्तुत परिचय को संपूर्ण गोंड समाज का एकमात्र रूप नहीं माना जाना चाहिए।",
     bodyEn: "Gond communities live across a wide region of central India, with distinct regional groups, speech varieties, and local traditions. This page focuses on Madhya Pradesh and Chhattisgarh and does not present one regional account as universal to all Gond people.",
+    bodyGon: "कोइतूर लोकुर मध्य भारत ता वेल्ले जागा न मन्टोर। अलग-अलग नाटे न गोंडी बास अर रीति अलग मंता। ई पन्ना मध्य प्रदेश अर छत्तीसगढ़ ता गोंड जीवना बारे न मंता।",
   },
   {
     titleHi: "गोंडवाना और ऐतिहासिक स्मृति",
     titleEn: "Gondwana and historical memory",
+    titleGon: "गोंडवाना अर इतिहास ता याद",
     bodyHi: "गोंडवाना केवल एक भौगोलिक नाम नहीं, बल्कि शासन, समुदाय और सांस्कृतिक स्मृति से जुड़ा ऐतिहासिक क्षेत्र है। मध्य भारत में अनेक गोंड राजवंशों, दुर्गों, जल-संरचनाओं और स्थानीय शासन परंपराओं ने इस स्मृति को आकार दिया।",
     bodyEn: "Gondwana is more than a geographical expression; it is a historical region connected with governance, community, and cultural memory. Gond dynasties, forts, water systems, and traditions of local administration helped shape this memory across central India.",
+    bodyGon: "गोंडवाना मावा भूम अर मावा इतिहास ता पोरोल आंद। गोंड राजा, गढ़, एर ता काम अर नाटे ता राज मावा याद न मंता।",
   },
   {
     titleHi: "गोंडी भाषा और मौखिक ज्ञान",
     titleEn: "Gondi language and oral knowledge",
+    titleGon: "गोंडी बास अर वाचा ज्ञान",
     bodyHi: "गोंडी द्रविड़ भाषा परिवार की भाषा है और इसके अनेक क्षेत्रीय रूप हैं। गीत, कथाएँ, वंश-स्मृतियाँ और सामुदायिक ज्ञान लंबे समय से मौखिक परंपरा में संचित और प्रसारित होते रहे हैं। गोंडी को देवनागरी, तेलुगु तथा गोंडी लिपियों सहित विभिन्न लिपियों में लिखा जाता है।",
     bodyEn: "Gondi belongs to the Dravidian language family and has several regional varieties. Songs, narratives, genealogical memory, and community knowledge have long been carried through oral traditions. Gondi is written in several scripts, including Devanagari, Telugu, and dedicated Gondi scripts.",
+    bodyGon: "गोंडी मावा बास आंद। अलग-अलग जागा न बास ता रूप अलग मंता। पाटा, कथा, पुरखा ता याद अर नाटे ता ज्ञान पीढ़ी ते पीढ़ी दाका वाचा न वात। गोंडी देवनागरी, तेलुगु अर गोंडी लिपि न लिखना कींतोर।",
   },
   {
     titleHi: "प्रकृति, कुल और पारस्परिकता",
     titleEn: "Nature, clans, and reciprocity",
+    titleGon: "भूम, कुल अर संगवारी जीवना",
     bodyHi: "कई गोंड परंपराओं में मनुष्य को भूमि, वनस्पति, जीव-जगत और पूर्वजों से अलग नहीं देखा जाता। कुल-चिह्न, स्थानीय पर्यावरण और सामुदायिक उत्तरदायित्व सामाजिक संबंधों को समझने की महत्वपूर्ण कुंजियाँ हैं, यद्यपि इनके रूप क्षेत्रानुसार बदलते हैं।",
     bodyEn: "Many Gond traditions understand human life in relation to land, plants, animals, and ancestors. Clan symbols, local ecology, and community responsibilities are important ways of reading social relationships, although their forms vary by region.",
+    bodyGon: "भूम, एर, मर्रा, जीव, मनकल अर पुरखा अलग हिल्लेर। कुल ता चिन्ह, जंगल अर नाटे ता जिम्मेदारी मावा संगवारी जीवना न खास मंता।",
   },
   {
     titleHi: "आस्था और सामुदायिक संसार",
     titleEn: "Faith and the community world",
+    titleGon: "पेन-पुनेम अर नाटे ता जीवना",
     bodyHi: "बड़ादेव, बूढ़ादेव, पूर्वज-स्मृति और ग्राम-आधारित आस्थाएँ अनेक समुदायों के सांस्कृतिक जीवन में महत्वपूर्ण स्थान रखती हैं। नाम, अनुष्ठान और अर्थ स्थानीय परंपराओं के अनुसार भिन्न हो सकते हैं; इसलिए यह परिचय किसी एक व्याख्या को अंतिम नहीं मानता।",
     bodyEn: "Bada Dev, Budha Dev, ancestral memory, and village-centred forms of faith hold important places in the cultural life of many communities. Names, rituals, and meanings differ locally, so this introduction does not treat any single interpretation as definitive.",
+    bodyGon: "बड़ादेव, बूढ़ादेव, पेन अर पुरखा ता याद मावा जीवना न खास मंता। नाटे-नाटे न पोरोल, सेवा अर रीति अलग मन्ता; ओना माटी एके आखरी अर्थ आयो।",
   },
   {
     titleHi: "कला, संगीत और सामूहिक अभिव्यक्ति",
     titleEn: "Art, music, and collective expression",
+    titleGon: "चित्र, पाटा अर नाच",
     bodyHi: "चित्रांकन, गीत, नृत्य, वाद्य, देह-अलंकरण और कथा-वाचन केवल सजावटी रूप नहीं हैं; वे स्मृति, संबंध और सामुदायिक अनुभव को व्यक्त करते हैं। समकालीन गोंड कला ने विश्व स्तर पर पहचान बनाई है, जबकि उसकी जड़ें विविध स्थानीय दृश्य और कथात्मक परंपराओं में हैं।",
     bodyEn: "Painting, song, dance, instruments, body ornamentation, and storytelling are not merely decorative forms; they express memory, relationships, and collective experience. Contemporary Gond art has gained international recognition while remaining connected to varied local visual and narrative traditions.",
+    bodyGon: "चित्र, पाटा, नाच, बाजा अर कथा सिरिफ सजावट आयो। इव मावा याद, संबंध अर संगवारी जीवना वेहंतांग। गोंड कला मावा नाटे ता कथा अर प्रकृति संग जोड़ेम मंता।",
   },
 ];
 
@@ -711,7 +723,7 @@ export function GondCulture() {
         <SanctuaryMotif className="culture-hero-motif" />
         <div className="culture-hero-inner">
           <Kicker>{isHindi ? "मध्य भारत की सांस्कृतिक स्मृति" : isGondi ? "गोंडी भाषा" : "Cultural memory of central India"}</Kicker>
-          <h1>{isHindi ? "गोंड संस्कृति और गोंडवाना" : isGondi ? "गोंड संस्कृति" : "Gond Culture and Gondwana"}</h1>
+          <h1>{isHindi ? "गोंड संस्कृति और गोंडवाना" : isGondi ? "कोइतूर संस्कृति अर गोंडवाना" : "Gond Culture and Gondwana"}</h1>
           <p>{isHindi ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में भाषा, प्रकृति, इतिहास, आस्था और सामुदायिक जीवन का परिचय।" : isGondi ? "मध्य प्रदेश और छत्तीसगढ़ की गोंडी भाषा में समुदाय-समीक्षित अनुवाद।" : "An introduction to language, ecology, history, faith, and community life, focused on Madhya Pradesh and Chhattisgarh."}</p>
           <div className="culture-language" role="group" aria-label="Culture page language">
             <button className={cultureLanguage === "hi" ? "active" : ""} onClick={() => setCultureLanguage("hi")}>हिंदी</button>
@@ -722,26 +734,23 @@ export function GondCulture() {
       </header>
 
       <div className="culture-content">
-        {isGondi ? (
-          <section className="gondi-review" aria-labelledby="gondi-review-title">
-            <span>समुदाय समीक्षा</span>
-            <h2 id="gondi-review-title">गोंडी अनुवाद तैयार किया जा रहा है</h2>
-            <p>इस पृष्ठ की गोंडी प्रति मध्य प्रदेश/छत्तीसगढ़ के देशज वक्ता की समीक्षा के बाद प्रकाशित होगी। स्रोत-पाठ को अनुमानित या अप्रमाणित अनुवाद से नहीं बदला गया है।</p>
-            <p className="gondi-review-en">The Gondi edition will be published after review by a native speaker from Madhya Pradesh/Chhattisgarh.</p>
+        {isGondi && (
+          <section className="gondi-draft-note" aria-label="Translation review status">
+            <strong>गोंडी मसौदा · समुदाय समीक्षा बाकी मंता</strong>
+            <span>Generated language draft. Native-speaker approval is pending.</span>
           </section>
-        ) : (
-          <div className="culture-section-list">
+        )}
+        <div className="culture-section-list">
             {cultureSections.map((section, index) => (
               <motion.section key={section.titleEn} {...fade} className="culture-section">
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <div>
-                  <h2>{isHindi ? section.titleHi : section.titleEn}</h2>
-                  <p>{isHindi ? section.bodyHi : section.bodyEn}</p>
+                  <h2>{isHindi ? section.titleHi : isGondi ? section.titleGon : section.titleEn}</h2>
+                  <p>{isHindi ? section.bodyHi : isGondi ? section.bodyGon : section.bodyEn}</p>
                 </div>
               </motion.section>
             ))}
-          </div>
-        )}
+        </div>
 
         <aside className="culture-sources">
           <h2>{isHindi || isGondi ? "स्रोत और संपादकीय दृष्टि" : "Sources and editorial approach"}</h2>
