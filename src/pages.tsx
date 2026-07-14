@@ -174,7 +174,7 @@ export function Home({ navigate }: { navigate: Nav }) {
       <section className="idea-section">
         <div className="book-feature">
           <div className="book-stack">
-            <img src="/images/book-cover.jpg" alt="प्राप्तस्य प्राप्ति book cover" />
+            <img src="/images/book-cover.png" alt="प्राप्तस्य प्राप्ति पुस्तक का आवरण" />
           </div>
           <div>
             <Kicker>About the Book</Kicker>
@@ -342,7 +342,7 @@ export function LegacyHome({ navigate }: { navigate: Nav }) {
           <div className="md:col-span-3 order-1 md:order-2">
             <div className="relative mx-auto max-w-sm">
               <div className="absolute -inset-4 bg-maroon/5 rounded-sm rotate-1" />
-              <img src="/images/book-cover.jpg" alt="प्राप्तस्य प्राप्ति" className="relative w-full rounded-sm shadow-2xl" loading="lazy" />
+              <img src="/images/book-cover.png" alt="प्राप्तस्य प्राप्ति पुस्तक का आवरण" className="relative w-full rounded-sm shadow-2xl" loading="lazy" />
             </div>
           </div>
         </motion.div>
@@ -469,9 +469,16 @@ export function Book({ navigate }: { navigate: Nav }) {
           </div>
         </div>
         <div className="reader-frame">
-          <iframe key={previewPage} src={`/book-preview.pdf#page=${previewPage}&toolbar=0&navpanes=0&scrollbar=0&view=FitH`} title={`प्राप्तस्य प्राप्ति — पृष्ठ ${previewPage}`} />
+          <object key={previewPage} data={`/book-preview.pdf#page=${previewPage}&toolbar=0&navpanes=0&scrollbar=0&view=FitH`} type="application/pdf" aria-label={`प्राप्तस्य प्राप्ति — पृष्ठ ${previewPage}`}>
+            <p>{language === "hi" ? "इस ब्राउज़र में PDF पूर्वावलोकन उपलब्ध नहीं है।" : "PDF preview is not available in this browser."}</p>
+          </object>
         </div>
-        <p className="reader-note">{language === "hi" ? "यह ऑनलाइन पूर्वावलोकन केवल पृष्ठ 1 से 10 तक संचालित होता है।" : "This online preview is limited by the site controls to pages 1–10."}</p>
+        <div className="reader-footer">
+          <p className="reader-note">{language === "hi" ? "ऑनलाइन पूर्वावलोकन केवल प्रथम दस पृष्ठों तक सीमित है। सम्पूर्ण ग्रंथ खरीदने के लिए अनुरोध भेजें।" : "The online preview contains only the first ten pages. Send a request to purchase the complete book."}</p>
+          <button onClick={() => navigate({ name: "contact" })} className="btn-primary">
+            {language === "hi" ? "खरीद अनुरोध" : "Purchase Request"} <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </section>
 
       <SanctuaryMotif />
@@ -480,10 +487,10 @@ export function Book({ navigate }: { navigate: Nav }) {
         <motion.div {...fade} className="md:col-span-2 md:sticky md:top-28">
           <div className="relative mx-auto max-w-xs">
             <div className="absolute -inset-4 bg-maroon/5 rounded-sm rotate-1" />
-            <img src="/images/book-cover.jpg" alt="प्राप्तस्य प्राप्ति" className="relative w-full rounded-sm shadow-2xl" loading="lazy" />
+            <img src="/images/book-cover.png" alt="प्राप्तस्य प्राप्ति पुस्तक का आवरण" className="relative w-full rounded-sm shadow-2xl" loading="lazy" />
           </div>
           <button onClick={() => navigate({ name: "contact" })} className="btn-primary w-full justify-center mt-8">
-            प्रति मँगाएँ / अनुरोध करें
+            खरीद अनुरोध
           </button>
           <p className="font-body text-center text-sm text-ink-soft mt-3">डाक अथवा व्हाट्सऐप द्वारा उपलब्ध</p>
         </motion.div>

@@ -2,6 +2,7 @@ node_modules/
 dist/
 logo.png
 praptasya prapti Book-compressed.pdf
+book cover.png
 .env
 .env.*
 *.local
