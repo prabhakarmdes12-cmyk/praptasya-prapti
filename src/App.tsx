@@ -128,7 +128,7 @@ export default function App() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur-sm border-b border-gold/30">
         <div className="max-w-7xl mx-auto px-5">
-          <div className="flex items-center justify-between h-20">
+          <div className="header-row flex items-center justify-between h-20">
             <button onClick={() => navigate({ name: "home" })} className="brand-lockup">
               <img src="/images/praptasya-logo.png" alt="" />
               <span>
@@ -158,7 +158,7 @@ export default function App() {
               </button>
             </nav>
 
-            <div className="lg:hidden flex items-center gap-2">
+            <div className="mobile-actions lg:hidden flex items-center gap-2">
               <button className="language-switch" onClick={() => setLanguage(language === "hi" ? "en" : "hi")} aria-label="Change language">
                 {language === "hi" ? "EN" : "हिं"}
               </button>
