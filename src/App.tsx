@@ -71,6 +71,13 @@ export default function App() {
     setMenuOpen(false);
   };
 
+  const changeLanguage = (nextLanguage: Language) => {
+    setLanguage(nextLanguage);
+    if (nextLanguage === "gon" && route.name !== "culture") {
+      navigate({ name: "culture" });
+    }
+  };
+
   useEffect(() => {
     const onPopState = () => setRoute(routeFromPath(window.location.pathname));
     window.addEventListener("popstate", onPopState);
@@ -209,11 +216,11 @@ export default function App() {
                   {item[language]}
                 </button>
               ))}
-              <LanguageSelect value={language} onChange={setLanguage} />
+              <LanguageSelect value={language} onChange={changeLanguage} />
             </nav>
 
             <div className="mobile-actions lg:hidden flex items-center gap-2">
-              <LanguageSelect value={language} onChange={setLanguage} />
+              <LanguageSelect value={language} onChange={changeLanguage} />
               <button className="text-maroon p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open navigation">
                 {menuOpen ? <X /> : <Menu />}
               </button>
