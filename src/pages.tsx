@@ -123,7 +123,7 @@ export function Home({ navigate }: { navigate: Nav }) {
           <img src="/images/praptasya-logo.png" alt="प्राप्तस्य प्राप्ति का चिह्न" />
         </div>
         <div className="hero-copy sanctuary-copy">
-          <p className="hero-kicker">{hi ? "मानव अस्तित्व को समझने की एक कालातीत विचार-यात्रा" : "A timeless inquiry into human existence"}</p>
+          <p className="hero-kicker hero-invocation">जय सेवा जय बड़ादेव जय बूढ़ादेव</p>
           <h1>प्राप्तस्य प्राप्ति</h1>
           <h2>{hi ? "मानव जीवन का मूल संविधान" : "The Fundamental Constitution of Human Life"}</h2>
           <blockquote>

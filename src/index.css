@@ -193,6 +193,50 @@ html { scroll-behavior: smooth; }
   color: rgba(193, 155, 97, 0.45);
 }
 
+.hero-motif .motif-line {
+  stroke-dasharray: 18 8 4 8;
+  animation: motifCurrent 18s linear infinite;
+}
+
+.hero-motif .motif-line.faint {
+  animation-duration: 25s;
+  animation-direction: reverse;
+}
+
+.hero-motif .motif-dots {
+  animation: motifBeads 20s linear infinite;
+}
+
+.hero-motif .motif-people {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: motifGather 7s ease-in-out infinite;
+}
+
+.hero-motif .motif-bird {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: motifBird 8s ease-in-out infinite;
+}
+
+@keyframes motifCurrent {
+  to { stroke-dashoffset: -152; }
+}
+
+@keyframes motifBeads {
+  to { stroke-dashoffset: -140; }
+}
+
+@keyframes motifGather {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes motifBird {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(7px, -4px); }
+}
+
 .hero-kicker {
   font-family: var(--font-body);
   text-transform: uppercase;
@@ -200,6 +244,18 @@ html { scroll-behavior: smooth; }
   font-size: 0.78rem;
   color: #c19b61;
   margin-bottom: 1.5rem;
+}
+
+.hero-invocation {
+  color: #d7ae70;
+  font-family: var(--font-serif);
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-motif * { animation: none !important; }
 }
 
 .hero-copy h1 {
@@ -611,7 +667,10 @@ html { scroll-behavior: smooth; }
 }
 
 @media (max-width: 560px) {
-  .brand-lockup img { width: 42px; height: 42px; }
+  .brand-lockup { flex: 1; max-width: calc(100% - 104px); overflow: hidden; }
+  .brand-lockup + div { flex-shrink: 0; }
+  .brand-lockup img { width: 42px; height: 42px; flex-shrink: 0; }
+  .brand-lockup > span { overflow: hidden; }
   .brand-lockup > span > span:last-child { display: none; }
   .brand-lockup > span > span:first-child { font-size: 1.08rem; white-space: nowrap; }
   .language-switch { min-width: 38px; margin-left: 0; }
