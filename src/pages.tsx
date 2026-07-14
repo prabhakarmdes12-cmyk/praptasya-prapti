@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Feather, BookOpen, Sparkles, ArrowRight, ArrowLeft,
@@ -86,7 +86,7 @@ function SanctuaryMotif({ className = "" }: { className?: string }) {
 
 export function Home({ navigate }: { navigate: Nav }) {
   const language = useLanguage();
-  const hi = language === "hi";
+  const hi = language !== "en";
   const pillars = [
     {
       title: "प्राप्तस्य प्राप्ति",
@@ -459,19 +459,19 @@ export function Book({ navigate }: { navigate: Nav }) {
       <section className="book-reader" aria-label="Ten page book preview">
         <div className="reader-heading">
           <div>
-            <Kicker>{language === "hi" ? "ऑनलाइन पाठ" : "Read online"}</Kicker>
-            <h2>{language === "hi" ? "ग्रंथ के प्रथम दस पृष्ठ" : "The first ten pages"}</h2>
+            <Kicker>{language !== "en" ? "ऑनलाइन पाठ" : "Read online"}</Kicker>
+            <h2>{language !== "en" ? "ग्रंथ के प्रथम दस पृष्ठ" : "The first ten pages"}</h2>
           </div>
         </div>
         <div className="reader-frame">
           <object data="/book-preview.pdf#toolbar=0&navpanes=0&view=FitH" type="application/pdf" aria-label="प्राप्तस्य प्राप्ति के प्रथम दस पृष्ठ">
-            <p>{language === "hi" ? "इस ब्राउज़र में PDF पूर्वावलोकन उपलब्ध नहीं है।" : "PDF preview is not available in this browser."}</p>
+            <p>{language !== "en" ? "इस ब्राउज़र में PDF पूर्वावलोकन उपलब्ध नहीं है।" : "PDF preview is not available in this browser."}</p>
           </object>
         </div>
         <div className="reader-footer">
-          <p className="reader-note">{language === "hi" ? "ऑनलाइन पूर्वावलोकन केवल प्रथम दस पृष्ठों तक सीमित है। सम्पूर्ण ग्रंथ खरीदने के लिए अनुरोध भेजें।" : "The online preview contains only the first ten pages. Send a request to purchase the complete book."}</p>
+          <p className="reader-note">{language !== "en" ? "ऑनलाइन पूर्वावलोकन केवल प्रथम दस पृष्ठों तक सीमित है। सम्पूर्ण ग्रंथ खरीदने के लिए अनुरोध भेजें।" : "The online preview contains only the first ten pages. Send a request to purchase the complete book."}</p>
           <button onClick={() => navigate({ name: "contact" })} className="btn-primary">
-            {language === "hi" ? "खरीद अनुरोध" : "Purchase Request"} <ArrowRight className="w-4 h-4" />
+            {language !== "en" ? "खरीद अनुरोध" : "Purchase Request"} <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </section>
@@ -713,9 +713,12 @@ const cultureSections = [
 ];
 
 export function GondCulture() {
-  const [cultureLanguage, setCultureLanguage] = useState<CultureLanguage>("hi");
+  const siteLanguage = useLanguage();
+  const [cultureLanguage, setCultureLanguage] = useState<CultureLanguage>(siteLanguage);
   const isHindi = cultureLanguage === "hi";
   const isGondi = cultureLanguage === "gon";
+
+  useEffect(() => setCultureLanguage(siteLanguage), [siteLanguage]);
 
   return (
     <article className="culture-page">

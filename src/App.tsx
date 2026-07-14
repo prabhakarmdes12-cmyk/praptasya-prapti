@@ -8,17 +8,27 @@ import {
 import { articles } from "./data";
 import { LanguageProvider, type Language } from "./i18n";
 
-const NAV_ITEMS: { hi: string; en: string; route: Route }[] = [
-  { hi: "मुखपृष्ठ", en: "Home", route: { name: "home" } },
-  { hi: "दर्शन", en: "Philosophy", route: { name: "philosophy" } },
-  { hi: "ग्रंथ", en: "Book", route: { name: "book" } },
-  { hi: "लेखक", en: "Author", route: { name: "about" } },
-  { hi: "गोंड संस्कृति", en: "Gond Culture", route: { name: "culture" } },
-  { hi: "ज्ञानालय", en: "Library", route: { name: "articles" } },
-  { hi: "मीडिया", en: "Media", route: { name: "gallery" } },
-  { hi: "आयोजन", en: "Events", route: { name: "events" } },
-  { hi: "संपर्क", en: "Contact", route: { name: "contact" } },
+const NAV_ITEMS: { hi: string; en: string; gon: string; route: Route }[] = [
+  { hi: "मुखपृष्ठ", en: "Home", gon: "मुखपृष्ठ", route: { name: "home" } },
+  { hi: "दर्शन", en: "Philosophy", gon: "दर्शन", route: { name: "philosophy" } },
+  { hi: "ग्रंथ", en: "Book", gon: "ग्रंथ", route: { name: "book" } },
+  { hi: "लेखक", en: "Author", gon: "लेखक", route: { name: "about" } },
+  { hi: "गोंड संस्कृति", en: "Gond Culture", gon: "कोइतूर संस्कृति", route: { name: "culture" } },
+  { hi: "ज्ञानालय", en: "Library", gon: "ज्ञानालय", route: { name: "articles" } },
+  { hi: "मीडिया", en: "Media", gon: "मीडिया", route: { name: "gallery" } },
+  { hi: "आयोजन", en: "Events", gon: "कार्यक्रम", route: { name: "events" } },
+  { hi: "संपर्क", en: "Contact", gon: "संपर्क", route: { name: "contact" } },
 ];
+
+function LanguageSelect({ value, onChange }: { value: Language; onChange: (language: Language) => void }) {
+  return (
+    <select className="language-select" value={value} onChange={(event) => onChange(event.target.value as Language)} aria-label="Website language">
+      <option value="hi">हिंदी</option>
+      <option value="en">English</option>
+      <option value="gon">गोंडी</option>
+    </select>
+  );
+}
 
 function routePath(route: Route) {
   if (route.name === "home") return "/";
@@ -48,7 +58,10 @@ function routeFromPath(pathname: string): Route {
 export default function App() {
   const [route, setRoute] = useState<Route>(() => routeFromPath(window.location.pathname));
   const [menuOpen, setMenuOpen] = useState(false);
-  const [language, setLanguage] = useState<Language>("hi");
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem("praptasya-language");
+    return saved === "en" || saved === "gon" ? saved : "hi";
+  });
   const [soundOn, setSoundOn] = useState(() => localStorage.getItem("praptasya-sound") !== "off");
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -122,6 +135,10 @@ export default function App() {
   }, [route]);
 
   useEffect(() => {
+    localStorage.setItem("praptasya-language", language);
+  }, [language]);
+
+  useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0.2;
@@ -173,7 +190,7 @@ export default function App() {
               <span>
               <span className="block font-serif text-xl text-maroon">प्राप्तस्य प्राप्ति</span>
               <span className="block font-body text-[0.65rem] tracking-[0.3em] uppercase text-saffron-deep mt-1">
-                {language === "hi" ? "मानव जीवन का मूल संविधान" : "Human Constitution"}
+                {language === "en" ? "Human Constitution" : language === "gon" ? "मानवा जीवना ता मूल संविधान" : "मानव जीवन का मूल संविधान"}
               </span>
               </span>
             </button>
@@ -192,15 +209,11 @@ export default function App() {
                   {item[language]}
                 </button>
               ))}
-              <button className="language-switch" onClick={() => setLanguage(language === "hi" ? "en" : "hi")} aria-label="Change language">
-                {language === "hi" ? "EN" : "हिं"}
-              </button>
+              <LanguageSelect value={language} onChange={setLanguage} />
             </nav>
 
             <div className="mobile-actions lg:hidden flex items-center gap-2">
-              <button className="language-switch" onClick={() => setLanguage(language === "hi" ? "en" : "hi")} aria-label="Change language">
-                {language === "hi" ? "EN" : "हिं"}
-              </button>
+              <LanguageSelect value={language} onChange={setLanguage} />
               <button className="text-maroon p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open navigation">
                 {menuOpen ? <X /> : <Menu />}
               </button>

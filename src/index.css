@@ -76,19 +76,17 @@ html { scroll-behavior: smooth; }
   object-fit: cover;
 }
 
-.language-switch {
-  min-width: 42px;
-  height: 34px;
-  margin-left: 0.5rem;
+.language-select {
+  height: 36px;
+  margin-left: 0.45rem;
+  padding: 0 1.65rem 0 0.65rem;
   border: 1px solid rgba(24, 49, 38, 0.3);
+  border-radius: 0;
   color: #183126;
-  font-weight: 600;
-  transition: background 180ms ease, color 180ms ease;
-}
-
-.language-switch:hover {
-  color: #efe7d6;
-  background: #183126;
+  background-color: rgba(239, 231, 214, 0.76);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 .sound-toggle {
@@ -880,7 +878,7 @@ html { scroll-behavior: smooth; }
   .brand-lockup > span { overflow: hidden; }
   .brand-lockup > span > span:last-child { display: none; }
   .brand-lockup > span > span:first-child { font-size: 1.08rem; white-space: nowrap; }
-  .language-switch { min-width: 38px; margin-left: 0; }
+  .language-select { width: 76px; margin-left: 0; padding-inline: 0.45rem; }
   .hero-copy h1 { font-size: 3rem; }
   .hero-copy h2 { font-size: 1.25rem; }
   .hero-copy blockquote { font-size: 1rem; }

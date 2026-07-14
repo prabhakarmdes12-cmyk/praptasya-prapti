@@ -1,6 +1,6 @@
 import { createContext, useContext, type ReactNode } from "react";
 
-export type Language = "hi" | "en";
+export type Language = "hi" | "en" | "gon";
 
 const LanguageContext = createContext<Language>("hi");
 
