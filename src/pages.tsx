@@ -720,9 +720,6 @@ export function GondCulture() {
   return (
     <article className="culture-page">
       <header className="culture-hero">
-        <figure className="culture-artwork">
-          <img src="/images/gondi-culture.png" alt="गोंड संस्कृति की जड़ों, आस्था, प्रकृति, कला, उत्सव और सामुदायिक जीवन को दर्शाती वर्णनात्मक चित्रकला" />
-        </figure>
         <div className="culture-hero-copy">
           <SanctuaryMotif className="culture-hero-motif" />
           <div className="culture-hero-inner">
@@ -737,6 +734,9 @@ export function GondCulture() {
           </div>
         </div>
       </header>
+      <figure className="culture-artwork">
+        <img src="/images/gondi-culture.png" alt="गोंड संस्कृति की जड़ों, आस्था, प्रकृति, कला, उत्सव और सामुदायिक जीवन को दर्शाती वर्णनात्मक चित्रकला" />
+      </figure>
 
       <div className="culture-content">
         {isGondi && (
