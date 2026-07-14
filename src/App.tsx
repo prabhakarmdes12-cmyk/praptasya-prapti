@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import {
   Home, About, Book, Philosophy, Articles, ArticleDetail,
-  Gallery, Events, Contact, type Route, type Nav,
+  Gallery, Events, Contact, GondCulture, type Route, type Nav,
 } from "./pages";
 import { articles } from "./data";
 import { LanguageProvider, type Language } from "./i18n";
@@ -13,21 +13,107 @@ const NAV_ITEMS: { hi: string; en: string; route: Route }[] = [
   { hi: "दर्शन", en: "Philosophy", route: { name: "philosophy" } },
   { hi: "ग्रंथ", en: "Book", route: { name: "book" } },
   { hi: "लेखक", en: "Author", route: { name: "about" } },
+  { hi: "गोंड संस्कृति", en: "Gond Culture", route: { name: "culture" } },
   { hi: "ज्ञानालय", en: "Library", route: { name: "articles" } },
   { hi: "मीडिया", en: "Media", route: { name: "gallery" } },
   { hi: "आयोजन", en: "Events", route: { name: "events" } },
   { hi: "संपर्क", en: "Contact", route: { name: "contact" } },
 ];
 
+function routePath(route: Route) {
+  if (route.name === "home") return "/";
+  if (route.name === "about") return "/author";
+  if (route.name === "articles") return "/library";
+  if (route.name === "gallery") return "/media";
+  if (route.name === "culture") return "/gond-culture";
+  if (route.name === "article") return `/library/${route.slug}`;
+  return `/${route.name}`;
+}
+
+function routeFromPath(pathname: string): Route {
+  const path = pathname.replace(/\/$/, "") || "/";
+  if (path === "/") return { name: "home" };
+  if (path === "/author") return { name: "about" };
+  if (path === "/library") return { name: "articles" };
+  if (path === "/media") return { name: "gallery" };
+  if (path === "/gond-culture") return { name: "culture" };
+  if (path.startsWith("/library/")) return { name: "article", slug: path.slice(9) };
+  const known = ["book", "philosophy", "events", "contact"] as const;
+  const name = path.slice(1);
+  return known.includes(name as (typeof known)[number])
+    ? { name: name as (typeof known)[number] }
+    : { name: "home" };
+}
+
 export default function App() {
-  const [route, setRoute] = useState<Route>({ name: "home" });
+  const [route, setRoute] = useState<Route>(() => routeFromPath(window.location.pathname));
   const [menuOpen, setMenuOpen] = useState(false);
   const [language, setLanguage] = useState<Language>("hi");
 
   const navigate: Nav = (r) => {
     setRoute(r);
+    window.history.pushState({}, "", routePath(r));
     setMenuOpen(false);
   };
+
+  useEffect(() => {
+    const onPopState = () => setRoute(routeFromPath(window.location.pathname));
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  useEffect(() => {
+    const isCulture = route.name === "culture";
+    document.title = isCulture
+      ? "गोंड संस्कृति, गोंडी भाषा और गोंडवाना | प्राप्तस्य प्राप्ति"
+      : "प्राप्तस्य प्राप्ति | मानव जीवन का मूल संविधान";
+    const description = isCulture
+      ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में गोंड संस्कृति, गोंडी भाषा, मौखिक परंपराओं, प्रकृति, कला और सामुदायिक जीवन का परिचय।"
+      : "प्राप्तस्य प्राप्ति — मानव जीवन, स्वतंत्रता, ज्ञान और समाज पर अनन्तानन्द मानव की विचार-यात्रा।";
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "description";
+      document.head.appendChild(meta);
+    }
+    meta.content = description;
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = `${window.location.origin}${routePath(route)}`;
+    const schemaId = "culture-structured-data";
+    document.getElementById(schemaId)?.remove();
+    if (isCulture) {
+      const schema = document.createElement("script");
+      schema.id = schemaId;
+      schema.type = "application/ld+json";
+      schema.text = JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Article",
+            headline: "गोंड संस्कृति, गोंडी भाषा और गोंडवाना",
+            description,
+            inLanguage: ["hi", "en", "gon"],
+            about: ["Gond culture", "Gondi language", "Gondwana", "Madhya Pradesh", "Chhattisgarh"],
+            author: { "@type": "Person", name: "अनन्तानन्द मानव" },
+            mainEntityOfPage: canonical.href,
+          },
+          {
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "प्राप्तस्य प्राप्ति", item: window.location.origin },
+              { "@type": "ListItem", position: 2, name: "गोंड संस्कृति", item: canonical.href },
+            ],
+          },
+        ],
+      });
+      document.head.appendChild(schema);
+    }
+  }, [route]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -175,6 +261,7 @@ function Page({ route, navigate }: { route: Route; navigate: Nav }) {
     case "gallery": return <Gallery />;
     case "events": return <Events navigate={navigate} />;
     case "contact": return <Contact />;
+    case "culture": return <GondCulture />;
     case "article": {
       const article = articles.find((a) => a.slug === route.slug);
       if (!article) return <Articles navigate={navigate} />;
