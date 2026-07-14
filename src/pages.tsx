@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Feather, BookOpen, Sparkles, ArrowRight, ArrowLeft,
   Quote, Phone, Mail, MapPin, MessageCircle, Calendar, Clock,
-  ScrollText, Palette, Play,
+  ScrollText, Palette, Play, ExternalLink, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import {
   quotes, philosophyPillars, chapters, articles, events, gallery,
   type Article,
 } from "./data";
+import { useLanguage } from "./i18n";
 
 export type Route =
   | { name: "home" }
@@ -60,9 +62,30 @@ function PageHead({ kicker, title, sub }: { kicker: string; title: string; sub?:
   );
 }
 
+function SanctuaryMotif({ className = "" }: { className?: string }) {
+  return (
+    <svg className={`sanctuary-motif ${className}`} viewBox="0 0 1200 150" aria-hidden="true">
+      <path className="motif-line" d="M0 88 C120 34 210 126 330 70 S520 28 610 80 S790 132 910 65 S1080 36 1200 82" />
+      <path className="motif-line faint" d="M0 108 C145 58 220 142 354 92 S536 50 634 100 S806 150 930 88 S1090 58 1200 102" />
+      <g className="motif-leaves">
+        <path d="M146 73 q18-28 38-5 q-18 25-38 5M208 91 q16-25 34-3 q-15 22-34 3M972 73 q18-28 38-5 q-18 25-38 5M1044 91 q16-25 34-3 q-15 22-34 3" />
+      </g>
+      <g className="motif-people">
+        <circle cx="490" cy="87" r="6" /><circle cx="545" cy="87" r="6" /><circle cx="655" cy="87" r="6" /><circle cx="710" cy="87" r="6" />
+        <path d="M490 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M545 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M501 109l33 0M655 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M710 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M666 109l33 0" />
+      </g>
+      <path className="motif-bird" d="M823 48q18-18 36 0q18-18 36 0q-18-9-36 4q-18-13-36-4Z" />
+      <path className="motif-bird" d="M300 42q12-12 24 0q12-12 24 0q-12-6-24 3q-12-9-24-3Z" />
+      <path className="motif-dots" d="M30 50h420M750 50h420" />
+    </svg>
+  );
+}
+
 /* ---------- HOME ---------- */
 
 export function Home({ navigate }: { navigate: Nav }) {
+  const language = useLanguage();
+  const hi = language === "hi";
   const pillars = [
     {
       title: "प्राप्तस्य प्राप्ति",
@@ -96,57 +119,41 @@ export function Home({ navigate }: { navigate: Nav }) {
   return (
     <div className="museum-home">
       <section className="banyan-hero">
-        <div className="banyan-visual" aria-hidden="true">
-          <div className="canopy canopy-one" />
-          <div className="canopy canopy-two" />
-          <div className="canopy canopy-three" />
-          <div className="trunk" />
-          <svg className="root-map" viewBox="0 0 900 420" preserveAspectRatio="none">
-            <path d="M450 0 C390 85 340 130 250 168 C150 210 105 270 55 400" />
-            <path d="M450 0 C420 95 435 160 390 225 C345 292 265 322 210 410" />
-            <path d="M450 0 C470 105 515 155 560 220 C615 298 690 335 760 412" />
-            <path d="M450 0 C520 80 610 118 705 165 C805 215 842 292 880 405" />
-            <path d="M326 184 C405 203 502 216 610 198" />
-            <path d="M225 300 C325 270 435 280 540 324 C620 358 700 360 820 322" />
-          </svg>
-          <div className="root-word word-one">ज्ञान</div>
-          <div className="root-word word-two">नदी</div>
-          <div className="root-word word-three">मानव</div>
-          <div className="root-word word-four">चेतना</div>
+        <SanctuaryMotif className="hero-motif" />
+        <div className="hero-seal">
+          <img src="/images/praptasya-logo.png" alt="प्राप्तस्य प्राप्ति का चिह्न" />
         </div>
-
-        <motion.div className="hero-copy" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="hero-kicker">A timeless philosophy for understanding human existence</p>
+        <div className="hero-copy sanctuary-copy">
+          <p className="hero-kicker">{hi ? "मानव अस्तित्व को समझने की एक कालातीत विचार-यात्रा" : "A timeless inquiry into human existence"}</p>
           <h1>प्राप्तस्य प्राप्ति</h1>
-          <h2>मानव जीवन का मूल संविधान</h2>
+          <h2>{hi ? "मानव जीवन का मूल संविधान" : "The Fundamental Constitution of Human Life"}</h2>
           <blockquote>
-            जब मनुष्य स्वयं को पहचान लेता है,<br />
-            तब जीवन प्राप्त करने योग्य नहीं रहता,<br />
-            वह पहले से ही प्राप्त होता है।
+            {hi ? "जो प्राप्त है, उसकी ओर लौटने का निमंत्रण।" : "An invitation to return to what is already present."}
           </blockquote>
           <div className="flex flex-col sm:flex-row gap-4 mt-9">
             <button onClick={() => navigate({ name: "philosophy" })} className="btn-primary">
-              Read the Philosophy <ArrowRight className="w-4 h-4" />
+              {hi ? "दर्शन पढ़ें" : "Read the Philosophy"} <ArrowRight className="w-4 h-4" />
             </button>
             <button onClick={() => navigate({ name: "book" })} className="btn-ghost hero-ghost">
-              Explore the Book
+              {hi ? "ग्रंथ देखें" : "Explore the Book"}
             </button>
           </div>
-        </motion.div>
+        </div>
       </section>
+      <SanctuaryMotif />
 
       <section className="idea-section">
         <div className="section-grid">
           <div>
-            <Kicker>What is Praptasya Prapti?</Kicker>
-            <h2 className="museum-title">Not another religion. Not another method.</h2>
+            <Kicker>{hi ? "प्राप्तस्य प्राप्ति क्या है?" : "What is Praptasya Prapti?"}</Kicker>
+            <h2 className="museum-title">{hi ? "न कोई नया धर्म। न कोई नई पद्धति।" : "Not another religion. Not another method."}</h2>
           </div>
           <div className="museum-copy">
             <p>
-              प्राप्तस्य प्राप्ति is presented as an inquiry into the nature of human life, freedom, knowledge, and the possibility that what we seek may already be inherent within us.
+              {hi ? "प्राप्तस्य प्राप्ति मानव जीवन, स्वतंत्रता और ज्ञान की प्रकृति पर एक स्वतंत्र जिज्ञासा है। यह उस संभावना को देखती है कि जिसे हम खोजते हैं, वह हमारे भीतर पहले से विद्यमान हो सकता है।" : "Praptasya Prapti is an inquiry into human life, freedom, knowledge, and the possibility that what we seek may already be inherent within us."}
             </p>
             <p>
-              The book invites readers to examine inherited assumptions and to explore questions about consciousness, society, nature, and human existence through the author's perspective.
+              {hi ? "यह ग्रंथ पाठक को विरासत में मिली मान्यताओं की पड़ताल करने और चेतना, समाज, प्रकृति तथा मानव अस्तित्व के प्रश्नों पर विचार करने का निमंत्रण देता है।" : "The book invites readers to examine inherited assumptions and explore questions about consciousness, society, nature, and human existence."}
             </p>
           </div>
         </div>
@@ -201,22 +208,25 @@ export function Home({ navigate }: { navigate: Nav }) {
         <div className="author-feature">
           <img src="/images/harnarayan-shah.jpg" alt="Harnarayan Shah" />
           <div>
-            <Kicker>About the Author</Kicker>
-            <h2 className="museum-title">Anantanand Manav</h2>
-            <p className="author-role">Founder · Manav Mukti Manch</p>
+            <Kicker>{hi ? "लेखक परिचय" : "About the Author"}</Kicker>
+            <h2 className="museum-title">हरनारायण शाह</h2>
+            <p className="author-role">{hi ? "लेखकीय नाम: अनन्तानन्द मानव · मानव मुक्ति मंच" : "Pen name: Anantanand Manav · Manav Mukti Manch"}</p>
             <p className="museum-copy">
               The website presents the author's journey, writings, and philosophy without making it only about personality. The focus remains on ideas, inquiry, and the human questions behind the work.
             </p>
             <button onClick={() => navigate({ name: "about" })} className="link-arrow mt-5">
-              Read the Journey <ArrowRight className="w-4 h-4" />
+              {hi ? "जीवन-यात्रा पढ़ें" : "Read the Journey"} <ArrowRight className="w-4 h-4" />
             </button>
+            <a href="https://www.facebook.com/harnarayan.sah.73" target="_blank" rel="noreferrer" className="facebook-link">
+              Facebook <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
         </div>
       </section>
 
       <section className="quote-band">
-        <p>सत्य किसी सम्प्रदाय का नहीं होता। सत्य अनुभव का विषय है।</p>
-        <span>Draft line. Replace after verifying exact wording from the book.</span>
+        <p>{hi ? "विचार का आरम्भ उत्तर से नहीं, प्रश्न करने की स्वतंत्रता से होता है।" : "Thought begins not with an answer, but with the freedom to question."}</p>
+        <span>{hi ? "प्राप्तस्य प्राप्ति · चिंतन का आमंत्रण" : "Praptasya Prapti · An invitation to inquiry"}</span>
       </section>
 
       <section className="idea-section muted-band">
@@ -433,6 +443,8 @@ export function About({ navigate }: { navigate: Nav }) {
 /* ---------- BOOK ---------- */
 
 export function Book({ navigate }: { navigate: Nav }) {
+  const language = useLanguage();
+  const [previewPage, setPreviewPage] = useState(1);
   const reasons = [
     "मूल प्रश्नों पर एक निर्भीक एवं स्वतंत्र दृष्टि",
     "किसी मत का प्रचार नहीं, विवेक जगाने का प्रयास",
@@ -443,6 +455,26 @@ export function Book({ navigate }: { navigate: Nav }) {
     <div className="max-w-6xl mx-auto px-5 py-20 md:py-24">
       <PageHead kicker="प्रमुख ग्रंथ" title="प्राप्तस्य प्राप्ति"
         sub="जो प्राप्त है, उसी की प्राप्ति — मानव जीवन के मूल प्रश्नों पर आठ अध्यायों की विचार-यात्रा।" />
+
+      <section className="book-reader" aria-label="Ten page book preview">
+        <div className="reader-heading">
+          <div>
+            <Kicker>{language === "hi" ? "ऑनलाइन पाठ" : "Read online"}</Kicker>
+            <h2>{language === "hi" ? "ग्रंथ के प्रथम दस पृष्ठ" : "The first ten pages"}</h2>
+          </div>
+          <div className="reader-controls">
+            <button onClick={() => setPreviewPage((page) => Math.max(1, page - 1))} disabled={previewPage === 1} aria-label="Previous page"><ChevronLeft /></button>
+            <span>{language === "hi" ? "पृष्ठ" : "Page"} {previewPage} / 10</span>
+            <button onClick={() => setPreviewPage((page) => Math.min(10, page + 1))} disabled={previewPage === 10} aria-label="Next page"><ChevronRight /></button>
+          </div>
+        </div>
+        <div className="reader-frame">
+          <iframe key={previewPage} src={`/book-preview.pdf#page=${previewPage}&toolbar=0&navpanes=0&scrollbar=0&view=FitH`} title={`प्राप्तस्य प्राप्ति — पृष्ठ ${previewPage}`} />
+        </div>
+        <p className="reader-note">{language === "hi" ? "यह ऑनलाइन पूर्वावलोकन केवल पृष्ठ 1 से 10 तक संचालित होता है।" : "This online preview is limited by the site controls to pages 1–10."}</p>
+      </section>
+
+      <SanctuaryMotif />
 
       <div className="grid md:grid-cols-5 gap-12 items-start">
         <motion.div {...fade} className="md:col-span-2 md:sticky md:top-28">

@@ -6,21 +6,23 @@ import {
   Gallery, Events, Contact, type Route, type Nav,
 } from "./pages";
 import { articles } from "./data";
+import { LanguageProvider, type Language } from "./i18n";
 
-const NAV_ITEMS: { label: string; route: Route }[] = [
-  { label: "Home", route: { name: "home" } },
-  { label: "Philosophy", route: { name: "philosophy" } },
-  { label: "Book", route: { name: "book" } },
-  { label: "Author", route: { name: "about" } },
-  { label: "Library", route: { name: "articles" } },
-  { label: "Media", route: { name: "gallery" } },
-  { label: "Events", route: { name: "events" } },
-  { label: "Contact", route: { name: "contact" } },
+const NAV_ITEMS: { hi: string; en: string; route: Route }[] = [
+  { hi: "मुखपृष्ठ", en: "Home", route: { name: "home" } },
+  { hi: "दर्शन", en: "Philosophy", route: { name: "philosophy" } },
+  { hi: "ग्रंथ", en: "Book", route: { name: "book" } },
+  { hi: "लेखक", en: "Author", route: { name: "about" } },
+  { hi: "ज्ञानालय", en: "Library", route: { name: "articles" } },
+  { hi: "मीडिया", en: "Media", route: { name: "gallery" } },
+  { hi: "आयोजन", en: "Events", route: { name: "events" } },
+  { hi: "संपर्क", en: "Contact", route: { name: "contact" } },
 ];
 
 export default function App() {
   const [route, setRoute] = useState<Route>({ name: "home" });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [language, setLanguage] = useState<Language>("hi");
 
   const navigate: Nav = (r) => {
     setRoute(r);
@@ -35,22 +37,26 @@ export default function App() {
     r.name === route.name || (route.name === "article" && r.name === "articles");
 
   return (
-    <div className="min-h-screen flex flex-col paper-texture">
+    <LanguageProvider language={language}>
+    <div className="min-h-screen flex flex-col paper-texture" lang={language}>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur-sm border-b border-gold/30">
         <div className="max-w-7xl mx-auto px-5">
           <div className="flex items-center justify-between h-20">
-            <button onClick={() => navigate({ name: "home" })} className="text-left leading-none">
-              <span className="block font-serif text-2xl text-maroon">प्राप्तस्य प्राप्ति</span>
+            <button onClick={() => navigate({ name: "home" })} className="brand-lockup">
+              <img src="/images/praptasya-logo.png" alt="" />
+              <span>
+              <span className="block font-serif text-xl text-maroon">प्राप्तस्य प्राप्ति</span>
               <span className="block font-body text-[0.65rem] tracking-[0.3em] uppercase text-saffron-deep mt-1">
-                Human Constitution
+                {language === "hi" ? "मानव जीवन का मूल संविधान" : "Human Constitution"}
+              </span>
               </span>
             </button>
 
             <nav className="hidden lg:flex items-center gap-1">
               {NAV_ITEMS.map((item) => (
                 <button
-                  key={item.label}
+                  key={item.en}
                   onClick={() => navigate(item.route)}
                   className={`font-body text-sm px-3 py-2 rounded-sm transition-colors ${
                     isActive(item.route)
@@ -58,14 +64,22 @@ export default function App() {
                       : "text-ink-soft hover:text-maroon"
                   }`}
                 >
-                  {item.label}
+                  {item[language]}
                 </button>
               ))}
+              <button className="language-switch" onClick={() => setLanguage(language === "hi" ? "en" : "hi")} aria-label="Change language">
+                {language === "hi" ? "EN" : "हिं"}
+              </button>
             </nav>
 
-            <button className="lg:hidden text-maroon" onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <X /> : <Menu />}
-            </button>
+            <div className="lg:hidden flex items-center gap-2">
+              <button className="language-switch" onClick={() => setLanguage(language === "hi" ? "en" : "hi")} aria-label="Change language">
+                {language === "hi" ? "EN" : "हिं"}
+              </button>
+              <button className="text-maroon p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open navigation">
+                {menuOpen ? <X /> : <Menu />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -80,13 +94,13 @@ export default function App() {
               <div className="px-5 py-3 flex flex-col">
                 {NAV_ITEMS.map((item) => (
                   <button
-                    key={item.label}
+                    key={item.en}
                     onClick={() => navigate(item.route)}
                     className={`text-left font-body py-2.5 border-b border-gold/15 last:border-0 ${
                       isActive(item.route) ? "text-saffron-deep font-semibold" : "text-ink-soft"
                     }`}
                   >
-                    {item.label}
+                    {item[language]}
                   </button>
                 ))}
               </div>
@@ -125,9 +139,9 @@ export default function App() {
               <h4 className="font-body text-xs tracking-[0.3em] uppercase text-gold-soft mb-4">पृष्ठ</h4>
               <div className="grid grid-cols-2 gap-y-2">
                 {NAV_ITEMS.map((item) => (
-                  <button key={item.label} onClick={() => navigate(item.route)}
+                  <button key={item.en} onClick={() => navigate(item.route)}
                     className="text-left font-body text-sm text-paper/70 hover:text-gold-soft transition-colors">
-                    {item.label}
+                    {item[language]}
                   </button>
                 ))}
               </div>
@@ -147,6 +161,7 @@ export default function App() {
         </div>
       </footer>
     </div>
+    </LanguageProvider>
   );
 }
 
