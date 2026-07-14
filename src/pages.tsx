@@ -63,6 +63,192 @@ function PageHead({ kicker, title, sub }: { kicker: string; title: string; sub?:
 /* ---------- HOME ---------- */
 
 export function Home({ navigate }: { navigate: Nav }) {
+  const pillars = [
+    {
+      title: "प्राप्तस्य प्राप्ति",
+      text: "Understanding what already exists within human life, rather than chasing fulfillment as something outside the self.",
+    },
+    {
+      title: "वसुधैव कुटुम्बकम्",
+      text: "Humanity as one family, rooted in shared ecological, social, and cultural memory.",
+    },
+    {
+      title: "सत्यमेव जयते",
+      text: "Truth approached through inquiry, experience, and understanding instead of inherited certainty.",
+    },
+  ];
+
+  const timeline = [
+    "Book Introduction",
+    "Religion",
+    "Knowledge",
+    "Human Freedom",
+    "Vasudhaiva Kutumbakam",
+    "Truth",
+    "Human Body",
+    "Karma",
+    "Soul",
+    "Conclusion",
+  ];
+
+  const library = ["Articles", "Questions", "Concepts", "Research", "Videos", "Downloads"];
+
+  return (
+    <div className="museum-home">
+      <section className="banyan-hero">
+        <div className="banyan-visual" aria-hidden="true">
+          <div className="canopy canopy-one" />
+          <div className="canopy canopy-two" />
+          <div className="canopy canopy-three" />
+          <div className="trunk" />
+          <svg className="root-map" viewBox="0 0 900 420" preserveAspectRatio="none">
+            <path d="M450 0 C390 85 340 130 250 168 C150 210 105 270 55 400" />
+            <path d="M450 0 C420 95 435 160 390 225 C345 292 265 322 210 410" />
+            <path d="M450 0 C470 105 515 155 560 220 C615 298 690 335 760 412" />
+            <path d="M450 0 C520 80 610 118 705 165 C805 215 842 292 880 405" />
+            <path d="M326 184 C405 203 502 216 610 198" />
+            <path d="M225 300 C325 270 435 280 540 324 C620 358 700 360 820 322" />
+          </svg>
+          <div className="root-word word-one">ज्ञान</div>
+          <div className="root-word word-two">नदी</div>
+          <div className="root-word word-three">मानव</div>
+          <div className="root-word word-four">चेतना</div>
+        </div>
+
+        <motion.div className="hero-copy" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+          <p className="hero-kicker">A timeless philosophy for understanding human existence</p>
+          <h1>प्राप्तस्य प्राप्ति</h1>
+          <h2>मानव जीवन का मूल संविधान</h2>
+          <blockquote>
+            जब मनुष्य स्वयं को पहचान लेता है,<br />
+            तब जीवन प्राप्त करने योग्य नहीं रहता,<br />
+            वह पहले से ही प्राप्त होता है।
+          </blockquote>
+          <div className="flex flex-col sm:flex-row gap-4 mt-9">
+            <button onClick={() => navigate({ name: "philosophy" })} className="btn-primary">
+              Read the Philosophy <ArrowRight className="w-4 h-4" />
+            </button>
+            <button onClick={() => navigate({ name: "book" })} className="btn-ghost hero-ghost">
+              Explore the Book
+            </button>
+          </div>
+        </motion.div>
+      </section>
+
+      <section className="idea-section">
+        <div className="section-grid">
+          <div>
+            <Kicker>What is Praptasya Prapti?</Kicker>
+            <h2 className="museum-title">Not another religion. Not another method.</h2>
+          </div>
+          <div className="museum-copy">
+            <p>
+              प्राप्तस्य प्राप्ति is presented as an inquiry into the nature of human life, freedom, knowledge, and the possibility that what we seek may already be inherent within us.
+            </p>
+            <p>
+              The book invites readers to examine inherited assumptions and to explore questions about consciousness, society, nature, and human existence through the author's perspective.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="idea-section muted-band">
+        <Kicker>The Three Pillars</Kicker>
+        <div className="pillar-grid">
+          {pillars.map((pillar) => (
+            <motion.button key={pillar.title} {...fade} onClick={() => navigate({ name: "philosophy" })} className="museum-card">
+              <h3>{pillar.title}</h3>
+              <p>{pillar.text}</p>
+            </motion.button>
+          ))}
+        </div>
+      </section>
+
+      <section className="idea-section">
+        <div className="book-feature">
+          <div className="book-stack">
+            <img src="/images/book-cover.jpg" alt="प्राप्तस्य प्राप्ति book cover" />
+          </div>
+          <div>
+            <Kicker>About the Book</Kicker>
+            <h2 className="museum-title">Written by अनन्तानन्द मानव</h2>
+            <p className="museum-copy">
+              This work presents the author's exploration of human life, knowledge, liberation, social structures, and the vision of a harmonious human society.
+            </p>
+            <p className="museum-copy">
+              Across twenty-nine chapters, it discusses topics ranging from religion and knowledge to karma, human nature, society, and philosophical questions about existence.
+            </p>
+            <button onClick={() => navigate({ name: "book" })} className="link-arrow mt-5">
+              Explore the Book <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="idea-section chapter-band">
+        <Kicker>Journey Through the Chapters</Kicker>
+        <div className="chapter-rail">
+          {timeline.map((item, index) => (
+            <button key={item} onClick={() => navigate({ name: "book" })} className="chapter-node">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong>{item}</strong>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="idea-section">
+        <div className="author-feature">
+          <img src="/images/harnarayan-shah.jpg" alt="Harnarayan Shah" />
+          <div>
+            <Kicker>About the Author</Kicker>
+            <h2 className="museum-title">Anantanand Manav</h2>
+            <p className="author-role">Founder · Manav Mukti Manch</p>
+            <p className="museum-copy">
+              The website presents the author's journey, writings, and philosophy without making it only about personality. The focus remains on ideas, inquiry, and the human questions behind the work.
+            </p>
+            <button onClick={() => navigate({ name: "about" })} className="link-arrow mt-5">
+              Read the Journey <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="quote-band">
+        <p>सत्य किसी सम्प्रदाय का नहीं होता। सत्य अनुभव का विषय है।</p>
+        <span>Draft line. Replace after verifying exact wording from the book.</span>
+      </section>
+
+      <section className="idea-section muted-band">
+        <div className="section-grid">
+          <div>
+            <Kicker>Manav Mukti Manch</Kicker>
+            <h2 className="museum-title">A public platform for human freedom and inquiry.</h2>
+          </div>
+          <div className="mini-grid">
+            {["History", "Mission", "Activities", "Books", "Research", "Community"].map((item) => (
+              <button key={item} onClick={() => navigate({ name: "events" })}>{item}</button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="idea-section library-section">
+        <Kicker>Knowledge Library</Kicker>
+        <div className="library-grid">
+          {library.map((item) => (
+            <button key={item} onClick={() => navigate(item === "Videos" ? { name: "gallery" } : { name: "articles" })}>
+              {item}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export function LegacyHome({ navigate }: { navigate: Nav }) {
   return (
     <div>
       {/* Hero */}

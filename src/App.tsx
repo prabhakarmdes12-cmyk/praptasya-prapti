@@ -8,14 +8,14 @@ import {
 import { articles } from "./data";
 
 const NAV_ITEMS: { label: string; route: Route }[] = [
-  { label: "मुख्य पृष्ठ", route: { name: "home" } },
-  { label: "लेखक", route: { name: "about" } },
-  { label: "ग्रंथ", route: { name: "book" } },
-  { label: "विचार-दर्शन", route: { name: "philosophy" } },
-  { label: "प्रवचन", route: { name: "articles" } },
-  { label: "कला-दीर्घा", route: { name: "gallery" } },
-  { label: "आयोजन", route: { name: "events" } },
-  { label: "संपर्क", route: { name: "contact" } },
+  { label: "Home", route: { name: "home" } },
+  { label: "Philosophy", route: { name: "philosophy" } },
+  { label: "Book", route: { name: "book" } },
+  { label: "Author", route: { name: "about" } },
+  { label: "Library", route: { name: "articles" } },
+  { label: "Media", route: { name: "gallery" } },
+  { label: "Events", route: { name: "events" } },
+  { label: "Contact", route: { name: "contact" } },
 ];
 
 export default function App() {
@@ -43,7 +43,7 @@ export default function App() {
             <button onClick={() => navigate({ name: "home" })} className="text-left leading-none">
               <span className="block font-serif text-2xl text-maroon">प्राप्तस्य प्राप्ति</span>
               <span className="block font-body text-[0.65rem] tracking-[0.3em] uppercase text-saffron-deep mt-1">
-                विचार-यात्रा · Author Archive
+                Human Constitution
               </span>
             </button>
 
