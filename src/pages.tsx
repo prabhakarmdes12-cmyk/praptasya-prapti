@@ -720,15 +720,20 @@ export function GondCulture() {
   return (
     <article className="culture-page">
       <header className="culture-hero">
-        <SanctuaryMotif className="culture-hero-motif" />
-        <div className="culture-hero-inner">
-          <Kicker>{isHindi ? "मध्य भारत की सांस्कृतिक स्मृति" : isGondi ? "गोंडी भाषा" : "Cultural memory of central India"}</Kicker>
-          <h1>{isHindi ? "गोंड संस्कृति और गोंडवाना" : isGondi ? "कोइतूर संस्कृति अर गोंडवाना" : "Gond Culture and Gondwana"}</h1>
-          <p>{isHindi ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में भाषा, प्रकृति, इतिहास, आस्था और सामुदायिक जीवन का परिचय।" : isGondi ? "मध्य प्रदेश और छत्तीसगढ़ की गोंडी भाषा में समुदाय-समीक्षित अनुवाद।" : "An introduction to language, ecology, history, faith, and community life, focused on Madhya Pradesh and Chhattisgarh."}</p>
-          <div className="culture-language" role="group" aria-label="Culture page language">
-            <button className={cultureLanguage === "hi" ? "active" : ""} onClick={() => setCultureLanguage("hi")}>हिंदी</button>
-            <button className={cultureLanguage === "en" ? "active" : ""} onClick={() => setCultureLanguage("en")}>English</button>
-            <button className={cultureLanguage === "gon" ? "active" : ""} onClick={() => setCultureLanguage("gon")}>गोंडी</button>
+        <figure className="culture-artwork">
+          <img src="/images/gondi-culture.png" alt="गोंड संस्कृति की जड़ों, आस्था, प्रकृति, कला, उत्सव और सामुदायिक जीवन को दर्शाती वर्णनात्मक चित्रकला" />
+        </figure>
+        <div className="culture-hero-copy">
+          <SanctuaryMotif className="culture-hero-motif" />
+          <div className="culture-hero-inner">
+            <Kicker>{isHindi ? "मध्य भारत की सांस्कृतिक स्मृति" : isGondi ? "गोंडी भाषा" : "Cultural memory of central India"}</Kicker>
+            <h1>{isHindi ? "गोंड संस्कृति और गोंडवाना" : isGondi ? "कोइतूर संस्कृति अर गोंडवाना" : "Gond Culture and Gondwana"}</h1>
+            <p>{isHindi ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में भाषा, प्रकृति, इतिहास, आस्था और सामुदायिक जीवन का परिचय।" : isGondi ? "मध्य प्रदेश और छत्तीसगढ़ की गोंडी भाषा में समुदाय-समीक्षित अनुवाद।" : "An introduction to language, ecology, history, faith, and community life, focused on Madhya Pradesh and Chhattisgarh."}</p>
+            <div className="culture-language" role="group" aria-label="Culture page language">
+              <button className={cultureLanguage === "hi" ? "active" : ""} onClick={() => setCultureLanguage("hi")}>हिंदी</button>
+              <button className={cultureLanguage === "en" ? "active" : ""} onClick={() => setCultureLanguage("en")}>English</button>
+              <button className={cultureLanguage === "gon" ? "active" : ""} onClick={() => setCultureLanguage("gon")}>गोंडी</button>
+            </div>
           </div>
         </div>
       </header>

@@ -658,18 +658,38 @@ html { scroll-behavior: smooth; }
 }
 
 .culture-hero {
-  position: relative;
-  overflow: hidden;
-  min-height: 560px;
-  display: grid;
-  place-items: center;
-  padding: 6rem 1.25rem 8rem;
-  color: #efe7d6;
-  text-align: center;
   background: #0d1c16;
 }
 
-.culture-hero::before {
+.culture-artwork {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: clamp(0.5rem, 1.5vw, 1.25rem);
+  background: #171717;
+}
+
+.culture-artwork img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 78svh;
+  object-fit: contain;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+}
+
+.culture-hero-copy {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  min-height: 520px;
+  place-items: center;
+  padding: 5.5rem 1.25rem 8rem;
+  color: #efe7d6;
+  text-align: center;
+}
+
+.culture-hero-copy::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -865,7 +885,8 @@ html { scroll-behavior: smooth; }
   .hero-copy h2 { font-size: 1.25rem; }
   .hero-copy blockquote { font-size: 1rem; }
   .sanctuary-copy { padding-top: 245px; }
-  .culture-hero { min-height: 500px; padding-block: 5rem 7rem; }
+  .culture-hero-copy { min-height: 480px; padding-block: 4.5rem 7rem; }
+  .culture-artwork { padding: 0.35rem; }
   .culture-language { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
   .culture-language button { min-width: 0; padding-inline: 0.5rem; }
   .culture-section { grid-template-columns: 1fr; gap: 0.75rem; padding-block: 2.25rem; }
