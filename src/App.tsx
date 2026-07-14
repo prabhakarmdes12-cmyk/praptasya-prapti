@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, Volume2, VolumeX, X } from "lucide-react";
 import {
   Home, About, Book, Philosophy, Articles, ArticleDetail,
   Gallery, Events, Contact, GondCulture, type Route, type Nav,
@@ -49,6 +49,8 @@ export default function App() {
   const [route, setRoute] = useState<Route>(() => routeFromPath(window.location.pathname));
   const [menuOpen, setMenuOpen] = useState(false);
   const [language, setLanguage] = useState<Language>("hi");
+  const [soundOn, setSoundOn] = useState(() => localStorage.getItem("praptasya-sound") !== "off");
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const navigate: Nav = (r) => {
     setRoute(r);
@@ -119,12 +121,49 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, [route]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = 0.2;
+    localStorage.setItem("praptasya-sound", soundOn ? "on" : "off");
+
+    const removeUnlockListeners = () => {
+      window.removeEventListener("pointerdown", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+    };
+    const unlockAudio = () => {
+      if (!soundOn) return;
+      void audio.play().then(removeUnlockListeners).catch(() => undefined);
+    };
+
+    if (soundOn) {
+      void audio.play().then(removeUnlockListeners).catch(() => {
+        window.addEventListener("pointerdown", unlockAudio, { once: true });
+        window.addEventListener("keydown", unlockAudio, { once: true });
+      });
+    } else {
+      audio.pause();
+    }
+
+    return removeUnlockListeners;
+  }, [soundOn]);
+
   const isActive = (r: Route) =>
     r.name === route.name || (route.name === "article" && r.name === "articles");
 
   return (
     <LanguageProvider language={language}>
     <div className="min-h-screen flex flex-col paper-texture" lang={language}>
+      <audio ref={audioRef} src="/audio/sanctuary-music.mp3" autoPlay loop preload="auto" playsInline />
+      <button
+        type="button"
+        className={`sound-toggle ${soundOn ? "is-on" : ""}`}
+        onClick={() => setSoundOn((current) => !current)}
+        aria-label={soundOn ? "Turn website music off" : "Turn website music on"}
+        title={soundOn ? "Music off" : "Music on"}
+      >
+        {soundOn ? <Volume2 /> : <VolumeX />}
+      </button>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur-sm border-b border-gold/30">
         <div className="max-w-7xl mx-auto px-5">

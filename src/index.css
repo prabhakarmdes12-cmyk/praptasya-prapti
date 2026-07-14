@@ -91,6 +91,28 @@ html { scroll-behavior: smooth; }
   background: #183126;
 }
 
+.sound-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 60;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(239, 231, 214, 0.28);
+  border-radius: 50%;
+  color: rgba(239, 231, 214, 0.72);
+  background: rgba(13, 28, 22, 0.88);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
+  transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.sound-toggle:hover { transform: translateY(-1px); }
+.sound-toggle.is-on { color: #d7ae70; border-color: rgba(215, 174, 112, 0.58); }
+.sound-toggle svg { width: 18px; height: 18px; }
+
 @layer components {
   .btn-primary {
     @apply inline-flex items-center gap-2 font-body font-medium text-paper bg-saffron hover:bg-saffron-deep px-7 py-3.5 rounded-sm transition-colors shadow-sm;

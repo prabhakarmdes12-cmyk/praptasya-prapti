@@ -3,6 +3,7 @@ dist/
 logo.png
 praptasya prapti Book-compressed.pdf
 book cover.png
+website music.mp4
 .env
 .env.*
 *.local
