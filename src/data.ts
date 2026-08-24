@@ -7,6 +7,41 @@ export type Article = {
   body: string[];
 };
 
+export type PdfCategory = "all" | "book" | "essay" | "story" | "biography" | "culture";
+
+export type PdfDocument = {
+  id: string;
+  titleHi: string;
+  titleEn: string;
+  category: PdfCategory;
+  categoryHi: string;
+  categoryEn: string;
+  descriptionHi: string;
+  descriptionEn: string;
+  pages: number | string;
+  fileSize: string;
+  filePath: string;
+  featured?: boolean;
+  publishedYear?: string;
+  tagHi?: string;
+  tagEn?: string;
+};
+
+export type VideoItem = {
+  id: string;
+  titleHi: string;
+  titleEn: string;
+  speakerHi: string;
+  speakerEn: string;
+  duration: string;
+  videoUrl: string;
+  descriptionHi: string;
+  descriptionEn: string;
+  badgeHi: string;
+  badgeEn: string;
+  date?: string;
+};
+
 export const quotes: string[] = [
   "जो प्राप्त है, वही तो प्राप्तव्य है — बस दृष्टि खोलनी है।",
   "मनुष्य की सबसे बड़ी स्वतंत्रता है — अपने प्रश्नों के साथ जीने का साहस।",
@@ -113,6 +148,162 @@ export const articles: Article[] = [
       "लेखक के विचार में, ऐसा समाज कोई काल्पनिक स्वर्ग नहीं। यह एक-एक मुक्त मनुष्य से बनता है। जब एक व्यक्ति भीतर से मुक्त होता है, तो उसके चारों ओर का वातावरण बदलने लगता है।",
       "यही इस विचार-यात्रा का अंतिम गंतव्य है — बाहर के संसार को बदलने से पहले, भीतर के मनुष्य को मुक्त करना।",
     ],
+  },
+];
+
+export const pdfDocuments: PdfDocument[] = [
+  {
+    id: "praptasya-prapti-complete",
+    titleHi: "प्राप्तस्य प्राप्ति: मानव जीवन का मूल संविधान",
+    titleEn: "Praptasya Prapti: The Fundamental Constitution of Human Life",
+    category: "book",
+    categoryHi: "सम्पूर्ण ग्रंथ",
+    categoryEn: "Core Book",
+    descriptionHi: "मानव जीवन, स्वतंत्रता, विवेक, ज्ञान, कर्म और आत्मा पर अनन्तानन्द मानव (श्री हरनारायण शाह) की संपूर्ण ग्रंथ रचना।",
+    descriptionEn: "The complete definitive philosophical text exploring human life, freedom, intellect, knowledge, and inner truth.",
+    pages: "सम्पूर्ण ग्रंथ",
+    fileSize: "7.1 MB",
+    filePath: "/pdfs/praptasya-prapti-complete-book.pdf",
+    featured: true,
+    tagHi: "मूल ग्रंथ",
+    tagEn: "Core Book",
+  },
+  {
+    id: "harnarayan-sah",
+    titleHi: "श्री हरनारायण शाह: व्यक्तित्व, साधना एवं कृतित्व",
+    titleEn: "Shri Harnarayan Shah: Life, Sadhana & Legacy",
+    category: "biography",
+    categoryHi: "जीवन-दर्शन",
+    categoryEn: "Biography & Sadhana",
+    descriptionHi: "लेखक एवं साधक श्री हरनारायण शाह की 15 पृष्ठीय विस्तृत जीवन-गाथा, साधना, वैचारिक विकास और लोक-कल्याणकारी दृष्टि।",
+    descriptionEn: "A 15-page comprehensive biographical record of author and thinker Shri Harnarayan Shah.",
+    pages: 15,
+    fileSize: "470 KB",
+    filePath: "/pdfs/harnarayan-sah.pdf",
+    featured: true,
+    tagHi: "लेखक जीवन-वृत्त",
+    tagEn: "Biography",
+  },
+  {
+    id: "sanskriti-ki-awaz",
+    titleHi: "संस्कृति की आवाज़ — जड़ें, परंपरा और मानवता",
+    titleEn: "Sanskriti Ki Awaz (Voice of Culture)",
+    category: "culture",
+    categoryHi: "संस्कृति",
+    categoryEn: "Culture & Roots",
+    descriptionHi: "लोक संस्कृति, सांस्कृतिक चेतना, प्राकृतिक सह-अस्तित्व और पारंपरिक ज्ञान के मूल सूत्रों पर 10 पृष्ठीय गहन चिंतन।",
+    descriptionEn: "A 10-page deep reflection on cultural consciousness, ecological harmony, and living folk wisdom.",
+    pages: 10,
+    fileSize: "1.1 MB",
+    filePath: "/pdfs/sanskriti-ki-awaz.pdf",
+    featured: true,
+    tagHi: "सांस्कृतिक विमर्श",
+    tagEn: "Culture",
+  },
+  {
+    id: "pankhe-ki-rassi",
+    titleHi: "पंखे की रस्सी — मनोवैज्ञानिक एवं दार्शनिक आख्यान",
+    titleEn: "Pankhe Ki Rassi (The Fan's Rope)",
+    category: "story",
+    categoryHi: "साहित्य व कथा",
+    categoryEn: "Literature & Story",
+    descriptionHi: "मानवीय द्वंद्व, मानसिक अवसाद, जीवन-मूल्य और आशा की किरण पर 9 पृष्ठीय मर्मस्पर्शी साहित्यिक विमर्श।",
+    descriptionEn: "A 9-page touching psychological narrative exploring human struggle, existential questions, and hope.",
+    pages: 9,
+    fileSize: "568 KB",
+    filePath: "/pdfs/pankhe-ki-rassi.pdf",
+    tagHi: "कथा साहित्य",
+    tagEn: "Story",
+  },
+  {
+    id: "nana-ka-thana",
+    titleHi: "नाना का थाना — संस्मरण व लोक-स्मृति",
+    titleEn: "Nana Ka Thana — Memoir & Lived Experience",
+    category: "story",
+    categoryHi: "संस्मरण व कथा",
+    categoryEn: "Memoir & Narrative",
+    descriptionHi: "जीवन के जीवंत अनुभवों, लोक-स्मृतियों और सामाजिक यथार्थ का 12 पृष्ठीय सजीव संस्मरणात्मक आख्यान।",
+    descriptionEn: "A 12-page vivid autobiographical memoir and narrative reflecting lived experiences and folk memory.",
+    pages: 12,
+    fileSize: "820 KB",
+    filePath: "/pdfs/nana-ka-thana.pdf",
+    tagHi: "संस्मरण",
+    tagEn: "Memoir",
+  },
+  {
+    id: "lekh-sangrah",
+    titleHi: "विचार लेख संग्रह — दर्शन एवं मानवीय चेतना",
+    titleEn: "Collected Essays on Philosophy & Life",
+    category: "essay",
+    categoryHi: "विचार-लेख",
+    categoryEn: "Essays & Articles",
+    descriptionHi: "दैनिक जीवन के प्रश्नों, आंतरिक स्वाधीनता और समाज की वास्तविकताओं पर लिखे गए प्रासंगिक वैचारिक निबंध।",
+    descriptionEn: "Essays addressing core life inquiries, inner freedom, and social consciousness.",
+    pages: 4,
+    fileSize: "910 KB",
+    filePath: "/pdfs/lekh-sangrah.pdf",
+    tagHi: "निबंध संग्रह",
+    tagEn: "Essays",
+  },
+  {
+    id: "sindoor",
+    titleHi: "सिन्दूर — सामाजिक-सांस्कृतिक चिंतन",
+    titleEn: "Sindoor — Cultural Realities & Perspectives",
+    category: "story",
+    categoryHi: "साहित्य",
+    categoryEn: "Literature",
+    descriptionHi: "भारतीय समाज, पारिवारिक मूल्यों, मान्यताओं और मानवीय संवेदनाओं पर 5 पृष्ठीय विचारोत्तेजक साहित्यिक रचना।",
+    descriptionEn: "A 5-page literary discourse on societal norms, family values, and human compassion.",
+    pages: 5,
+    fileSize: "342 KB",
+    filePath: "/pdfs/sindoor.pdf",
+    tagHi: "साहित्य",
+    tagEn: "Literature",
+  },
+  {
+    id: "book-2022",
+    titleHi: "प्राप्तस्य प्राप्ति — संक्षिप्त संस्करण (2022)",
+    titleEn: "Praptasya Prapti — Concise Edition (2022)",
+    category: "book",
+    categoryHi: "संक्षिप्त संस्करण",
+    categoryEn: "Manuscript Draft",
+    descriptionHi: "ग्रंथ का प्रारंभिक वैचारिक प्रारूप एवं मूल सिद्धांतों का 6 पृष्ठीय संक्षिप्त दिग्दर्शन।",
+    descriptionEn: "Early manuscript outline and conceptual summary of core principles (6 pages).",
+    pages: 6,
+    fileSize: "356 KB",
+    filePath: "/pdfs/book-2022.pdf",
+    publishedYear: "2022",
+    tagHi: "संक्षिप्त रूप",
+    tagEn: "Draft",
+  },
+];
+
+export const videoItems: VideoItem[] = [
+  {
+    id: "pravachan-1",
+    titleHi: "प्राप्तस्य प्राप्ति — लेखक का वैचारिक संदेश एवं ग्रंथ परिचय (भाग १)",
+    titleEn: "Praptasya Prapti — Author's Message & Introduction (Part 1)",
+    speakerHi: "अनन्तानन्द मानव (श्री हरनारायण शाह)",
+    speakerEn: "Anantanand Manav (Shri Harnarayan Shah)",
+    duration: "2:51",
+    videoUrl: "/videos/pravachan-1.mp4",
+    descriptionHi: "जीवन के मूल प्रश्नों, 'प्राप्तस्य प्राप्ति' के मर्म और मनुष्य के आत्म-अन्वेषण पर लेखक का विशेष वीडियो संदेश।",
+    descriptionEn: "The author's special video message addressing life's fundamental questions and the essence of Praptasya Prapti.",
+    badgeHi: "प्रमुख संदेश",
+    badgeEn: "Keynote",
+  },
+  {
+    id: "pravachan-2",
+    titleHi: "सत्य, स्वविवेक और मुक्त चेतना पर उद्बोधन (भाग २)",
+    titleEn: "Reflections on Truth, Inner Discernment and Free Consciousness (Part 2)",
+    speakerHi: "अनन्तानन्द मानव (श्री हरनारायण शाह)",
+    speakerEn: "Anantanand Manav (Shri Harnarayan Shah)",
+    duration: "1:38",
+    videoUrl: "/videos/pravachan-2.mp4",
+    descriptionHi: "मानव स्वतंत्रता, मानसिक बंधनों से मुक्ति और भीतरी विवेक को जाग्रत करने पर प्रेरक चिंतन।",
+    descriptionEn: "Inspiring discourse on inner freedom, transcending mental limitations, and awakening human discernment.",
+    badgeHi: "विचार प्रवाह",
+    badgeEn: "Discourse",
   },
 ];
 

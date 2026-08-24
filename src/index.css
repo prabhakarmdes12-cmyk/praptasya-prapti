@@ -890,3 +890,27 @@ html { scroll-behavior: smooth; }
   .culture-section { grid-template-columns: 1fr; gap: 0.75rem; padding-block: 2.25rem; }
   .gondi-draft-note { align-items: flex-start; flex-direction: column; }
 }
+
+/* Video & PDF Media System Enhancements */
+.pdf-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pdf-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(24, 49, 38, 0.12);
+}
+
+.video-container video::-webkit-media-controls-panel {
+  background-image: linear-gradient(transparent, rgba(13, 28, 22, 0.85));
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
