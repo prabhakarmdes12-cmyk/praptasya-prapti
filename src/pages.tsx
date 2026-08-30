@@ -1401,21 +1401,27 @@ export function LibraryHub({
   const completeBook = pdfDocuments.find((d) => d.id === COMPLETE_BOOK_ID) || pdfDocuments[0];
 
   return (
-    <div className="max-w-6xl mx-auto px-5 py-16 md:py-20">
+    <div className={activeDoc ? "reader-fold-page" : "max-w-6xl mx-auto px-5 py-16 md:py-20"}>
       {manuscriptDoc && <PdfModal doc={manuscriptDoc} onClose={() => setManuscriptDoc(null)} />}
 
-      <PageHead
-        kicker={hi ? "पढ़ें — अनन्तानन्द मानव" : "Read — Anantanand Manav"}
-        title={hi ? "पूरा ग्रंथ, पूरी लाइब्रेरी — एक पृष्ठ पर" : "The complete book & library on one page"}
-        sub={
-          hi
-            ? "मूल ग्रंथ को एक सतत स्क्रॉल में ऑनलाइन पढ़ें — पिछली/अगली रचना पर एक क्लिक में जाएँ, और नीचे लेखक की सम्पूर्ण रचनाएँ — सभी निःशुल्क, बिना किसी शर्त के।"
-            : "Read the complete book as one continuous scroll — switch to the previous or next work with one click, and explore every writing below — all free, no sign-up, no paywall."
-        }
-      />
+      {!activeDoc && (
+        <PageHead
+          kicker={hi ? "पढ़ें — अनन्तानन्द मानव" : "Read — Anantanand Manav"}
+          title={hi ? "पूरा ग्रंथ, पूरी लाइब्रेरी — एक पृष्ठ पर" : "The complete book & library on one page"}
+          sub={
+            hi
+              ? "मूल ग्रंथ को एक सतत स्क्रॉल में ऑनलाइन पढ़ें — पिछली/अगली रचना पर एक क्लिक में जाएँ, और नीचे लेखक की सम्पूर्ण रचनाएँ — सभी निःशुल्क, बिना किसी शर्त के।"
+              : "Read the complete book as one continuous scroll — switch to the previous or next work with one click, and explore every writing below — all free, no sign-up, no paywall."
+          }
+        />
+      )}
 
-      {/* ---- READING EXPERIENCE ---- */}
-      <section className="mb-24" ref={readerAnchorRef} aria-label={hi ? "पुस्तक पाठक" : "Book reader"}>
+      {/* ---- READING EXPERIENCE (fills the first fold) ---- */}
+      <section
+        className={activeDoc ? "reader-fold-area" : "mb-24"}
+        ref={readerAnchorRef}
+        aria-label={hi ? "पुस्तक पाठक" : "Book reader"}
+      >
         {activeDoc ? (
           <PdfReader
             doc={activeDoc}

@@ -213,7 +213,48 @@ html { scroll-behavior: smooth; }
 .motif-leaves, .motif-bird { fill: currentColor; }
 .motif-dots { stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1 13; }
 
-/* Copy panel — translucent ivory so text stays readable over artwork */
+/* Gentle life in the tribal SVG art below the artwork */
+.motif-bird {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: motif-bird 7s ease-in-out infinite alternate;
+}
+.motif-leaves {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: motif-sway 6s ease-in-out infinite alternate;
+}
+.motif-dots {
+  animation: motif-march 4.5s linear infinite;
+}
+@keyframes motif-bird {
+  from { transform: translate(0, 0); }
+  to { transform: translate(20px, -7px); }
+}
+@keyframes motif-sway {
+  from { transform: rotate(-1.6deg); }
+  to { transform: rotate(1.6deg); }
+}
+@keyframes motif-march {
+  to { stroke-dashoffset: -280; }
+}
+
+/* Soft entrance — once, on load */
+.hero-seal img,
+.hero-panel {
+  animation: hero-rise 700ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.hero-seal img { animation-name: hero-seal-in; }
+@keyframes hero-seal-in {
+  from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Copy panel — frosted glass over the artwork, text stays readable */
 .hero-copy {
   position: relative;
   z-index: 2;
@@ -227,13 +268,30 @@ html { scroll-behavior: smooth; }
   text-align: center;
 }
 .hero-panel {
-  background: rgba(247, 243, 234, 0.86);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(23, 64, 47, 0.1);
+  background: rgba(247, 243, 234, 0.52);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid rgba(247, 243, 234, 0.6);
   border-radius: var(--radius-md);
-  box-shadow: 0 24px 60px -30px rgba(14, 40, 29, 0.35);
+  box-shadow:
+    0 24px 60px -30px rgba(14, 40, 29, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
   padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3rem);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hero-panel { background: rgba(247, 243, 234, 0.9); }
+}
+/* Frosted glass on the secondary CTAs; primary stays solid for hierarchy */
+.hero-panel .btn-ghost {
+  background: rgba(247, 243, 234, 0.34);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(247, 243, 234, 0.75);
+  color: var(--color-maroon-deep);
+}
+.hero-panel .btn-ghost:hover {
+  background: rgba(247, 243, 234, 0.58);
+  border-color: rgba(247, 243, 234, 0.9);
 }
 .hero-eyebrow {
   font-family: var(--font-body);
@@ -808,6 +866,33 @@ html { scroll-behavior: smooth; }
 .reader-paper { background: var(--color-paper); }
 .reader-dark { background: #16130f; }
 
+/* Library page — the reader takes the first fold:
+   toolbar (title + tools), reading window and book dock are all on screen */
+.reader-fold-page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - 64px);
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: clamp(0.6rem, 1.6vh, 1rem) clamp(1rem, 3vw, 2rem);
+}
+.reader-fold-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+.reader-fold-area .pdf-reader-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.reader-fold-area .reader-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+
 .reader-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -1326,6 +1411,9 @@ html { scroll-behavior: smooth; }
   .reader-toolbar { padding: 0.6rem 0.7rem; }
   .reader-scroll { padding: 0.7rem 0.7rem 1.5rem; }
   .reader-zoom-group { display: none; }
+  .reader-fold-page { padding: 0.5rem 0.5rem 0.75rem; }
+  .reader-fold-page .reader-toolbar { padding: 0.55rem 0.7rem; }
+  .reader-fold-page .reader-dock { padding: 0.55rem 0.7rem; }
   .share-label { display: none; }
   .culture-hero-copy { min-height: 440px; padding-block: 4rem 6.5rem; }
   .culture-artwork { padding: 0.35rem; }
