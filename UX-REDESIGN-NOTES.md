@@ -2,6 +2,19 @@
 
 What changed and why, following the review of the site on **2026-08-30**.
 
+## Design cleanup (2026-08-30, later pass)
+
+Removed decorative clutter (the "AI slop") and applied a consistent system:
+
+- **Removed** autoplay background music + floating sound toggle (bad UX, removed `public/audio/`).
+- **Removed** the animated SVG "sanctuary motif" (people/birds/dashed lines), the `❖` ornament component, and the duplicate logo seal over the hero.
+- **Removed** paper-grain textures, gradient "glows", gold gradient rules, and the third font (Martel).
+- **Hero rebuilt**: the Gond artwork is now a proper `<figure>` (with caption, explicit dimensions, high priority loading) beside clean typography — no overlay, no text-shadow.
+- **Design tokens**: flat ivory `#f7f3ea`, deep forest `#17402f`, ochre `#a8642a`; consistent 4/8/12px radii (Tailwind `--radius-*` overridden so `rounded-sm` etc. are uniform); hairline borders `rgba(23,64,47,…)` replace gold borders.
+- **Components**: buttons (primary green / ghost outline), nav with pill active state, quiet metadata chips, clean cards, editorial quote band, flat dark chapter band.
+- **Accessibility**: real `:focus-visible` outlines, `prefers-reduced-motion` support, CLS-safe hero image.
+
+
 ## 1. Reading the book is now effortless
 
 **Before:** the Book page embedded a 10-page PDF with `<object>` (broken on iPhone/Android PDF viewers), the full 60-page book existed only as a 7.1 MB download, and there was no progress, resume, TOC, or mobile support.

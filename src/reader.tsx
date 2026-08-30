@@ -529,7 +529,7 @@ export function PdfReader({
             <h3 className="reader-title">{hi ? doc.titleHi : doc.titleEn}</h3>
             <p className="reader-meta">
               {typeof doc.pages === "number" ? `${doc.pages} ${hi ? "पृष्ठ" : "pages"}` : doc.pages} · {doc.fileSize} ·{" "}
-              <span className="text-gold">❖</span> {hi ? "सभी रचनाएँ निःशुल्क" : "All works free"}
+              {hi ? "सभी रचनाएँ निःशुल्क" : "All works free"}
             </p>
           </div>
         </div>

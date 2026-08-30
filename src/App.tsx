@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Volume2, VolumeX, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import {
   Home, About, Book, Philosophy, LibraryHub, ArticleDetail,
   Gallery, Events, Contact, GondCulture, type Route, type Nav,
@@ -71,9 +71,6 @@ export default function App() {
     const saved = localStorage.getItem("praptasya-language");
     return saved === "en" ? saved : "hi";
   });
-  const [soundOn, setSoundOn] = useState(() => localStorage.getItem("praptasya-sound") === "on");
-  const audioRef = useRef<HTMLAudioElement>(null);
-
   const navigate: Nav = (r) => {
     setRoute(r);
     window.history.pushState({}, "", routePath(r));
@@ -166,33 +163,6 @@ export default function App() {
     localStorage.setItem("praptasya-language", language);
   }, [language]);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.volume = 0.2;
-    localStorage.setItem("praptasya-sound", soundOn ? "on" : "off");
-
-    const removeUnlockListeners = () => {
-      window.removeEventListener("pointerdown", unlockAudio);
-      window.removeEventListener("keydown", unlockAudio);
-    };
-    const unlockAudio = () => {
-      if (!soundOn) return;
-      void audio.play().then(removeUnlockListeners).catch(() => undefined);
-    };
-
-    if (soundOn) {
-      void audio.play().then(removeUnlockListeners).catch(() => {
-        window.addEventListener("pointerdown", unlockAudio, { once: true });
-        window.addEventListener("keydown", unlockAudio, { once: true });
-      });
-    } else {
-      audio.pause();
-    }
-
-    return removeUnlockListeners;
-  }, [soundOn]);
-
   const isActive = (r: Route) =>
     r.name === route.name ||
     (route.name === "article" && r.name === "articles") ||
@@ -200,19 +170,9 @@ export default function App() {
 
   return (
     <LanguageProvider language={language}>
-    <div className="min-h-screen flex flex-col paper-texture" lang={language}>
-      <audio ref={audioRef} src="/audio/sanctuary-music.mp3" autoPlay loop preload="none" playsInline />
-      <button
-        type="button"
-        className={`sound-toggle ${soundOn ? "is-on" : ""}`}
-        onClick={() => setSoundOn((current) => !current)}
-        aria-label={soundOn ? "Turn website music off" : "Turn website music on"}
-        title={soundOn ? "Music off" : "Music on"}
-      >
-        {soundOn ? <Volume2 /> : <VolumeX />}
-      </button>
+    <div className="min-h-screen flex flex-col bg-paper" lang={language}>
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur-sm border-b border-gold/30">
+      <header className="sticky top-0 z-50 bg-paper/95 backdrop-blur-sm border-b border-ink/10">
         <div className="max-w-7xl mx-auto px-5">
           <div className="header-row flex items-center justify-between h-20">
             <button onClick={() => navigate({ name: "home" })} className="brand-lockup">
@@ -225,16 +185,12 @@ export default function App() {
               </span>
             </button>
 
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="site-nav hidden lg:flex items-center gap-1">
               {NAV_ITEMS.map((item) => (
                 <button
                   key={item.en}
                   onClick={() => navigate(item.route)}
-                  className={`font-body text-sm px-3 py-2 rounded-sm transition-colors ${
-                    isActive(item.route)
-                      ? "text-saffron-deep font-semibold"
-                      : "text-ink-soft hover:text-maroon"
-                  }`}
+                  className={isActive(item.route) ? "nav-active" : ""}
                 >
                   {item[language]}
                 </button>
@@ -257,16 +213,14 @@ export default function App() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden overflow-hidden bg-paper-dark border-t border-gold/30"
+              className="site-nav-mobile lg:hidden overflow-hidden bg-paper-dark border-t border-ink/10"
             >
-              <div className="px-5 py-3 flex flex-col">
+              <div className="px-5 py-2 flex flex-col">
                 {NAV_ITEMS.map((item) => (
                   <button
                     key={item.en}
                     onClick={() => navigate(item.route)}
-                    className={`text-left font-body py-2.5 border-b border-gold/15 last:border-0 ${
-                      isActive(item.route) ? "text-saffron-deep font-semibold" : "text-ink-soft"
-                    }`}
+                    className={isActive(item.route) ? "nav-active" : ""}
                   >
                     {item[language]}
                   </button>
