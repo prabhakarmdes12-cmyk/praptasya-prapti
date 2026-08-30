@@ -17,6 +17,7 @@ export default defineConfig({
     },
   },
   server: {
+    allowedHosts: [".e2b.app", ".localhost", "localhost", "127.0.0.1"],
     watch: {
       ignored: ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.mp4", "**/*.pdf", "**/dist/**"],
     },

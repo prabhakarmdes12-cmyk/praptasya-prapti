@@ -1,3 +1,5 @@
+export const COMPLETE_BOOK_ID = "praptasya-prapti-complete";
+
 export type Article = {
   slug: string;
   title: string;
@@ -7,7 +9,7 @@ export type Article = {
   body: string[];
 };
 
-export type PdfCategory = "all" | "book" | "manuscript" | "essay" | "story" | "biography" | "culture";
+export type PdfCategory = "all" | "book" | "manuscript" | "essay" | "story" | "culture";
 
 export type ManuscriptPage = {
   id: string;
@@ -283,20 +285,19 @@ export const pdfDocuments: PdfDocument[] = [
     tagEn: "Manuscript",
   },
   {
-    id: "harnarayan-sah",
-    titleHi: "श्री हरनारायण साह: व्यक्तित्व, साधना एवं कृतित्व",
-    titleEn: "Shri Harnarayan Sah: Life, Sadhana & Legacy",
-    category: "biography",
-    categoryHi: "जीवन-दर्शन",
-    categoryEn: "Biography & Sadhana",
-    descriptionHi: "लेखक एवं साधक श्री हरनारायण साह की 15 पृष्ठीय विस्तृत जीवन-गाथा, साधना, वैचारिक विकास और लोक-कल्याणकारी दृष्टि।",
-    descriptionEn: "A 15-page comprehensive biographical record of author and thinker Shri Harnarayan Sah.",
+    id: "sanskriti-ka-khel",
+    titleHi: "संस्कृति का खेल — काव्य संग्रह",
+    titleEn: "Sanskriti Ka Khel — A Poetry Collection",
+    category: "book",
+    categoryHi: "काव्य ग्रंथ",
+    categoryEn: "Poetry Book",
+    descriptionHi: "संस्कृति, माया, अज्ञान और आत्म-ज्ञान पर लेखक की 33 काव्य-रचनाओं का संग्रह — सहज जीवन शैली की ओर लौटने का काव्य-आमंत्रण (15 पृष्ठ)।",
+    descriptionEn: "A 15-page collection of 33 poems on culture, illusion, ignorance and self-knowledge — a poetic invitation back to natural living.",
     pages: 15,
     fileSize: "470 KB",
-    filePath: "/pdfs/harnarayan-sah.pdf",
-    featured: true,
-    tagHi: "लेखक जीवन-वृत्त",
-    tagEn: "Biography",
+    filePath: "/pdfs/sanskriti-ka-khel.pdf",
+    tagHi: "काव्य संग्रह",
+    tagEn: "Poetry",
   },
   {
     id: "sanskriti-ki-awaz",
