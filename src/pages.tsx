@@ -717,7 +717,6 @@ export function Home({ navigate }: { navigate: Nav }) {
       {modalPdf && <PdfModal doc={modalPdf} onClose={() => setModalPdf(null)} />}
 
       <section className="banyan-hero">
-        <TribalMotif className="hero-motif" />
         <div className="hero-seal">
           <img src="/images/praptasya-logo.png" alt="प्राप्तस्य प्राप्ति का चिह्न" width={512} height={512} fetchPriority="high" />
         </div>
@@ -744,6 +743,11 @@ export function Home({ navigate }: { navigate: Nav }) {
           </div>
         </div>
       </section>
+
+      {/* Animated tribal SVG band — sits 50px below the hero artwork */}
+      <div className="hero-motif-band" aria-hidden="true">
+        <TribalMotif className="hero-motif" />
+      </div>
 
       {/* What is Praptasya Prapti */}
       <section className="idea-section">

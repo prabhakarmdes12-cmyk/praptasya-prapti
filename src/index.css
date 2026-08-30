@@ -193,11 +193,16 @@ html { scroll-behavior: smooth; }
   box-shadow: 0 18px 50px rgba(14, 40, 29, 0.3), 0 0 0 1px rgba(23, 64, 47, 0.12);
 }
 
-/* Tribal SVG art strip along the bottom */
-.hero-motif {
-  position: absolute;
-  inset: auto 0 0;
+/* Tribal SVG art strip — its own band 50px below the hero artwork */
+.hero-motif-band {
+  position: relative;
   z-index: 1;
+  margin-top: 50px;
+  padding: 0 1.25rem;
+  overflow: hidden;
+}
+.hero-motif {
+  display: block;
   width: 100%;
   color: rgba(125, 77, 32, 0.6);
   pointer-events: none;
@@ -866,32 +871,14 @@ html { scroll-behavior: smooth; }
 .reader-paper { background: var(--color-paper); }
 .reader-dark { background: #16130f; }
 
-/* Library page — the reader takes the first fold:
-   toolbar (title + tools), reading window and book dock are all on screen */
+/* Library page — reader window is a fixed-height scroll area:
+   toolbar (title + tools), reading window and book dock stay on screen */
 .reader-fold-page {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100svh - 64px);
   max-width: 1400px;
   margin-inline: auto;
   padding: clamp(0.6rem, 1.6vh, 1rem) clamp(1rem, 3vw, 2rem);
 }
-.reader-fold-area {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-}
-.reader-fold-area .pdf-reader-shell {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-.reader-fold-area .reader-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  max-height: none;
-}
+.reader-fold-area { margin-bottom: 2rem; }
 
 .reader-toolbar {
   display: flex;
@@ -971,11 +958,13 @@ html { scroll-behavior: smooth; }
 }
 .reader-popover .share-btn { background: var(--color-paper); }
 
-/* Continuous scroll area — the whole work reads as one flowing document */
+/* Reading window — fixed comfortable height, internal scroll */
+.reader-scroll-wrap { position: relative; }
 .reader-scroll {
   position: relative;
-  min-height: 55vh;
-  max-height: calc(100svh - 240px);
+  height: 600px;
+  max-height: 600px;
+  min-height: 0;
   overflow: auto;
   padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 3vw, 2rem) 2.5rem;
   background: var(--color-paper-dark);
@@ -983,7 +972,81 @@ html { scroll-behavior: smooth; }
   overscroll-behavior: contain;
   scrollbar-width: thin;
 }
+.reader-scroll:focus-visible {
+  outline: 2px solid var(--color-saffron);
+  outline-offset: -2px;
+}
 .reader-dark .reader-scroll { background: #100e0b; }
+
+/* Thin reading progress bar along the top of the window */
+.reader-readprogress {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 8;
+  height: 3px;
+  background: rgba(23, 64, 47, 0.12);
+  pointer-events: none;
+}
+.reader-dark .reader-readprogress { background: rgba(247, 243, 234, 0.12); }
+.reader-readprogress span {
+  display: block;
+  height: 100%;
+  border-radius: 0 999px 999px 0;
+  background: var(--color-saffron);
+  transition: width 140ms linear;
+}
+
+/* Current-page pill — appears briefly while scrolling */
+.reader-page-pill {
+  position: sticky;
+  top: 0.6rem;
+  z-index: 6;
+  display: flex;
+  justify-content: center;
+  height: 0;
+  pointer-events: none;
+}
+.reader-page-pill span {
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(23, 64, 47, 0.85);
+  color: var(--color-gold-soft);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 20px rgba(14, 40, 29, 0.3);
+  animation: reader-pill 1.8s ease both;
+}
+.reader-dark .reader-page-pill span {
+  background: rgba(247, 243, 234, 0.92);
+  color: var(--color-maroon-deep);
+}
+@keyframes reader-pill {
+  0% { opacity: 0; transform: translateY(-4px); }
+  14% { opacity: 1; transform: none; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Back-to-top — appears after the reader has been scrolled */
+.reader-top-btn {
+  position: absolute;
+  right: 1rem;
+  bottom: 1.1rem;
+  z-index: 7;
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(247, 243, 234, 0.22);
+  background: var(--color-maroon-deep);
+  color: var(--color-paper);
+  box-shadow: 0 10px 26px rgba(14, 40, 29, 0.35);
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+.reader-top-btn:hover { background: var(--color-maroon); }
 
 .reader-doc {
   margin-inline: auto;
@@ -1070,7 +1133,10 @@ html { scroll-behavior: smooth; }
   display: block;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 180ms ease;
 }
+.reader-page-slot.render-ready .reader-canvas { opacity: 1; }
 .reader-page-loader {
   position: absolute;
   inset: 0;
@@ -1166,10 +1232,17 @@ html { scroll-behavior: smooth; }
   flex-direction: column;
   height: 100svh;
 }
-.pdf-reader-shell:fullscreen .reader-scroll {
+.pdf-reader-shell:fullscreen .reader-scroll-wrap {
   flex: 1 1 auto;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.pdf-reader-shell:fullscreen .reader-scroll {
+  flex: 1 1 auto;
+  height: auto;
   max-height: none;
+  min-height: 0;
 }
 
 .reader-dock {
@@ -1389,7 +1462,7 @@ html { scroll-behavior: smooth; }
   .reader-dock { grid-template-columns: 1fr; }
   .reader-dock-btn { justify-content: center; }
   .reader-dock-btn > span { display: none; }
-  .reader-scroll { min-height: 55vh; max-height: calc(100svh - 300px); }
+  .reader-scroll { height: 540px; max-height: 540px; }
   .reader-page-label { display: none; }
   .culture-section { grid-template-columns: 48px minmax(0, 1fr); gap: 1.2rem; }
 }
@@ -1406,10 +1479,10 @@ html { scroll-behavior: smooth; }
 
   .hero-panel h1 { font-size: 2.6rem; }
   .hero-panel blockquote { font-size: 1rem; }
-  .hero-motif { display: none; }
+  .hero-motif-band { display: none; }
   .reader-title { max-width: 38vw; }
   .reader-toolbar { padding: 0.6rem 0.7rem; }
-  .reader-scroll { padding: 0.7rem 0.7rem 1.5rem; }
+  .reader-scroll { height: 480px; max-height: 480px; padding: 0.7rem 0.7rem 1.5rem; }
   .reader-zoom-group { display: none; }
   .reader-fold-page { padding: 0.5rem 0.5rem 0.75rem; }
   .reader-fold-page .reader-toolbar { padding: 0.55rem 0.7rem; }

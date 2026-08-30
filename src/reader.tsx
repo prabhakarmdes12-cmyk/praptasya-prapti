@@ -4,7 +4,7 @@ import type { PDFDocumentProxy } from "pdfjs-dist";
 import workerRaw from "pdfjs-dist/build/pdf.worker.min.js?raw";
 import JSZip from "jszip";
 import {
-  BookOpen, Check, ChevronLeft, ChevronRight, Download, Link2, List,
+  ArrowUp, BookOpen, Check, ChevronLeft, ChevronRight, Download, Link2, List,
   Loader, Maximize, MessageCircle, Minus, Moon, Plus, RotateCcw, Send,
   Share, Sun, X, Zap,
 } from "lucide-react";
@@ -347,6 +347,7 @@ function PdfPage({
   const tokenRef = useRef(0);
   const [near, setNear] = useState(false);
   const [drawing, setDrawing] = useState(false);
+  const [ready, setReady] = useState(false);
 
   /* proximity observer (render window) + center-band observer (active page) */
   useEffect(() => {
@@ -357,7 +358,7 @@ function PdfPage({
       (entries) => {
         for (const en of entries) setNear(en.isIntersecting);
       },
-      { root, rootMargin: "1100px 0px" },
+      { root, rootMargin: "1500px 0px" },
     );
     const actObs = new IntersectionObserver(
       (entries) => {
@@ -398,11 +399,13 @@ function PdfPage({
           return;
         }
         setDrawing(true);
+        setReady(false);
         const task = p.render({ canvasContext: ctx, viewport: vp });
         taskRef.current = task;
         await task.promise;
         taskRef.current = null;
         p.cleanup();
+        if (token === tokenRef.current) setReady(true);
       } catch {
         /* render cancelled or page failed; keep placeholder */
       } finally {
@@ -428,9 +431,9 @@ function PdfPage({
   }, [near]);
 
   return (
-    <div className="reader-page-slot" ref={slotRef} data-page={num}>
+    <div className={`reader-page-slot${ready ? " render-ready" : ""}`} ref={slotRef} data-page={num}>
       <canvas ref={canvasRef} className="reader-canvas" aria-label={`पृष्ठ ${num} / page ${num}`} />
-      {near && drawing && (
+      {near && drawing && !ready && (
         <span className="reader-page-loader" aria-hidden="true">
           <Loader className="w-4 h-4 animate-spin" />
         </span>
@@ -476,8 +479,10 @@ export function PdfReader({
   const scrollRef = useRef<HTMLDivElement>(null);
   const pageElsRef = useRef<Record<number, HTMLDivElement | null>>({});
   const pageInputRef = useRef<HTMLInputElement>(null);
+  const scrollRafRef = useRef(0);
   const lastSavedRef = useRef(0);
   const lastExternalPageRef = useRef<number | undefined>(undefined);
+  const [readPct, setReadPct] = useState(0);
 
   /* works that can be opened in this reader (PDFs only; manuscripts/videos excluded) */
   const readerDocs = useMemo(
@@ -498,25 +503,39 @@ export function PdfReader({
     [doc.id, total, onPageChange],
   );
 
-  const scrollToPage = useCallback((n: number) => {
+  const scrollToPage = useCallback((n: number, smooth = true) => {
     const el = pageElsRef.current[n];
     const sc = scrollRef.current;
     if (!el || !sc) return;
     sc.scrollTo({
       top: el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 14,
-      behavior: "smooth",
+      behavior: smooth ? "smooth" : "auto",
     });
   }, []);
 
   const goTo = useCallback(
-    (n: number) => {
+    (n: number, smooth = true) => {
       if (!total) return;
       const next = Math.min(Math.max(1, Math.floor(n)), total);
       setPage(next);
-      scrollToPage(next);
+      scrollToPage(next, smooth);
     },
     [total, scrollToPage],
   );
+
+  /* reading progress of the scroll window (throttled to one update per frame) */
+  const handleScroll = useCallback(() => {
+    if (scrollRafRef.current) return;
+    scrollRafRef.current = requestAnimationFrame(() => {
+      scrollRafRef.current = 0;
+      const el = scrollRef.current;
+      if (!el) return;
+      const max = el.scrollHeight - el.clientHeight;
+      setReadPct(max > 0 ? Math.min(100, Math.round((el.scrollTop / max) * 100)) : 0);
+    });
+  }, []);
+
+  useEffect(() => () => cancelAnimationFrame(scrollRafRef.current), []);
 
   /* current page indicator (from the page crossing the reading band) */
   const handleActive = useCallback(
@@ -606,7 +625,7 @@ export function PdfReader({
     if (!ratios || !pdfDoc) return;
     const start = initialPage && initialPage > 1 ? initialPage : readStoredPage(doc.id, pdfDoc.numPages);
     if (start > 1) {
-      window.setTimeout(() => scrollToPage(start), 60);
+      window.setTimeout(() => scrollToPage(start, false), 60);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ratios, pdfDoc, doc.id]);
@@ -617,7 +636,7 @@ export function PdfReader({
     if (!initialPage || initialPage < 1) return;
     if (initialPage === lastExternalPageRef.current) return;
     lastExternalPageRef.current = initialPage;
-    if (initialPage > 1) scrollToPage(initialPage);
+    if (initialPage > 1) scrollToPage(initialPage, false);
   }, [initialPage, ratios, scrollToPage]);
 
   /* persist settings */
@@ -648,7 +667,7 @@ export function PdfReader({
 
   const goToInput = () => {
     const n = Number(pageInputRef.current?.value);
-    if (Number.isFinite(n) && n > 0) goTo(n);
+    if (Number.isFinite(n) && n > 0) goTo(n, false);
   };
 
   const title = hi ? doc.titleHi : doc.titleEn;
@@ -826,14 +845,23 @@ export function PdfReader({
         </div>
       )}
 
-      {/* Continuous scrollable document */}
-      <div
-        ref={scrollRef}
-        className="reader-scroll"
-        role="region"
-        aria-label={hi ? `${title} — पठन` : `${title} — reading`}
-      >
-        {loadError && (
+      {/* Continuous scrollable document — fixed-height reading window */}
+      <div className="reader-scroll-wrap">
+        <div className="reader-readprogress" aria-hidden="true">
+          <span style={{ width: `${readPct}%` }} />
+        </div>
+        <div
+          ref={scrollRef}
+          className="reader-scroll"
+          role="region"
+          tabIndex={0}
+          onScroll={handleScroll}
+          aria-label={hi ? `${title} — पठन` : `${title} — reading`}
+        >
+          <div className="reader-page-pill" aria-hidden="true">
+            <span key={page}>{hi ? `पृष्ठ ${page} / ${total || "—"}` : `Page ${page} / ${total || "—"}`}</span>
+          </div>
+          {loadError && (
           <div className="reader-empty">
             <p className="font-body text-ink-soft">
               {hi
@@ -944,6 +972,18 @@ export function PdfReader({
             </footer>
           </div>
         )}
+        </div>
+        {readPct > 6 && (
+          <button
+            type="button"
+            className="reader-top-btn"
+            onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+            title={hi ? "ऊपर जाएँ" : "Back to top"}
+            aria-label={hi ? "ऊपर जाएँ" : "Back to top"}
+          >
+            <ArrowUp className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* Dock — prev/next switches between works; page slider inside */}
@@ -971,7 +1011,7 @@ export function PdfReader({
             min={1}
             max={Math.max(total, 1)}
             value={page}
-            onChange={(e) => goTo(Number(e.target.value))}
+            onChange={(e) => goTo(Number(e.target.value), false)}
             className="reader-range"
             aria-label={hi ? "पृष्ठ चुनें" : "Choose page"}
             style={{ ["--progress" as string]: `${progress}%` }}
