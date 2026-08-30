@@ -1116,29 +1116,6 @@ export function About({ navigate }: { navigate: Nav }) {
         </div>
       </section>
 
-      {/* Author's art images */}
-      <section className="mb-16">
-        <div className="flex items-center gap-3 mb-6">
-          <Palette className="w-6 h-6 text-saffron-deep" />
-          <h2 className="text-2xl md:text-3xl text-maroon font-serif">
-            {hi ? "विचारों से प्रेरित कलाकृतियाँ" : "Art inspired by these ideas"}
-          </h2>
-        </div>
-        <div className="grid sm:grid-cols-3 gap-6">
-          {gallery.map((g) => (
-            <motion.figure key={g.title} {...fade} className="m-0 group">
-              <div className="relative overflow-hidden rounded-md border border-ink/10 bg-paper-dark">
-                <img src={g.src} alt={g.title} className="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" width={600} height={600} />
-              </div>
-              <figcaption className="mt-3">
-                <h3 className="font-serif text-lg text-maroon">{g.title}</h3>
-                <p className="font-body text-sm text-ink-soft">{g.caption}</p>
-              </figcaption>
-            </motion.figure>
-          ))}
-        </div>
-      </section>
-
       <div className="text-center flex flex-wrap justify-center gap-4">
         <button onClick={() => navigate({ name: "book" })} className="btn-primary">
           <BookOpen className="w-5 h-5" /> {hi ? "ग्रंथ के बारे में जानें" : "Explore the Book"}
