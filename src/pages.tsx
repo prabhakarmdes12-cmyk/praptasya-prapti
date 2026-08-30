@@ -525,9 +525,8 @@ export function PdfRepository({
 
   const categories: { key: PdfCategory; hi: string; en: string }[] = [
     { key: "all", hi: "सभी रचनाएँ (9)", en: "All (9)" },
-    { key: "book", hi: "मूल ग्रंथ (2)", en: "Books (2)" },
+    { key: "book", hi: "पुस्तकें (3)", en: "Books (3)" },
     { key: "manuscript", hi: "मूल पांडुलिपि (1)", en: "Manuscript (1)" },
-    { key: "biography", hi: "जीवन-दर्शन (1)", en: "Biography (1)" },
     { key: "culture", hi: "संस्कृति (1)", en: "Culture (1)" },
     { key: "essay", hi: "विचार-लेख (1)", en: "Essays (1)" },
     { key: "story", hi: "साहित्य व कथा (3)", en: "Literature (3)" },
@@ -959,11 +958,11 @@ export function Home({ navigate }: { navigate: Nav }) {
                 {hi ? "जीवन-यात्रा पढ़ें" : "Read the Journey"} <ArrowRight className="w-4 h-4" />
               </button>
               <a
-                href="/pdfs/harnarayan-sah.pdf"
+                href="/pdfs/sanskriti-ka-khel.pdf"
                 download
                 className="inline-flex items-center gap-1.5 text-xs font-body font-semibold text-saffron-deep underline underline-offset-4"
               >
-                <Download className="w-3.5 h-3.5" /> {hi ? "जीवनी आलेख PDF (15 पृष्ठ)" : "Biography PDF (15 pages)"}
+                <Download className="w-3.5 h-3.5" /> {hi ? "संस्कृति का खेल — काव्य PDF (15 पृष्ठ)" : "Sanskriti Ka Khel — Poetry PDF (15 pages)"}
               </a>
               <a href="https://www.facebook.com/harnarayan.sah.73" target="_blank" rel="noreferrer" className="facebook-link">
                 Facebook <ExternalLink className="w-3 h-3" />
@@ -1029,8 +1028,6 @@ export function About({ navigate }: { navigate: Nav }) {
     { icon: Feather, title: "क्यों लिखा यह ग्रंथ", text: "लेखक ने अनुभव किया कि आज मनुष्य को तैयार उत्तरों की नहीं, स्वयं सोचने के साहस की आवश्यकता है। यही आवश्यकता इस ग्रंथ का बीज बनी।" },
   ];
 
-  const bioPdf = pdfDocuments.find((d) => d.id === "harnarayan-sah") || pdfDocuments[1];
-
   return (
     <div className="max-w-5xl mx-auto px-5 py-20 md:py-24">
       <PageHead
@@ -1039,28 +1036,21 @@ export function About({ navigate }: { navigate: Nav }) {
         sub="एक स्वतंत्र चिंतक, साधक एवं कलाकार — जिनकी लेखनी किसी मत का प्रचार नहीं, विवेक का आह्वान करती है।"
       />
 
-      <motion.div {...fade} className="grid md:grid-cols-5 gap-10 items-start mb-16">
+      <motion.div {...fade} className="grid md:grid-cols-5 gap-10 items-start mb-20">
         <div className="md:col-span-2 space-y-6">
-          <div className="relative">
-            <div className="absolute -inset-3 border border-ink/15 rounded-sm" />
-            <img src="/images/author.jpg" alt="लेखक" className="relative w-full aspect-[4/5] object-cover rounded-sm grayscale-[15%] sepia-[10%]" loading="lazy" />
-          </div>
-
-          {/* Author Video Message Component */}
-          <div className="bg-paper-dark/70 border border-ink/10 rounded-sm p-4 overflow-hidden">
-            <div className="flex items-center gap-2 mb-3">
-              <Video className="w-4 h-4 text-saffron" />
-              <h4 className="font-serif text-sm text-maroon font-semibold">
-                {hi ? "लेखक का वीडियो संदेश" : "Author's Video Address"}
-              </h4>
-            </div>
-            <div className="relative aspect-video bg-black rounded-xs overflow-hidden mb-3">
-              <video src="/videos/pravachan-1.mp4" controls playsInline preload="metadata" className="w-full h-full object-contain" />
-            </div>
-            <p className="font-body text-xs text-ink-soft">
-              {hi ? "प्राप्तस्य प्राप्ति एवं मानव जीवन के मूल संविधान पर लेखक का उद्बोधन।" : "Address on the fundamental constitution of human life."}
-            </p>
-          </div>
+          <figure className="m-0">
+            <img
+              src="/images/harnarayan-shah.jpg"
+              alt={hi ? "लेखक श्री हरनारायण साह (अनन्तानन्द मानव)" : "Author Shri Harnarayan Sah (Anantanand Manav)"}
+              className="w-full aspect-[4/5] object-cover rounded-md border border-ink/10"
+              width={1170}
+              height={1170}
+              loading="eager"
+            />
+            <figcaption className="font-body text-sm text-ink-soft mt-3">
+              {hi ? "श्री हरनारायण साह · अनन्तानन्द मानव" : "Shri Harnarayan Sah · Anantanand Manav"}
+            </figcaption>
+          </figure>
         </div>
 
         <div className="md:col-span-3 space-y-8">
@@ -1075,40 +1065,67 @@ export function About({ navigate }: { navigate: Nav }) {
               </div>
             </div>
           ))}
-
-          {/* Detailed Biography PDF Feature Box */}
-          <div className="bg-paper-dark/50 border border-ink/10 rounded-sm p-6">
-            <div className="flex items-center gap-2 mb-2 font-body text-xs font-semibold text-saffron-deep uppercase tracking-wider">
-              <FileText className="w-4 h-4" />
-              {hi ? "विस्तृत जीवन-गाथा एवं साधना" : "Detailed Biography & Sadhana"}
-            </div>
-            <h4 className="font-serif text-xl text-maroon mb-2">
-              {hi ? bioPdf.titleHi : bioPdf.titleEn}
-            </h4>
-            <p className="font-body text-sm text-ink-soft mb-4 leading-relaxed">
-              {hi ? bioPdf.descriptionHi : bioPdf.descriptionEn}
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                onClick={() => navigate({ name: "articles", readId: bioPdf.id, readPage: 1 })}
-                className="btn-primary py-2 px-5 text-sm"
-              >
-                <Eye className="w-4 h-4" /> {hi ? "जीवनी आलेख पढ़ें (15 पृष्ठ)" : "Read Biography (15 pages)"}
-              </button>
-              <a href={bioPdf.filePath} download className="btn-ghost py-2 px-5 text-sm">
-                <Download className="w-4 h-4" /> {hi ? "PDF डाउनलोड" : "Download PDF"}
-              </a>
-            </div>
-          </div>
         </div>
       </motion.div>
+
+      {/* Author video messages */}
+      <section className="mb-16">
+        <div className="flex items-center gap-3 mb-6">
+          <Video className="w-6 h-6 text-saffron-deep" />
+          <h2 className="text-2xl md:text-3xl text-maroon font-serif">
+            {hi ? "लेखक के वीडियो संदेश" : "Author's video messages"}
+          </h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          {videoItems.map((vid, i) => (
+            <motion.figure key={vid.id} {...fade} className="m-0 bg-paper-dark/40 border border-ink/10 rounded-md overflow-hidden">
+              <div className="bg-black aspect-video">
+                <video src={vid.videoUrl} controls playsInline preload="metadata" className="w-full h-full object-contain" />
+              </div>
+              <figcaption className="p-5">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="px-2 py-0.5 bg-saffron/10 text-saffron-deep text-[0.7rem] font-bold uppercase rounded-xs">
+                    {hi ? `भाग ${i + 1}` : `Part ${i + 1}`}
+                  </span>
+                  <span className="font-body text-xs text-ink-soft flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {vid.duration}</span>
+                </div>
+                <h3 className="font-serif text-lg text-maroon mb-1">{hi ? vid.titleHi : vid.titleEn}</h3>
+                <p className="font-body text-sm text-ink-soft leading-relaxed">{hi ? vid.descriptionHi : vid.descriptionEn}</p>
+              </figcaption>
+            </motion.figure>
+          ))}
+        </div>
+      </section>
+
+      {/* Author's art images */}
+      <section className="mb-16">
+        <div className="flex items-center gap-3 mb-6">
+          <Palette className="w-6 h-6 text-saffron-deep" />
+          <h2 className="text-2xl md:text-3xl text-maroon font-serif">
+            {hi ? "विचारों से प्रेरित कलाकृतियाँ" : "Art inspired by these ideas"}
+          </h2>
+        </div>
+        <div className="grid sm:grid-cols-3 gap-6">
+          {gallery.map((g) => (
+            <motion.figure key={g.title} {...fade} className="m-0 group">
+              <div className="relative overflow-hidden rounded-md border border-ink/10 bg-paper-dark">
+                <img src={g.src} alt={g.title} className="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" width={600} height={600} />
+              </div>
+              <figcaption className="mt-3">
+                <h3 className="font-serif text-lg text-maroon">{g.title}</h3>
+                <p className="font-body text-sm text-ink-soft">{g.caption}</p>
+              </figcaption>
+            </motion.figure>
+          ))}
+        </div>
+      </section>
 
       <div className="text-center flex flex-wrap justify-center gap-4">
         <button onClick={() => navigate({ name: "book" })} className="btn-primary">
           <BookOpen className="w-5 h-5" /> {hi ? "ग्रंथ के बारे में जानें" : "Explore the Book"}
         </button>
         <button onClick={() => navigate({ name: "gallery" })} className="btn-ghost">
-          <Play className="w-4 h-4 text-saffron" /> {hi ? "वीडियो प्रवचन देखें" : "Watch Discourses"}
+          <Play className="w-4 h-4 text-saffron" /> {hi ? "मीडिया एवं कला-दीर्घा" : "Media & Gallery"}
         </button>
       </div>
     </div>
