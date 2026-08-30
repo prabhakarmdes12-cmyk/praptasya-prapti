@@ -978,6 +978,11 @@ html { scroll-behavior: smooth; }
 }
 .reader-dark .reader-scroll { background: #100e0b; }
 
+/* On short screens, keep the whole reader (toolbar + window + dock) on one fold */
+@media (max-height: 860px) {
+  .reader-scroll { height: 520px; max-height: 520px; }
+}
+
 /* Thin reading progress bar along the top of the window */
 .reader-readprogress {
   position: absolute;
