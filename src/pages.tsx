@@ -1409,8 +1409,8 @@ export function LibraryHub({
         title={hi ? "पूरा ग्रंथ, पूरी लाइब्रेरी — एक पृष्ठ पर" : "The complete book & library on one page"}
         sub={
           hi
-            ? "मूल ग्रंथ को पृष्ठ-दर-पृष्ठ ऑनलाइन पढ़ें, और नीचे लेखक की सम्पूर्ण रचनाएँ — सभी निःशुल्क, बिना किसी शर्त के।"
-            : "Read the complete book page by page, and explore every writing below — all free, no sign-up, no paywall."
+            ? "मूल ग्रंथ को एक सतत स्क्रॉल में ऑनलाइन पढ़ें — पिछली/अगली रचना पर एक क्लिक में जाएँ, और नीचे लेखक की सम्पूर्ण रचनाएँ — सभी निःशुल्क, बिना किसी शर्त के।"
+            : "Read the complete book as one continuous scroll — switch to the previous or next work with one click, and explore every writing below — all free, no sign-up, no paywall."
         }
       />
 
