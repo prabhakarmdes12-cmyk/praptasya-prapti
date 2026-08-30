@@ -728,10 +728,6 @@ export function Home({ navigate }: { navigate: Nav }) {
       {modalPdf && <PdfModal doc={modalPdf} onClose={() => setModalPdf(null)} />}
 
       <section className="banyan-hero">
-        <SanctuaryMotif className="hero-motif" />
-        <div className="hero-seal">
-          <img src="/images/praptasya-logo.png" alt="प्राप्तस्य प्राप्ति का चिह्न" />
-        </div>
         <div className="hero-copy sanctuary-copy">
           <p className="hero-author">अनन्तानन्द मानव · {hi ? "लेखक" : "Author"}</p>
           <p className="hero-kicker hero-invocation">जय सेवा जय बड़ादेव जय बूढ़ादेव</p>

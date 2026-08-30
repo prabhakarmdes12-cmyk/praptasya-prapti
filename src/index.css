@@ -131,15 +131,15 @@ html { scroll-behavior: smooth; }
   position: relative;
   min-height: calc(100svh - 80px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   overflow: hidden;
-  padding: 1.25rem 1.25rem 2rem;
+  padding: 1.25rem 1.25rem clamp(1.25rem, 6vh, 3.25rem);
   background:
-    radial-gradient(circle at 50% 38%, rgba(168, 106, 43, 0.2), transparent 35%),
-    linear-gradient(180deg, rgba(13, 28, 22, 0.95), rgba(13, 28, 22, 0.82)),
-    #0d1c16;
-  color: #efe7d6;
+    linear-gradient(180deg, rgba(250, 241, 228, 0) 0%, rgba(250, 241, 228, 0.14) 30%, rgba(250, 241, 228, 0.78) 56%, rgba(250, 241, 228, 0.96) 74%, #efe7d6 88%),
+    url("/images/hero background.png") center top / cover no-repeat,
+    #efe7d6;
+  color: #3a2410;
 }
 
 .hero-copy {
@@ -152,7 +152,7 @@ html { scroll-behavior: smooth; }
 .sanctuary-copy {
   width: min(780px, 92vw);
   margin: 0;
-  padding-top: min(34vw, 335px);
+  padding-top: 0;
   text-align: center;
 }
 
@@ -184,6 +184,9 @@ html { scroll-behavior: smooth; }
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(239, 231, 214, 0.18);
 }
 
+/* Seal is intentionally unused now that the hero artwork carries the emblem */
+.banyan-hero .hero-seal { display: none; }
+
 .sanctuary-motif {
   display: block;
   width: 100%;
@@ -210,8 +213,8 @@ html { scroll-behavior: smooth; }
 .hero-motif {
   position: absolute;
   inset: auto 0 0;
-  z-index: 1;
-  color: rgba(193, 155, 97, 0.45);
+  z-index: 0;
+  color: rgba(125, 77, 32, 0.35);
 }
 
 .hero-motif .motif-line {
@@ -263,12 +266,12 @@ html { scroll-behavior: smooth; }
   text-transform: uppercase;
   letter-spacing: 0.28em;
   font-size: 0.78rem;
-  color: #c19b61;
+  color: #a86a2b;
   margin-bottom: 0.7rem;
 }
 
 .hero-invocation {
-  color: #d7ae70;
+  color: #7d4d20;
   font-family: var(--font-serif);
   font-size: clamp(0.9rem, 1.3vw, 1.1rem);
   letter-spacing: 0.08em;
@@ -282,14 +285,15 @@ html { scroll-behavior: smooth; }
 .hero-copy h1 {
   font-size: clamp(3.4rem, 7.6vw, 7rem);
   line-height: 0.98;
-  color: #efe7d6;
+  color: #3a2410;
+  text-shadow: 0 2px 24px rgba(250, 241, 228, 0.85);
 }
 
 .hero-copy h2 {
   margin-top: 0.55rem;
   font-family: var(--font-display);
   font-size: clamp(1.35rem, 3vw, 2.5rem);
-  color: #c19b61;
+  color: #7d4d20;
 }
 
 .hero-copy blockquote {
@@ -298,16 +302,16 @@ html { scroll-behavior: smooth; }
   font-family: var(--font-serif);
   font-size: clamp(1.1rem, 1.8vw, 1.5rem);
   line-height: 1.55;
-  color: rgba(239, 231, 214, 0.9);
+  color: #4b443a;
 }
 
 .hero-ghost {
-  color: #efe7d6;
-  border-color: rgba(239, 231, 214, 0.42);
+  color: #183126;
+  border-color: rgba(24, 49, 38, 0.45);
 }
 
 .hero-ghost:hover {
-  background: rgba(239, 231, 214, 0.08);
+  background: rgba(24, 49, 38, 0.08);
 }
 
 .banyan-visual {
@@ -839,7 +843,7 @@ html { scroll-behavior: smooth; }
     min-height: calc(100svh - 80px);
   }
 
-  .sanctuary-copy { padding-top: 270px; }
+  .sanctuary-copy { padding-top: 0; }
 
   .hero-seal { width: min(245px, 62vw); }
 
@@ -882,7 +886,7 @@ html { scroll-behavior: smooth; }
   .hero-copy h1 { font-size: 3rem; }
   .hero-copy h2 { font-size: 1.25rem; }
   .hero-copy blockquote { font-size: 1rem; }
-  .sanctuary-copy { padding-top: 245px; }
+  .sanctuary-copy { padding-top: 0; }
   .culture-hero-copy { min-height: 480px; padding-block: 4.5rem 7rem; }
   .culture-artwork { padding: 0.35rem; }
   .culture-language { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
@@ -970,7 +974,7 @@ html { scroll-behavior: smooth; }
   letter-spacing: 0.34em;
   text-transform: uppercase;
   font-size: clamp(0.72rem, 1.4vw, 0.92rem);
-  color: #d7ae70;
+  color: #a86a2b;
   margin-bottom: 0.85rem;
 }
 
