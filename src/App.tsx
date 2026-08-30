@@ -13,7 +13,7 @@ const NAV_ITEMS: { hi: string; en: string; route: Route }[] = [
   { hi: "पढ़ें", en: "Read", route: { name: "articles" } },
   { hi: "दर्शन", en: "Philosophy", route: { name: "philosophy" } },
   { hi: "लेखक", en: "Author", route: { name: "about" } },
-  { hi: "गोंड संस्कृति", en: "Gond Culture", route: { name: "culture" } },
+  { hi: "गोंडी संस्कृति", en: "Gond Culture", route: { name: "culture" } },
   { hi: "आयोजन", en: "Events", route: { name: "events" } },
   { hi: "संपर्क", en: "Contact", route: { name: "contact" } },
 ];
@@ -91,7 +91,7 @@ export default function App() {
     const isCulture = route.name === "culture";
     const titleFor = (t: string) => `${t} | अनन्तानन्द मानव`;
     document.title = isCulture
-      ? titleFor("गोंड संस्कृति, गोंडी भाषा और गोंडवाना")
+      ? titleFor("गोंडी संस्कृति, भाषा और गोंडवाना")
       : route.name === "articles" || route.name === "book"
         ? titleFor("पढ़ें — निःशुल्क कृतियाँ एवं पुस्तकें")
         : route.name === "about"
@@ -108,7 +108,7 @@ export default function App() {
                     ? titleFor(articles.find((a) => a.slug === route.slug)?.title ?? "विचार-लेख")
                     : titleFor("लेखक — प्राप्तस्य प्राप्ति");
     const description = isCulture
-      ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में गोंड संस्कृति, गोंडी भाषा, मौखिक परंपराओं, प्रकृति, कला और सामुदायिक जीवन का परिचय।"
+      ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में गोंडी संस्कृति, भाषा, मौखिक परंपराओं, प्रकृति, कला और सामुदायिक जीवन का परिचय।"
       : "अनन्तानन्द मानव (हरनारायण साह) की निःशुल्क कृतियाँ — 'प्राप्तस्य प्राप्ति' सहित सम्पूर्ण पुस्तकें ऑनलाइन पढ़ें और PDF डाउनलोड करें।";
     let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!meta) {
@@ -135,7 +135,7 @@ export default function App() {
         "@graph": [
           {
             "@type": "Article",
-            headline: "गोंड संस्कृति, गोंडी भाषा और गोंडवाना",
+            headline: "गोंडी संस्कृति, भाषा और गोंडवाना",
             description,
             inLanguage: ["hi", "en", "gon"],
             about: ["Gond culture", "Gondi language", "Gondwana", "Madhya Pradesh", "Chhattisgarh"],
@@ -146,7 +146,7 @@ export default function App() {
             "@type": "BreadcrumbList",
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "प्राप्तस्य प्राप्ति", item: window.location.origin },
-              { "@type": "ListItem", position: 2, name: "गोंड संस्कृति", item: canonical.href },
+              { "@type": "ListItem", position: 2, name: "गोंडी संस्कृति", item: canonical.href },
             ],
           },
         ],

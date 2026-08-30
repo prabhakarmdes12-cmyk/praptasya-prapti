@@ -158,70 +158,130 @@ html { scroll-behavior: smooth; }
 .page-head h1 { color: var(--color-maroon-deep); }
 
 /* ------------------------------------------------------------------
-   Home hero — editorial split: artwork + copy, no overlays
+   Home hero — artwork background, centered seal, tribal SVG art
    ------------------------------------------------------------------ */
-.home-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(2rem, 5vw, 4.5rem);
+.banyan-hero {
+  position: relative;
+  min-height: calc(100svh - 64px);
+  display: flex;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(3.5rem, 7vw, 6rem);
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(4rem, 9vh, 6rem) 1.25rem clamp(3rem, 6vh, 4rem);
+  background:
+    linear-gradient(180deg, rgba(247, 243, 234, 0.16) 0%, rgba(247, 243, 234, 0.4) 55%, rgba(247, 243, 234, 0.9) 92%),
+    url("/images/hero-background.png") center / cover no-repeat,
+    var(--color-paper);
+  color: var(--color-maroon-deep);
 }
-.home-hero-art { margin: 0; }
-.home-hero-art img {
+
+/* Centered circular logo seal */
+.hero-seal {
+  position: absolute;
+  top: clamp(1rem, 3.5vh, 2.5rem);
+  left: 0;
+  right: 0;
+  z-index: 3;
+  width: clamp(140px, 19vw, 215px);
+  margin-inline: auto;
+}
+.hero-seal img {
   display: block;
   width: 100%;
-  height: auto;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(23, 64, 47, 0.08);
-  box-shadow: 0 30px 70px -38px rgba(14, 40, 29, 0.45);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(247, 243, 234, 0.92);
+  box-shadow: 0 18px 50px rgba(14, 40, 29, 0.3), 0 0 0 1px rgba(23, 64, 47, 0.12);
 }
-.home-hero-art figcaption {
-  margin-top: 0.9rem;
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-ink-soft);
+
+/* Tribal SVG art strip along the bottom */
+.hero-motif {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  width: 100%;
+  color: rgba(125, 77, 32, 0.6);
+  pointer-events: none;
+}
+.motif-line, .motif-people, .motif-bird {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.motif-line.faint { opacity: 0.35; }
+.motif-leaves, .motif-bird { fill: currentColor; }
+.motif-dots { stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1 13; }
+
+/* Copy panel — translucent ivory so text stays readable over artwork */
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  width: min(760px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+.hero-panel {
+  background: rgba(247, 243, 234, 0.86);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(23, 64, 47, 0.1);
+  border-radius: var(--radius-md);
+  box-shadow: 0 24px 60px -30px rgba(14, 40, 29, 0.35);
+  padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3rem);
 }
 .hero-eyebrow {
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--color-saffron-deep);
-  margin-bottom: 1.1rem;
 }
-.home-hero-copy h1 {
-  font-size: clamp(2.7rem, 5.6vw, 4.4rem);
-  line-height: 1.06;
-  color: var(--color-maroon-deep);
-}
-.hero-sub {
-  margin-top: 0.65rem;
+.hero-kicker {
   font-family: var(--font-body);
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  font-weight: 500;
-  color: var(--color-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.76rem;
+  color: var(--color-saffron);
+  margin: 0.85rem 0 0.4rem;
 }
-.hero-quote {
-  margin-top: 1.5rem;
-  padding-left: 1rem;
-  border-left: 3px solid var(--color-saffron);
+.hero-invocation {
+  color: var(--color-saffron-deep);
   font-family: var(--font-serif);
-  font-size: 1.12rem;
-  line-height: 1.7;
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+.hero-panel h1 {
+  font-size: clamp(2.8rem, 6vw, 4.6rem);
+  line-height: 1.04;
+  color: var(--color-maroon-deep);
+  margin-top: 0.6rem;
+}
+.hero-panel h2 {
+  margin-top: 0.5rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+  color: var(--color-maroon);
+  font-weight: 500;
+}
+.hero-panel blockquote {
+  margin: 1.4rem auto 0;
+  max-width: 520px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+  line-height: 1.6;
   color: var(--color-ink-soft);
-  max-width: 460px;
 }
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 2.1rem;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.9rem;
 }
 
 /* ------------------------------------------------------------------
@@ -1066,8 +1126,9 @@ html { scroll-behavior: smooth; }
    Responsive
    ------------------------------------------------------------------ */
 @media (max-width: 900px) {
-  .home-hero { grid-template-columns: 1fr; gap: 2.25rem; }
-  .home-hero-art figcaption { text-align: left; }
+  .banyan-hero { min-height: auto; padding-top: clamp(4.5rem, 10vh, 5.5rem); }
+  .hero-seal { width: clamp(124px, 26vw, 168px); }
+  .hero-motif { opacity: 0.45; }
   .section-grid,
   .book-feature,
   .author-feature,
@@ -1100,7 +1161,9 @@ html { scroll-behavior: smooth; }
   .brand-lockup > span > span:first-child { font-size: 1.05rem; white-space: nowrap; }
   .language-select { width: 76px; margin-left: 0; padding-inline: 0.45rem; }
 
-  .hero-quote { font-size: 1rem; }
+  .hero-panel h1 { font-size: 2.6rem; }
+  .hero-panel blockquote { font-size: 1rem; }
+  .hero-motif { display: none; }
   .reader-title { max-width: 42vw; }
   .reader-toolbar { padding: 0.6rem 0.7rem; }
   .reader-stage { padding: 0.7rem; }

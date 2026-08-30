@@ -56,6 +56,26 @@ function PageHead({ kicker, title, sub }: { kicker: string; title: string; sub?:
   );
 }
 
+/* Tribal SVG art — people, birds, leaves and beads in Gond style */
+function TribalMotif({ className = "" }: { className?: string }) {
+  return (
+    <svg className={`tribal-motif ${className}`} viewBox="0 0 1200 150" aria-hidden="true" focusable="false">
+      <path className="motif-line" d="M0 88 C120 34 210 126 330 70 S520 28 610 80 S790 132 910 65 S1080 36 1200 82" />
+      <path className="motif-line faint" d="M0 108 C145 58 220 142 354 92 S536 50 634 100 S806 150 930 88 S1090 58 1200 102" />
+      <g className="motif-leaves">
+        <path d="M146 73 q18-28 38-5 q-18 25-38 5M208 91 q16-25 34-3 q-15 22-34 3M972 73 q18-28 38-5 q-18 25-38 5M1044 91 q16-25 34-3 q-15 22-34 3" />
+      </g>
+      <g className="motif-people">
+        <circle cx="490" cy="87" r="6" /><circle cx="545" cy="87" r="6" /><circle cx="655" cy="87" r="6" /><circle cx="710" cy="87" r="6" />
+        <path d="M490 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M545 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M501 109l33 0M655 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M710 94v25m-11-10 11-7 11 7m-11 10-10 18m10-18 10 18M666 109l33 0" />
+      </g>
+      <path className="motif-bird" d="M823 48q18-18 36 0q18-18 36 0q-18-9-36 4q-18-13-36-4Z" />
+      <path className="motif-bird" d="M300 42q12-12 24 0q12-12 24 0q-12-6-24 3q-12-9-24-3Z" />
+      <path className="motif-dots" d="M30 50h420M750 50h420" />
+    </svg>
+  );
+}
+
 /* ---------- PDF READER MODAL ---------- */
 
 export function PdfModal({ doc, onClose }: { doc: PdfDocument; onClose: () => void }) {
@@ -696,36 +716,31 @@ export function Home({ navigate }: { navigate: Nav }) {
     <div className="museum-home">
       {modalPdf && <PdfModal doc={modalPdf} onClose={() => setModalPdf(null)} />}
 
-      <section className="home-hero">
-        <figure className="home-hero-art">
-          <img
-            src="/images/hero-background.png"
-            width={1672}
-            height={941}
-            loading="eager"
-            fetchPriority="high"
-            alt={hi
-              ? "गोंड चित्रकला — जीवन-वृक्ष, पुस्तक, वाद्य और समुदाय"
-              : "Gond art — the tree of life, a book, a drum and community"}
-          />
-          <figcaption>जय सेवा · जय बड़ादेव · जय बूढ़ादेव</figcaption>
-        </figure>
-        <div className="home-hero-copy">
-          <p className="hero-eyebrow">अनन्तानन्द मानव · {hi ? "लेखक" : "Author"}</p>
-          <h1>प्राप्तस्य प्राप्ति</h1>
-          <p className="hero-sub">
-            {hi ? "मानव जीवन का मूल संविधान" : "The Fundamental Constitution of Human Life"}
-          </p>
-          <p className="hero-quote">
-            {hi ? "जो प्राप्त है, उसकी ओर लौटने का निमंत्रण।" : "An invitation to return to what is already present."}
-          </p>
-          <div className="hero-actions">
-            <button onClick={() => navigate({ name: "articles", readId: COMPLETE_BOOK_ID, readPage: 1 })} className="btn-primary">
-              {hi ? "पूरा ग्रंथ पढ़ें" : "Read the complete book"} <ArrowRight className="w-4 h-4" />
-            </button>
-            <button onClick={() => navigate({ name: "articles" })} className="btn-ghost">
-              {hi ? "सभी रचनाएँ" : "All writings"}
-            </button>
+      <section className="banyan-hero">
+        <TribalMotif className="hero-motif" />
+        <div className="hero-seal">
+          <img src="/images/praptasya-logo.png" alt="प्राप्तस्य प्राप्ति का चिह्न" width={512} height={512} fetchPriority="high" />
+        </div>
+        <div className="hero-copy sanctuary-copy">
+          <div className="hero-panel">
+            <p className="hero-eyebrow">अनन्तानन्द मानव · {hi ? "लेखक" : "Author"}</p>
+            <p className="hero-kicker hero-invocation">जय सेवा जय बड़ादेव जय बूढ़ादेव</p>
+            <h1>प्राप्तस्य प्राप्ति</h1>
+            <h2>{hi ? "मानव जीवन का मूल संविधान" : "The Fundamental Constitution of Human Life"}</h2>
+            <blockquote>
+              {hi ? "जो प्राप्त है, उसकी ओर लौटने का निमंत्रण।" : "An invitation to return to what is already present."}
+            </blockquote>
+            <div className="hero-actions">
+              <button onClick={() => navigate({ name: "articles", readId: COMPLETE_BOOK_ID, readPage: 1 })} className="btn-primary">
+                {hi ? "पूरा ग्रंथ पढ़ें" : "Read the complete book"} <ArrowRight className="w-4 h-4" />
+              </button>
+              <button onClick={() => navigate({ name: "articles" })} className="btn-ghost">
+                {hi ? "सभी रचनाएँ" : "All writings"}
+              </button>
+              <button onClick={() => navigate({ name: "gallery" })} className="btn-ghost">
+                <Play className="w-4 h-4 text-saffron" /> {hi ? "वीडियो देखें" : "Watch videos"}
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -1655,7 +1670,7 @@ export function GondCulture() {
         <div className="culture-hero-copy">
           <div className="culture-hero-inner">
             <Kicker>{isHindi ? "मध्य भारत की सांस्कृतिक स्मृति" : isGondi ? "गोंडी भाषा" : "Cultural memory of central India"}</Kicker>
-            <h1>{isHindi ? "गोंड संस्कृति और गोंडवाना" : isGondi ? "कोइतूर संस्कृति अर गोंडवाना" : "Gond Culture and Gondwana"}</h1>
+            <h1>{isHindi ? "गोंडी संस्कृति और गोंडवाना" : isGondi ? "कोइतूर संस्कृति अर गोंडवाना" : "Gond Culture and Gondwana"}</h1>
             <p>{isHindi ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में भाषा, प्रकृति, इतिहास, आस्था और सामुदायिक जीवन का परिचय।" : isGondi ? "मध्य प्रदेश और छत्तीसगढ़ की गोंडी भाषा में समुदाय-समीक्षित अनुवाद।" : "An introduction to language, ecology, history, faith, and community life, focused on Madhya Pradesh and Chhattisgarh."}</p>
             <div className="culture-language" role="group" aria-label="Culture page language">
               <button className={cultureLanguage === "hi" ? "active" : ""} onClick={() => setCultureLanguage("hi")}>हिंदी</button>
@@ -1666,7 +1681,7 @@ export function GondCulture() {
         </div>
       </header>
       <figure className="culture-artwork">
-        <img src="/images/gondi-culture.png" alt="गोंड संस्कृति की जड़ों, आस्था, प्रकृति, कला, उत्सव और सामुदायिक जीवन को दर्शाती वर्णनात्मक चित्रकला" />
+        <img src="/images/gondi-culture.png" alt="गोंडी संस्कृति की जड़ों, आस्था, प्रकृति, कला, उत्सव और सामुदायिक जीवन को दर्शाती वर्णनात्मक चित्रकला" />
       </figure>
 
       <div className="culture-content">
