@@ -721,7 +721,7 @@ export function Home({ navigate }: { navigate: Nav }) {
         <div className="hero-seal">
           <img src="/images/praptasya-logo.png" alt="प्राप्तस्य प्राप्ति का चिह्न" width={512} height={512} fetchPriority="high" />
         </div>
-        <div className="hero-copy sanctuary-copy">
+        <div className="hero-copy">
           <div className="hero-panel">
             <p className="hero-eyebrow">अनन्तानन्द मानव · {hi ? "लेखक" : "Author"}</p>
             <p className="hero-kicker hero-invocation">जय सेवा जय बड़ादेव जय बूढ़ादेव</p>

@@ -164,10 +164,10 @@ html { scroll-behavior: smooth; }
   position: relative;
   min-height: calc(100svh - 64px);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   overflow: hidden;
-  padding: clamp(4rem, 9vh, 6rem) 1.25rem clamp(3rem, 6vh, 4rem);
+  padding: clamp(2.25rem, 6vh, 4rem) 1.25rem clamp(3rem, 6vh, 4rem);
   background:
     linear-gradient(180deg, rgba(247, 243, 234, 0.16) 0%, rgba(247, 243, 234, 0.4) 55%, rgba(247, 243, 234, 0.9) 92%),
     url("/images/hero-background.png") center / cover no-repeat,
@@ -175,12 +175,10 @@ html { scroll-behavior: smooth; }
   color: var(--color-maroon-deep);
 }
 
-/* Centered circular logo seal */
+/* Centered circular logo seal — in flow at the top so it never collides with the copy */
 .hero-seal {
-  position: absolute;
-  top: clamp(1rem, 3.5vh, 2.5rem);
-  left: 0;
-  right: 0;
+  position: relative;
+  flex: 0 0 auto;
   z-index: 3;
   width: clamp(140px, 19vw, 215px);
   margin-inline: auto;
@@ -219,8 +217,13 @@ html { scroll-behavior: smooth; }
 .hero-copy {
   position: relative;
   z-index: 2;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: min(760px, 100%);
   margin: 0 auto;
+  padding: clamp(1.25rem, 3.5vh, 2.25rem) 0 clamp(1.5rem, 4vh, 2.5rem);
   text-align: center;
 }
 .hero-panel {
@@ -1126,8 +1129,9 @@ html { scroll-behavior: smooth; }
    Responsive
    ------------------------------------------------------------------ */
 @media (max-width: 900px) {
-  .banyan-hero { min-height: auto; padding-top: clamp(4.5rem, 10vh, 5.5rem); }
+  .banyan-hero { min-height: auto; padding: clamp(2.25rem, 7vh, 3.75rem) 1.25rem clamp(2.75rem, 6vh, 3.5rem); }
   .hero-seal { width: clamp(124px, 26vw, 168px); }
+  .hero-copy { padding-top: clamp(1.5rem, 4.5vh, 2.25rem); }
   .hero-motif { opacity: 0.45; }
   .section-grid,
   .book-feature,
