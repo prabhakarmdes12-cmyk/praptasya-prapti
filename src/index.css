@@ -131,13 +131,13 @@ html { scroll-behavior: smooth; }
   position: relative;
   min-height: calc(100svh - 80px);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 1.25rem 1.25rem clamp(1.25rem, 6vh, 3.25rem);
+  padding: 1.25rem 1.25rem 2rem;
   background:
-    linear-gradient(180deg, rgba(250, 241, 228, 0) 0%, rgba(250, 241, 228, 0.14) 30%, rgba(250, 241, 228, 0.78) 56%, rgba(250, 241, 228, 0.96) 74%, #efe7d6 88%),
-    url("/images/hero background.png") center top / cover no-repeat,
+    radial-gradient(ellipse 78% 66% at 50% 56%, rgba(250, 241, 228, 0.92) 0%, rgba(250, 241, 228, 0.68) 40%, rgba(250, 241, 228, 0.22) 68%, rgba(250, 241, 228, 0) 100%),
+    url("/images/hero-background.png") center / cover no-repeat,
     #efe7d6;
   color: #3a2410;
 }
@@ -152,7 +152,7 @@ html { scroll-behavior: smooth; }
 .sanctuary-copy {
   width: min(780px, 92vw);
   margin: 0;
-  padding-top: 0;
+  padding-top: min(34vw, 335px);
   text-align: center;
 }
 
@@ -184,8 +184,7 @@ html { scroll-behavior: smooth; }
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(239, 231, 214, 0.18);
 }
 
-/* Seal is intentionally unused now that the hero artwork carries the emblem */
-.banyan-hero .hero-seal { display: none; }
+.banyan-hero .hero-seal { display: block; }
 
 .sanctuary-motif {
   display: block;
@@ -213,7 +212,7 @@ html { scroll-behavior: smooth; }
 .hero-motif {
   position: absolute;
   inset: auto 0 0;
-  z-index: 0;
+  z-index: 1;
   color: rgba(125, 77, 32, 0.35);
 }
 
@@ -843,7 +842,7 @@ html { scroll-behavior: smooth; }
     min-height: calc(100svh - 80px);
   }
 
-  .sanctuary-copy { padding-top: 0; }
+  .sanctuary-copy { padding-top: 270px; }
 
   .hero-seal { width: min(245px, 62vw); }
 
@@ -886,7 +885,7 @@ html { scroll-behavior: smooth; }
   .hero-copy h1 { font-size: 3rem; }
   .hero-copy h2 { font-size: 1.25rem; }
   .hero-copy blockquote { font-size: 1rem; }
-  .sanctuary-copy { padding-top: 0; }
+  .sanctuary-copy { padding-top: 245px; }
   .culture-hero-copy { min-height: 480px; padding-block: 4.5rem 7rem; }
   .culture-artwork { padding: 0.35rem; }
   .culture-language { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
