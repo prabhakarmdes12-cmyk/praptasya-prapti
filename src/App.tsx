@@ -2,22 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Volume2, VolumeX, X } from "lucide-react";
 import {
-  Home, About, Book, Philosophy, Articles, ArticleDetail,
+  Home, About, Book, Philosophy, LibraryHub, ArticleDetail,
   Gallery, Events, Contact, GondCulture, type Route, type Nav,
 } from "./pages";
 import { articles } from "./data";
 import { LanguageProvider, type Language } from "./i18n";
 
-const NAV_ITEMS: { hi: string; en: string; gon: string; route: Route }[] = [
-  { hi: "मुखपृष्ठ", en: "Home", gon: "मुखपृष्ठ", route: { name: "home" } },
-  { hi: "दर्शन", en: "Philosophy", gon: "दर्शन", route: { name: "philosophy" } },
-  { hi: "ग्रंथ", en: "Book", gon: "ग्रंथ", route: { name: "book" } },
-  { hi: "लेखक", en: "Author", gon: "लेखक", route: { name: "about" } },
-  { hi: "गोंड संस्कृति", en: "Gond Culture", gon: "कोइतूर संस्कृति", route: { name: "culture" } },
-  { hi: "ज्ञानालय", en: "Library", gon: "ज्ञानालय", route: { name: "articles" } },
-  { hi: "मीडिया", en: "Media", gon: "मीडिया", route: { name: "gallery" } },
-  { hi: "आयोजन", en: "Events", gon: "कार्यक्रम", route: { name: "events" } },
-  { hi: "संपर्क", en: "Contact", gon: "संपर्क", route: { name: "contact" } },
+const NAV_ITEMS: { hi: string; en: string; route: Route }[] = [
+  { hi: "मुखपृष्ठ", en: "Home", route: { name: "home" } },
+  { hi: "पढ़ें", en: "Read", route: { name: "articles" } },
+  { hi: "दर्शन", en: "Philosophy", route: { name: "philosophy" } },
+  { hi: "लेखक", en: "Author", route: { name: "about" } },
+  { hi: "गोंड संस्कृति", en: "Gond Culture", route: { name: "culture" } },
+  { hi: "आयोजन", en: "Events", route: { name: "events" } },
+  { hi: "संपर्क", en: "Contact", route: { name: "contact" } },
 ];
 
 function LanguageSelect({ value, onChange }: { value: Language; onChange: (language: Language) => void }) {
@@ -25,7 +23,6 @@ function LanguageSelect({ value, onChange }: { value: Language; onChange: (langu
     <select className="language-select" value={value} onChange={(event) => onChange(event.target.value as Language)} aria-label="Website language">
       <option value="hi">हिंदी</option>
       <option value="en">English</option>
-      <option value="gon">गोंडी</option>
     </select>
   );
 }
@@ -33,7 +30,15 @@ function LanguageSelect({ value, onChange }: { value: Language; onChange: (langu
 function routePath(route: Route) {
   if (route.name === "home") return "/";
   if (route.name === "about") return "/author";
-  if (route.name === "articles") return "/library";
+  if (route.name === "articles") {
+    const q = new URLSearchParams();
+    if (route.readId) {
+      q.set("read", route.readId);
+      if (route.readPage && route.readPage > 1) q.set("page", String(route.readPage));
+    }
+    const s = q.toString();
+    return s ? `/library?${s}` : "/library";
+  }
   if (route.name === "gallery") return "/media";
   if (route.name === "culture") return "/gond-culture";
   if (route.name === "article") return `/library/${route.slug}`;
@@ -42,9 +47,13 @@ function routePath(route: Route) {
 
 function routeFromPath(pathname: string): Route {
   const path = pathname.replace(/\/$/, "") || "/";
+  const q = new URLSearchParams(window.location.search);
+  const readId = q.get("read") || undefined;
+  const pageNum = Number(q.get("page"));
+  const readPage = Number.isFinite(pageNum) && pageNum > 1 ? Math.floor(pageNum) : undefined;
   if (path === "/") return { name: "home" };
   if (path === "/author") return { name: "about" };
-  if (path === "/library") return { name: "articles" };
+  if (path === "/library") return { name: "articles", readId, readPage };
   if (path === "/media") return { name: "gallery" };
   if (path === "/gond-culture") return { name: "culture" };
   if (path.startsWith("/library/")) return { name: "article", slug: path.slice(9) };
@@ -60,9 +69,9 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem("praptasya-language");
-    return saved === "en" || saved === "gon" ? saved : "hi";
+    return saved === "en" ? saved : "hi";
   });
-  const [soundOn, setSoundOn] = useState(() => localStorage.getItem("praptasya-sound") !== "off");
+  const [soundOn, setSoundOn] = useState(() => localStorage.getItem("praptasya-sound") === "on");
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const navigate: Nav = (r) => {
@@ -73,9 +82,6 @@ export default function App() {
 
   const changeLanguage = (nextLanguage: Language) => {
     setLanguage(nextLanguage);
-    if (nextLanguage === "gon" && route.name !== "culture") {
-      navigate({ name: "culture" });
-    }
   };
 
   useEffect(() => {
@@ -86,12 +92,27 @@ export default function App() {
 
   useEffect(() => {
     const isCulture = route.name === "culture";
+    const titleFor = (t: string) => `${t} | अनन्तानन्द मानव`;
     document.title = isCulture
-      ? "गोंड संस्कृति, गोंडी भाषा और गोंडवाना | प्राप्तस्य प्राप्ति"
-      : "प्राप्तस्य प्राप्ति | मानव जीवन का मूल संविधान";
+      ? titleFor("गोंड संस्कृति, गोंडी भाषा और गोंडवाना")
+      : route.name === "articles" || route.name === "book"
+        ? titleFor("पढ़ें — निःशुल्क कृतियाँ एवं पुस्तकें")
+        : route.name === "about"
+          ? titleFor("लेखक परिचय")
+          : route.name === "philosophy"
+            ? titleFor("विचार-दर्शन")
+            : route.name === "gallery"
+              ? titleFor("वीडियो एवं कला-दीर्घा")
+              : route.name === "events"
+                ? titleFor("आयोजन")
+                : route.name === "contact"
+                  ? titleFor("संपर्क")
+                  : route.name === "article"
+                    ? titleFor(articles.find((a) => a.slug === route.slug)?.title ?? "विचार-लेख")
+                    : titleFor("लेखक — प्राप्तस्य प्राप्ति");
     const description = isCulture
       ? "मध्य प्रदेश और छत्तीसगढ़ के संदर्भ में गोंड संस्कृति, गोंडी भाषा, मौखिक परंपराओं, प्रकृति, कला और सामुदायिक जीवन का परिचय।"
-      : "प्राप्तस्य प्राप्ति — मानव जीवन, स्वतंत्रता, ज्ञान और समाज पर अनन्तानन्द मानव की विचार-यात्रा।";
+      : "अनन्तानन्द मानव (हरनारायण साह) की निःशुल्क कृतियाँ — 'प्राप्तस्य प्राप्ति' सहित सम्पूर्ण पुस्तकें ऑनलाइन पढ़ें और PDF डाउनलोड करें।";
     let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!meta) {
       meta = document.createElement("meta");
@@ -173,12 +194,14 @@ export default function App() {
   }, [soundOn]);
 
   const isActive = (r: Route) =>
-    r.name === route.name || (route.name === "article" && r.name === "articles");
+    r.name === route.name ||
+    (route.name === "article" && r.name === "articles") ||
+    (route.name === "book" && r.name === "articles");
 
   return (
     <LanguageProvider language={language}>
     <div className="min-h-screen flex flex-col paper-texture" lang={language}>
-      <audio ref={audioRef} src="/audio/sanctuary-music.mp3" autoPlay loop preload="auto" playsInline />
+      <audio ref={audioRef} src="/audio/sanctuary-music.mp3" autoPlay loop preload="none" playsInline />
       <button
         type="button"
         className={`sound-toggle ${soundOn ? "is-on" : ""}`}
@@ -195,9 +218,9 @@ export default function App() {
             <button onClick={() => navigate({ name: "home" })} className="brand-lockup">
               <img src="/images/praptasya-logo.png" alt="" />
               <span>
-              <span className="block font-serif text-xl text-maroon">प्राप्तस्य प्राप्ति</span>
+              <span className="block font-serif text-xl text-maroon">अनन्तानन्द मानव</span>
               <span className="block font-body text-[0.65rem] tracking-[0.3em] uppercase text-saffron-deep mt-1">
-                {language === "en" ? "Human Constitution" : language === "gon" ? "मानवा जीवना ता मूल संविधान" : "मानव जीवन का मूल संविधान"}
+                {language === "en" ? "Author · Praptasya Prapti" : "लेखक · प्राप्तस्य प्राप्ति"}
               </span>
               </span>
             </button>
@@ -274,10 +297,11 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-5 py-16">
           <div className="grid md:grid-cols-3 gap-10">
             <div>
-              <h3 className="font-serif text-2xl text-paper mb-3">प्राप्तस्य प्राप्ति</h3>
+              <h3 className="font-serif text-2xl text-paper mb-3">अनन्तानन्द मानव</h3>
               <p className="font-body text-paper/70 leading-relaxed text-sm">
-                मानव जीवन के मूल प्रश्नों पर एक स्वतंत्र विचार-यात्रा। यहाँ प्रस्तुत सभी विचार
-                लेखक के स्वतंत्र विचार हैं।
+                {language === "en"
+                  ? "Writings by Anantanand Manav — all books and works are free to read, download and share."
+                  : "अनन्तानन्द मानव की कृतियाँ — सभी पुस्तकें एवं लेखन पढ़ने व साझा करने के लिए पूर्णतः निःशुल्क हैं।"}
               </p>
             </div>
             <div>
@@ -292,16 +316,16 @@ export default function App() {
               </div>
             </div>
             <div>
-              <h4 className="font-body text-xs tracking-[0.3em] uppercase text-gold-soft mb-4">संपर्क</h4>
-              <p className="font-body text-sm text-paper/70">व्हाट्सऐप · ईमेल · डाक</p>
+              <h4 className="font-body text-xs tracking-[0.3em] uppercase text-gold-soft mb-4">{language === "en" ? "Contact" : "संपर्क"}</h4>
+              <p className="font-body text-sm text-paper/70">WhatsApp · Email · Post</p>
               <button onClick={() => navigate({ name: "contact" })} className="mt-4 font-body text-sm text-gold-soft hover:text-paper transition-colors underline underline-offset-4">
-                ग्रंथ की प्रति मँगाएँ →
+                {language === "en" ? "Reach the author →" : "लेखक से जुड़ें →"}
               </button>
             </div>
           </div>
           <div className="gold-rule w-full my-10 opacity-40" />
           <p className="font-body text-center text-xs text-paper/50">
-            © {new Date().getFullYear()} प्राप्तस्य प्राप्ति · समस्त विचार लेखक के स्वतंत्र विचार हैं · Built in India
+            © {new Date().getFullYear()} अनन्तानन्द मानव · {language === "en" ? "All works are free to read, download and share." : "सभी रचनाएँ निःशुल्क पढ़ने, डाउनलोड करने व साझा करने हेतु उपलब्ध हैं।"} · Built in India
           </p>
         </div>
       </footer>
@@ -316,14 +340,20 @@ function Page({ route, navigate }: { route: Route; navigate: Nav }) {
     case "about": return <About navigate={navigate} />;
     case "book": return <Book navigate={navigate} />;
     case "philosophy": return <Philosophy navigate={navigate} />;
-    case "articles": return <Articles navigate={navigate} />;
+    case "articles":
+      return (
+        <LibraryHub
+          navigate={navigate}
+          initialRead={route.readId ? { id: route.readId, page: route.readPage || 1 } : undefined}
+        />
+      );
     case "gallery": return <Gallery />;
     case "events": return <Events navigate={navigate} />;
     case "contact": return <Contact />;
     case "culture": return <GondCulture />;
     case "article": {
       const article = articles.find((a) => a.slug === route.slug);
-      if (!article) return <Articles navigate={navigate} />;
+      if (!article) return <LibraryHub navigate={navigate} />;
       return <ArticleDetail article={article} navigate={navigate} />;
     }
   }

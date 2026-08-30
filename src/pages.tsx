@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Feather, BookOpen, Sparkles, ArrowRight, ArrowLeft,
   Quote, Phone, Mail, MapPin, MessageCircle, Calendar, Clock,
   ScrollText, Palette, Play, ExternalLink, Download, FileText,
-  Video, Film, Eye, X, CheckCircle2, ChevronRight, User, BookCheck,
-  Search, ZoomIn, ZoomOut, RotateCcw, Layers, Bookmark,
+  Video, Film, Eye, X, CheckCircle2, User,
+  Search, ZoomIn, ZoomOut, RotateCcw, ArrowUpRight,
 } from "lucide-react";
 import {
   quotes, philosophyPillars, chapters, articles, events, gallery,
-  pdfDocuments, videoItems, manuscriptPages,
-  type Article, type PdfDocument, type VideoItem, type PdfCategory, type ManuscriptPage,
+  pdfDocuments, videoItems, manuscriptPages, COMPLETE_BOOK_ID,
+  type Article, type PdfDocument, type VideoItem, type PdfCategory,
 } from "./data";
+import { PdfReader, ShareButtons, DownloadAllZip, ReaderSignup, readStoredPage } from "./reader";
 import { useLanguage } from "./i18n";
 
 export type Route =
@@ -19,7 +20,7 @@ export type Route =
   | { name: "about" }
   | { name: "book" }
   | { name: "philosophy" }
-  | { name: "articles" }
+  | { name: "articles"; readId?: string; readPage?: number }
   | { name: "gallery" }
   | { name: "events" }
   | { name: "contact" }
@@ -540,14 +541,20 @@ export function ManuscriptSection({ className = "" }: { className?: string }) {
 
 /* ---------- PDF REPOSITORY COMPONENT ---------- */
 
-export function PdfRepository({ onSelectPdf }: { onSelectPdf: (doc: PdfDocument) => void }) {
+export function PdfRepository({
+  onRead,
+  onManuscript,
+}: {
+  onRead: (doc: PdfDocument) => void;
+  onManuscript: (doc: PdfDocument) => void;
+}) {
   const language = useLanguage();
   const hi = language !== "en";
   const [selectedCategory, setSelectedCategory] = useState<PdfCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   const categories: { key: PdfCategory; hi: string; en: string }[] = [
-    { key: "all", hi: "सभी दस्तावेज (9)", en: "All (9)" },
+    { key: "all", hi: "सभी रचनाएँ (9)", en: "All (9)" },
     { key: "book", hi: "मूल ग्रंथ (2)", en: "Books (2)" },
     { key: "manuscript", hi: "मूल पांडुलिपि (1)", en: "Manuscript (1)" },
     { key: "biography", hi: "जीवन-दर्शन (1)", en: "Biography (1)" },
@@ -568,12 +575,17 @@ export function PdfRepository({ onSelectPdf }: { onSelectPdf: (doc: PdfDocument)
     return matchesCategory && matchesSearch;
   });
 
+  const openDoc = (doc: PdfDocument) => {
+    if (doc.category === "manuscript") onManuscript(doc);
+    else onRead(doc);
+  };
+
   return (
     <section className="pdf-repository-section space-y-8">
       {/* Category Tabs & Search Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           {categories.map((cat) => (
             <button
               key={cat.key}
@@ -590,12 +602,12 @@ export function PdfRepository({ onSelectPdf }: { onSelectPdf: (doc: PdfDocument)
         </div>
 
         {/* Search */}
-        <div className="relative w-full md:w-64">
+        <div className="relative w-full lg:w-72">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={hi ? "ग्रंथ व PDF खोजें..." : "Search Library..."}
+            placeholder={hi ? "रचना, ग्रंथ या विषय खोजें…" : "Search writings…"}
             className="w-full pl-9 pr-4 py-2 bg-paper border border-gold/30 rounded-sm font-body text-xs text-ink placeholder-ink-soft/60 focus:outline-none focus:border-saffron"
           />
           <Search className="w-3.5 h-3.5 text-ink-soft absolute left-3 top-1/2 -translate-y-1/2" />
@@ -603,59 +615,74 @@ export function PdfRepository({ onSelectPdf }: { onSelectPdf: (doc: PdfDocument)
       </div>
 
       {/* PDF Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
-        {filteredDocs.map((doc) => (
-          <motion.div
-            key={doc.id}
-            {...fade}
-            className="pdf-card bg-paper-dark/40 border border-gold/30 rounded-sm p-6 flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-saffron/15 text-saffron-deep font-semibold text-[0.7rem] uppercase tracking-wider rounded-xs">
-                  <FileText className="w-3 h-3" />
-                  {hi ? doc.categoryHi : doc.categoryEn}
-                </span>
-                <span className="font-body text-xs text-ink-soft flex items-center gap-1">
-                  <span>{typeof doc.pages === "number" ? `${doc.pages} ${hi ? "पृष्ठ" : "pages"}` : doc.pages}</span>
-                  <span>•</span>
-                  <span>{doc.fileSize}</span>
-                </span>
+      <div className="grid sm:grid-cols-2 gap-6">
+        {filteredDocs.map((doc) => {
+          const isCore = doc.id === COMPLETE_BOOK_ID;
+          const maxPage = typeof doc.pages === "number" ? doc.pages : 60;
+          const savedPage = readStoredPage(doc.id, maxPage);
+          return (
+            <motion.div
+              key={doc.id}
+              {...fade}
+              className={`pdf-card bg-paper-dark/40 border rounded-sm p-6 flex flex-col justify-between ${
+                isCore ? "border-saffron/60 ring-1 ring-saffron/20" : "border-gold/30"
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-saffron/15 text-saffron-deep font-semibold text-[0.7rem] uppercase tracking-wider rounded-xs">
+                    <FileText className="w-3 h-3" />
+                    {hi ? doc.categoryHi : doc.categoryEn}
+                  </span>
+                  <span className="font-body text-xs text-ink-soft flex items-center gap-1">
+                    <span>{typeof doc.pages === "number" ? `${doc.pages} ${hi ? "पृष्ठ" : "pages"}` : doc.pages}</span>
+                    <span>•</span>
+                    <span>{doc.fileSize}</span>
+                  </span>
+                </div>
+
+                <h3 className="text-xl md:text-2xl text-maroon font-serif mb-2 leading-snug">
+                  {hi ? doc.titleHi : doc.titleEn}
+                </h3>
+                <p className="font-body text-ink-soft text-sm leading-relaxed mb-6">
+                  {hi ? doc.descriptionHi : doc.descriptionEn}
+                </p>
               </div>
 
-              <h3 className="text-xl md:text-2xl text-maroon font-serif mb-2 leading-snug">
-                {hi ? doc.titleHi : doc.titleEn}
-              </h3>
-              <p className="font-body text-ink-soft text-sm leading-relaxed mb-6">
-                {hi ? doc.descriptionHi : doc.descriptionEn}
-              </p>
-            </div>
-
-            <div className="pt-4 border-t border-gold/20 flex items-center justify-between gap-3">
-              <button
-                onClick={() => onSelectPdf(doc)}
-                className="inline-flex items-center gap-1.5 font-body text-sm font-medium text-saffron-deep hover:text-maroon transition-colors"
-              >
-                <Eye className="w-4 h-4" />
-                {hi ? "ऑनलाइन पढ़ें" : "Read Online"}
-              </button>
-              <a
-                href={doc.filePath}
-                download
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-paper border border-gold/30 hover:border-saffron text-maroon text-xs font-body font-medium rounded-sm transition-colors"
-              >
-                <Download className="w-3.5 h-3.5 text-saffron-deep" />
-                {hi ? "डाउनलोड" : "Download PDF"}
-              </a>
-            </div>
-          </motion.div>
-        ))}
+              <div className="pt-4 border-t border-gold/20 flex flex-wrap items-center justify-between gap-3">
+                <button
+                  onClick={() => openDoc(doc)}
+                  className="inline-flex items-center gap-1.5 font-body text-sm font-medium text-saffron-deep hover:text-maroon transition-colors"
+                >
+                  <Eye className="w-4 h-4" />
+                  {hi ? "ऑनलाइन पढ़ें" : "Read Online"}
+                </button>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={doc.filePath}
+                    download
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-paper border border-gold/30 hover:border-saffron text-maroon text-xs font-body font-medium rounded-sm transition-colors"
+                  >
+                    <Download className="w-3.5 h-3.5 text-saffron-deep" />
+                    {hi ? (doc.category === "manuscript" ? "स्कैन" : "PDF") : "Download"}
+                  </a>
+                  <ShareButtons doc={doc} compact />
+                </div>
+              </div>
+              {isCore && savedPage > 1 && (
+                <p className="mt-3 pt-3 border-t border-gold/15 font-body text-xs text-saffron-deep">
+                  {hi ? `⏵ आप पृष्ठ ${savedPage} तक पढ़ चुके हैं` : `⏵ You have read up to page ${savedPage}`}
+                </p>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
 
       {filteredDocs.length === 0 && (
         <div className="text-center py-12 bg-paper-dark/30 border border-gold/20 rounded-sm">
           <p className="font-body text-ink-soft text-base">
-            {hi ? "कोई PDF नहीं मिली। कृपया भिन्न खोज शब्द आज़माएँ।" : "No PDFs found matching your query."}
+            {hi ? "कोई रचना नहीं मिली। कृपया भिन्न खोज शब्द आज़माएँ।" : "No writings found matching your query."}
           </p>
         </div>
       )}
@@ -694,19 +721,6 @@ export function Home({ navigate }: { navigate: Nav }) {
     },
   ];
 
-  const timeline = [
-    "Book Introduction",
-    "Religion",
-    "Knowledge",
-    "Human Freedom",
-    "Vasudhaiva Kutumbakam",
-    "Truth",
-    "Human Body",
-    "Karma",
-    "Soul",
-    "Conclusion",
-  ];
-
   const featuredPdfs = pdfDocuments.filter((d) => d.featured);
 
   return (
@@ -719,6 +733,7 @@ export function Home({ navigate }: { navigate: Nav }) {
           <img src="/images/praptasya-logo.png" alt="प्राप्तस्य प्राप्ति का चिह्न" />
         </div>
         <div className="hero-copy sanctuary-copy">
+          <p className="hero-author">अनन्तानन्द मानव · {hi ? "लेखक" : "Author"}</p>
           <p className="hero-kicker hero-invocation">जय सेवा जय बड़ादेव जय बूढ़ादेव</p>
           <h1>प्राप्तस्य प्राप्ति</h1>
           <h2>{hi ? "मानव जीवन का मूल संविधान" : "The Fundamental Constitution of Human Life"}</h2>
@@ -726,11 +741,11 @@ export function Home({ navigate }: { navigate: Nav }) {
             {hi ? "जो प्राप्त है, उसकी ओर लौटने का निमंत्रण।" : "An invitation to return to what is already present."}
           </blockquote>
           <div className="flex flex-col sm:flex-row gap-4 mt-9">
-            <button onClick={() => navigate({ name: "philosophy" })} className="btn-primary">
-              {hi ? "दर्शन पढ़ें" : "Read the Philosophy"} <ArrowRight className="w-4 h-4" />
+            <button onClick={() => navigate({ name: "articles", readId: COMPLETE_BOOK_ID, readPage: 1 })} className="btn-primary">
+              {hi ? "पूरा ग्रंथ पढ़ें" : "Read the complete book"} <ArrowRight className="w-4 h-4" />
             </button>
-            <button onClick={() => navigate({ name: "book" })} className="btn-ghost hero-ghost">
-              {hi ? "ग्रंथ देखें" : "Explore the Book"}
+            <button onClick={() => navigate({ name: "articles" })} className="btn-ghost hero-ghost">
+              {hi ? "सभी रचनाएँ पढ़ें" : "Browse all writings"}
             </button>
             <button onClick={() => navigate({ name: "gallery" })} className="btn-ghost hero-ghost">
               <Play className="w-4 h-4 text-saffron" /> {hi ? "वीडियो देखें" : "Watch Videos"}
@@ -855,7 +870,7 @@ export function Home({ navigate }: { navigate: Nav }) {
               </p>
             </div>
             <button onClick={() => navigate({ name: "articles" })} className="link-arrow mt-4 md:mt-0 shrink-0">
-              {hi ? "सम्पूर्ण ई-पुस्तकालय (9 दस्तावेज)" : "View Complete Library (9 PDFs)"} <ArrowRight className="w-4 h-4" />
+              {hi ? "सम्पूर्ण पुस्तकालय (9 रचनाएँ)" : "View the complete library (9 works)"} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
@@ -880,7 +895,11 @@ export function Home({ navigate }: { navigate: Nav }) {
                 </div>
                 <div className="pt-4 border-t border-gold/20 flex items-center justify-between">
                   <button
-                    onClick={() => setModalPdf(doc)}
+                    onClick={() =>
+                      doc.category === "manuscript"
+                        ? setModalPdf(doc)
+                        : navigate({ name: "articles", readId: doc.id, readPage: 1 })
+                    }
                     className="font-body text-sm font-medium text-saffron-deep hover:text-maroon inline-flex items-center gap-1.5"
                   >
                     <Eye className="w-4 h-4" /> {hi ? "ऑनलाइन पढ़ें" : "Read Online"}
@@ -907,24 +926,28 @@ export function Home({ navigate }: { navigate: Nav }) {
             <img src="/images/book-cover.png" alt="प्राप्तस्य प्राप्ति पुस्तक का आवरण" />
           </div>
           <div>
-            <Kicker>About the Book</Kicker>
-            <h2 className="museum-title">Written by अनन्तानन्द मानव</h2>
+            <Kicker>{hi ? "मुख्य ग्रंथ" : "The core book"}</Kicker>
+            <h2 className="museum-title">{hi ? "लेखक: अनन्तानन्द मानव" : "Written by Anantanand Manav"}</h2>
             <p className="museum-copy">
-              This work presents the author's exploration of human life, knowledge, liberation, social structures, and the vision of a harmonious human society.
+              {hi
+                ? "यह कृति मानव जीवन, ज्ञान, मुक्ति, सामाजिक संरचनाओं और एक सामंजस्यपूर्ण मानव समाज की दृष्टि पर लेखक की खोज प्रस्तुत करती है।"
+                : "This work presents the author's exploration of human life, knowledge, liberation, social structures, and the vision of a harmonious human society."}
             </p>
             <p className="museum-copy">
-              Across twenty-nine chapters, it discusses topics ranging from religion and knowledge to karma, human nature, society, and philosophical questions about existence.
+              {hi
+                ? "धर्म से लेकर ज्ञान, कर्म, मानव स्वभाव, समाज और अस्तित्व के दार्शनिक प्रश्नों तक — यह पुस्तक हर पाठक को स्वयं सोचने का निमंत्रण देती है।"
+                : "Across its chapters, it discusses topics ranging from religion and knowledge to karma, human nature, society, and philosophical questions about existence."}
             </p>
             <div className="flex flex-wrap gap-4 mt-5">
-              <button onClick={() => navigate({ name: "book" })} className="link-arrow">
-                Explore the Book <ArrowRight className="w-4 h-4" />
+              <button onClick={() => navigate({ name: "articles", readId: COMPLETE_BOOK_ID, readPage: 1 })} className="link-arrow">
+                {hi ? "पूरा ग्रंथ अभी पढ़ें" : "Read the full book now"} <ArrowRight className="w-4 h-4" />
               </button>
               <a
                 href="/pdfs/praptasya-prapti-complete-book.pdf"
                 download
                 className="inline-flex items-center gap-1.5 text-xs font-body font-semibold text-saffron-deep underline underline-offset-4"
               >
-                <Download className="w-3.5 h-3.5" /> Download Full Book PDF (7.1 MB)
+                <Download className="w-3.5 h-3.5" /> {hi ? "सम्पूर्ण PDF (7.1 MB)" : "Full Book PDF (7.1 MB)"}
               </a>
             </div>
           </div>
@@ -933,12 +956,12 @@ export function Home({ navigate }: { navigate: Nav }) {
 
       {/* Chapter Rail */}
       <section className="idea-section chapter-band">
-        <Kicker>Journey Through the Chapters</Kicker>
+        <Kicker>{hi ? "अध्यायों की यात्रा" : "Journey through the chapters"}</Kicker>
         <div className="chapter-rail">
-          {timeline.map((item, index) => (
-            <button key={item} onClick={() => navigate({ name: "book" })} className="chapter-node">
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{item}</strong>
+          {chapters.map((c) => (
+            <button key={c.num} onClick={() => navigate({ name: "articles", readId: COMPLETE_BOOK_ID, readPage: 1 })} className="chapter-node">
+              <span>{c.num}</span>
+              <strong>{c.title}</strong>
             </button>
           ))}
         </div>
@@ -982,18 +1005,33 @@ export function Home({ navigate }: { navigate: Nav }) {
 
       {/* Library shortcuts */}
       <section className="idea-section library-section">
-        <Kicker>Knowledge Library</Kicker>
+        <Kicker>{hi ? "पुस्तकालय | शॉर्टकट" : "Library shortcuts"}</Kicker>
         <div className="library-grid">
           {[
-            { label: "Articles", target: "articles" },
-            { label: "PDF Documents (8)", target: "articles" },
-            { label: "Video Messages", target: "gallery" },
-            { label: "Concepts", target: "philosophy" },
-            { label: "Book Chapters", target: "book" },
-            { label: "Events & Discourses", target: "events" },
+            { hi: "पूरा ग्रंथ पढ़ें", en: "Read the full book", target: "articles" as const, readId: COMPLETE_BOOK_ID },
+            { hi: "सभी रचनाएँ (9)", en: "All writings (9)", target: "articles" as const, readId: undefined as string | undefined },
+            { hi: "विचार-लेख", en: "Online essays", target: "article" as const, slug: articles[0].slug },
+            { hi: "वीडियो एवं कला", en: "Videos & art", target: "gallery" as const },
+            { hi: "दर्शन एवं शास्त्र", en: "Philosophy & scripture", target: "philosophy" as const },
+            { hi: "आयोजन", en: "Events", target: "events" as const },
           ].map((item) => (
-            <button key={item.label} onClick={() => navigate({ name: item.target as any })}>
-              {item.label}
+            <button
+              key={item.hi}
+              onClick={() => {
+                if (item.target === "article") {
+                  navigate({ name: "article", slug: (item as { slug: string }).slug });
+                } else if (item.target === "articles") {
+                  navigate({ name: "articles", readId: item.readId, readPage: item.readId ? 1 : undefined });
+                } else if (item.target === "gallery") {
+                  navigate({ name: "gallery" });
+                } else if (item.target === "philosophy") {
+                  navigate({ name: "philosophy" });
+                } else {
+                  navigate({ name: "events" });
+                }
+              }}
+            >
+              <span>{hi ? item.hi : item.en}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           ))}
@@ -1008,7 +1046,6 @@ export function Home({ navigate }: { navigate: Nav }) {
 export function About({ navigate }: { navigate: Nav }) {
   const language = useLanguage();
   const hi = language !== "en";
-  const [modalPdf, setModalPdf] = useState<PdfDocument | null>(null);
 
   const blocks = [
     { icon: ScrollText, title: "जीवन यात्रा", text: "एक साधारण जीवन से आरंभ हुई यह यात्रा प्रश्नों से भरी रही। हर अनुभव, हर संघर्ष ने चिंतन को गहराई दी और लेखक को मूल प्रश्नों की ओर मोड़ा।" },
@@ -1020,8 +1057,6 @@ export function About({ navigate }: { navigate: Nav }) {
 
   return (
     <div className="max-w-5xl mx-auto px-5 py-20 md:py-24">
-      {modalPdf && <PdfModal doc={modalPdf} onClose={() => setModalPdf(null)} />}
-
       <PageHead
         kicker="लेखक परिचय"
         title="लेखक की विचार-यात्रा"
@@ -1078,7 +1113,10 @@ export function About({ navigate }: { navigate: Nav }) {
               {hi ? bioPdf.descriptionHi : bioPdf.descriptionEn}
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <button onClick={() => setModalPdf(bioPdf)} className="btn-primary py-2 px-5 text-sm">
+              <button
+                onClick={() => navigate({ name: "articles", readId: bioPdf.id, readPage: 1 })}
+                className="btn-primary py-2 px-5 text-sm"
+              >
                 <Eye className="w-4 h-4" /> {hi ? "जीवनी आलेख पढ़ें (15 पृष्ठ)" : "Read Biography (15 pages)"}
               </button>
               <a href={bioPdf.filePath} download className="btn-ghost py-2 px-5 text-sm">
@@ -1104,182 +1142,7 @@ export function About({ navigate }: { navigate: Nav }) {
 /* ---------- BOOK ---------- */
 
 export function Book({ navigate }: { navigate: Nav }) {
-  const language = useLanguage();
-  const hi = language !== "en";
-  const [modalPdf, setModalPdf] = useState<PdfDocument | null>(null);
-
-  const completeBookPdf = pdfDocuments.find((d) => d.id === "praptasya-prapti-complete") || pdfDocuments[0];
-  const draftBookPdf = pdfDocuments.find((d) => d.id === "book-2022") || pdfDocuments[7];
-
-  const reasons = [
-    "मूल प्रश्नों पर एक निर्भीक एवं स्वतंत्र दृष्टि",
-    "किसी मत का प्रचार नहीं, विवेक जगाने का प्रयास",
-    "सरल भाषा में गहन दार्शनिक विचार",
-    "दैनिक जीवन में उतारने योग्य चिंतन",
-  ];
-
-  return (
-    <div className="max-w-6xl mx-auto px-5 py-20 md:py-24">
-      {modalPdf && <PdfModal doc={modalPdf} onClose={() => setModalPdf(null)} />}
-
-      <PageHead
-        kicker="प्रमुख ग्रंथ"
-        title="प्राप्तस्य प्राप्ति"
-        sub="जो प्राप्त है, उसी की प्राप्ति — मानव जीवन के मूल प्रश्नों पर आठ अध्यायों की विचार-यात्रा।"
-      />
-
-      {/* Online Book Preview */}
-      <section className="book-reader" aria-label="Ten page book preview">
-        <div className="reader-heading">
-          <div>
-            <Kicker>{hi ? "ऑनलाइन पाठ" : "Read online"}</Kicker>
-            <h2>{hi ? "ग्रंथ के प्रथम दस पृष्ठ" : "The first ten pages"}</h2>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setModalPdf(completeBookPdf)}
-              className="btn-ghost py-2 px-4 text-xs font-body"
-            >
-              <Eye className="w-4 h-4" /> {hi ? "सम्पूर्ण ग्रंथ देखें (PDF)" : "View Complete Book"}
-            </button>
-            <a
-              href="/pdfs/praptasya-prapti-complete-book.pdf"
-              download
-              className="btn-primary py-2 px-4 text-xs font-body"
-            >
-              <Download className="w-4 h-4" /> {hi ? "सम्पूर्ण PDF डाउनलोड" : "Download Full PDF"}
-            </a>
-          </div>
-        </div>
-        <div className="reader-frame">
-          <object data="/book-preview.pdf#toolbar=0&navpanes=0&view=FitH" type="application/pdf" aria-label="प्राप्तस्य प्राप्ति के प्रथम दस पृष्ठ">
-            <p>{hi ? "इस ब्राउज़र में PDF पूर्वावलोकन उपलब्ध नहीं है।" : "PDF preview is not available in this browser."}</p>
-          </object>
-        </div>
-        <div className="reader-footer">
-          <p className="reader-note">
-            {hi
-              ? "ऑनलाइन पूर्वावलोकन के अतिरिक्त आप सम्पूर्ण ग्रंथ का डिजिटल PDF संस्करण भी डाउनलोड कर सकते हैं।"
-              : "In addition to the online preview, you can download the full digital PDF edition of the book."}
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <a href="/pdfs/praptasya-prapti-complete-book.pdf" download className="btn-primary">
-              <Download className="w-4 h-4" /> {hi ? "सम्पूर्ण ग्रंथ PDF (7.1 MB)" : "Full PDF (7.1 MB)"}
-            </a>
-            <button onClick={() => navigate({ name: "contact" })} className="btn-ghost">
-              {hi ? "हार्डकॉपी खरीद अनुरोध" : "Purchase Hardcopy"} <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <SanctuaryMotif />
-
-      <div className="grid md:grid-cols-5 gap-12 items-start">
-        <motion.div {...fade} className="md:col-span-2 md:sticky md:top-28 space-y-6">
-          <div className="relative mx-auto max-w-xs">
-            <div className="absolute -inset-4 bg-maroon/5 rounded-sm rotate-1" />
-            <img src="/images/book-cover.png" alt="प्राप्तस्य प्राप्ति पुस्तक का आवरण" className="relative w-full rounded-sm shadow-2xl" loading="lazy" />
-          </div>
-
-          <div className="bg-paper-dark/60 border border-gold/30 rounded-sm p-5 space-y-3">
-            <h4 className="font-serif text-lg text-maroon">{hi ? "डिजिटल संस्करण उपलब्ध" : "Digital Editions"}</h4>
-            <div className="space-y-2">
-              <button
-                onClick={() => setModalPdf(completeBookPdf)}
-                className="w-full text-left p-2.5 rounded-sm bg-paper border border-gold/20 hover:border-saffron flex items-center justify-between text-xs font-body text-maroon font-medium"
-              >
-                <span>{hi ? "सम्पूर्ण ग्रंथ (PDF)" : "Complete Book (PDF)"}</span>
-                <Eye className="w-4 h-4 text-saffron-deep" />
-              </button>
-              <button
-                onClick={() => setModalPdf(draftBookPdf)}
-                className="w-full text-left p-2.5 rounded-sm bg-paper border border-gold/20 hover:border-saffron flex items-center justify-between text-xs font-body text-maroon font-medium"
-              >
-                <span>{hi ? "संक्षिप्त संस्करण 2022 (PDF)" : "Concise Edition 2022 (PDF)"}</span>
-                <Eye className="w-4 h-4 text-saffron-deep" />
-              </button>
-            </div>
-          </div>
-
-          <button onClick={() => navigate({ name: "contact" })} className="btn-primary w-full justify-center">
-            {hi ? "हार्डकॉपी मँगाएँ" : "Order Hardcopy"}
-          </button>
-          <p className="font-body text-center text-sm text-ink-soft">डाक अथवा व्हाट्सऐप द्वारा उपलब्ध</p>
-        </motion.div>
-
-        <motion.div {...fade} className="md:col-span-3 space-y-12">
-          <div>
-            <h2 className="text-2xl text-maroon mb-4">ग्रंथ-सार</h2>
-            <p className="font-body text-lg text-ink-soft leading-relaxed mb-4">
-              'प्राप्तस्य प्राप्ति' इस विरोधाभास से आरंभ होती है कि मनुष्य जीवन-भर उसे बाहर खोजता है
-              जो पहले से उसके भीतर विद्यमान है। यह ग्रंथ उसी 'प्राप्त' की ओर लौटने का मार्ग सुझाता है।
-            </p>
-            <p className="font-body text-lg text-ink-soft leading-relaxed">
-              धर्म, ईश्वर, गुरु और मानवता जैसे शाश्वत विषयों पर यह पुस्तक कोई अंतिम उत्तर नहीं देती —
-              यह पाठक को स्वयं प्रश्न पूछने और उत्तर खोजने के लिए प्रेरित करती है।
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-2xl text-maroon mb-5">विषय सूची</h2>
-            <div className="space-y-3">
-              {chapters.map((c) => (
-                <div key={c.num} className="flex gap-4 items-start bg-paper-dark/50 border border-gold/20 rounded-sm p-4">
-                  <span className="font-serif text-2xl text-saffron-deep w-8 text-center shrink-0">{c.num}</span>
-                  <div>
-                    <h4 className="text-lg text-maroon">{c.title}</h4>
-                    <p className="font-body text-ink-soft text-sm">{c.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-2xl text-maroon mb-4">नमूना पृष्ठ</h2>
-            <blockquote className="paper-texture border-l-4 border-saffron rounded-sm p-6 md:p-8">
-              <p className="font-serif text-xl md:text-2xl text-ink leading-[1.8] italic">
-                “मनुष्य पूछता है — मुझे क्या पाना है? और यही प्रश्न उसे भटकाता है। सही प्रश्न है —
-                जो मेरे पास पहले से है, उसे मैं क्यों नहीं देख पाता?”
-              </p>
-              <p className="font-body text-sm text-ink-soft mt-4">— अध्याय २, प्राप्तस्य प्राप्ति</p>
-            </blockquote>
-          </div>
-
-          <div>
-            <h2 className="text-2xl text-maroon mb-4">यह ग्रंथ क्यों पढ़ें</h2>
-            <ul className="space-y-3">
-              {reasons.map((r) => (
-                <li key={r} className="flex gap-3 items-start font-body text-lg text-ink-soft">
-                  <span className="text-gold text-xl leading-none mt-1">❖</span> {r}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </motion.div>
-      </div>
-
-      <div className="gold-rule w-full my-16 opacity-50" />
-
-      {/* Original Manuscript Spotlight in Book Page */}
-      <section className="mt-12">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <Kicker>{hi ? "हस्तलिखित पांडुलिपि" : "Original Manuscript"}</Kicker>
-          <h2 className="text-3xl md:text-4xl text-maroon font-serif">
-            {hi ? "लेखक की मूल हस्तलिखित पांडुलिपि के पृष्ठ" : "Original Handwritten Manuscript Pages"}
-          </h2>
-          <p className="font-body text-ink-soft text-base mt-2">
-            {hi
-              ? "ग्रंथ के प्रथम तीन आधार स्तम्भों पर लेखक श्री हरनारायण साह की मूल हस्तलिखित पांडुलिपि एवं उसका सुगम डिजिटल पाठ।"
-              : "Examine the original handwritten pages of the foundational thesis alongside verified text."}
-          </p>
-        </div>
-
-        <ManuscriptSection />
-      </section>
-    </div>
-  );
+  return <LibraryHub navigate={navigate} initialRead={{ id: COMPLETE_BOOK_ID, page: 1 }} />;
 }
 
 /* ---------- PHILOSOPHY ---------- */
@@ -1389,46 +1252,225 @@ export function Philosophy({ navigate }: { navigate: Nav }) {
   );
 }
 
-/* ---------- ARTICLES & LIBRARY ---------- */
+/* ---------- LIBRARY HUB (BOOK + LIBRARY + ARTICLES + MEDIA) ---------- */
 
-export function Articles({ navigate }: { navigate: Nav }) {
+function LibraryHero({
+  doc,
+  onStart,
+  onReadOthers,
+}: {
+  doc: PdfDocument;
+  onStart: () => void;
+  onReadOthers: (doc: PdfDocument) => void;
+}) {
   const language = useLanguage();
   const hi = language !== "en";
-  const [modalPdf, setModalPdf] = useState<PdfDocument | null>(null);
+  const savedPage = typeof doc.pages === "number" ? readStoredPage(doc.id, doc.pages) : 1;
+  const others = pdfDocuments.filter((d) => d.id !== doc.id && d.category !== "manuscript").slice(0, 4);
 
   return (
-    <div className="max-w-6xl mx-auto px-5 py-20 md:py-24">
-      {modalPdf && <PdfModal doc={modalPdf} onClose={() => setModalPdf(null)} />}
+    <div className="library-hero">
+      <div className="library-hero-cover">
+        <img src="/images/book-cover.png" alt={hi ? "प्राप्तस्य प्राप्ति का आवरण" : "Praptasya Prapti cover"} />
+      </div>
+      <div className="library-hero-copy">
+        <span className="scripture-pill">
+          <BookOpen className="w-3 h-3" />
+          {hi ? "मूल ग्रंथ · सभी पृष्ठ निःशुल्क" : "Core book · all pages free"}
+        </span>
+        <h2>{hi ? doc.titleHi : doc.titleEn}</h2>
+        <p className="font-body text-ink-soft leading-relaxed">
+          {hi ? doc.descriptionHi : doc.descriptionEn}
+        </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-body text-sm text-maroon my-4">
+          <span className="flex items-center gap-1.5"><FileText className="w-4 h-4 text-saffron-deep" /> {typeof doc.pages === "number" ? `${doc.pages} ${hi ? "पृष्ठ" : "pages"}` : doc.pages}</span>
+          <span className="flex items-center gap-1.5"><Download className="w-4 h-4 text-saffron-deep" /> {doc.fileSize}</span>
+          <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-saffron-deep" /> {hi ? "निःशुल्क" : "Free"}</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <button onClick={onStart} className="btn-primary">
+            <BookOpen className="w-5 h-5" />
+            {savedPage > 1 ? (hi ? `जारी रखें — पृष्ठ ${savedPage}` : `Continue — page ${savedPage}`) : hi ? "पढ़ना शुरू करें" : "Start reading"}
+          </button>
+          <a href={doc.filePath} download className="btn-ghost">
+            <Download className="w-4 h-4" /> {hi ? "PDF डाउनलोड" : "Download PDF"}
+          </a>
+          <ShareButtons doc={doc} />
+        </div>
+        <div className="flex flex-wrap items-center gap-2 mt-6">
+          <span className="font-body text-xs text-ink-soft mr-1">{hi ? "यह भी पढ़ें:" : "Also read:"}</span>
+          {others.map((d) => (
+            <button
+              key={d.id}
+              onClick={() => onReadOthers(d)}
+              className="read-chip"
+              title={hi ? d.titleHi : d.titleEn}
+            >
+              {hi ? d.titleHi.split("—")[0].trim() : d.titleEn.split("—")[0].trim()}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function LibraryHub({
+  navigate,
+  initialRead,
+}: {
+  navigate: Nav;
+  initialRead?: { id: string; page?: number };
+}) {
+  const language = useLanguage();
+  const hi = language !== "en";
+  const [activeDoc, setActiveDoc] = useState<PdfDocument | null>(null);
+  const [manuscriptDoc, setManuscriptDoc] = useState<PdfDocument | null>(null);
+  const [readerPage, setReaderPage] = useState(1);
+  const readerAnchorRef = useRef<HTMLDivElement>(null);
+  const handledInitialRef = useRef<string | null>(null);
+
+  const openDoc = (doc: PdfDocument, page = 1) => {
+    setActiveDoc(doc);
+    setReaderPage(page);
+    readerAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const q = new URLSearchParams();
+    q.set("read", doc.id);
+    if (page > 1) q.set("page", String(page));
+    window.history.pushState({}, "", `/library?${q.toString()}`);
+  };
+
+  const onPageChange = (page: number) => {
+    setReaderPage(page);
+    if (activeDoc) {
+      const q = new URLSearchParams();
+      q.set("read", activeDoc.id);
+      if (page > 1) q.set("page", String(page));
+      window.history.replaceState({}, "", `/library?${q.toString()}`);
+    }
+  };
+
+  /* open book directly when arriving via deep link / book route */
+  useEffect(() => {
+    if (!initialRead) return;
+    if (handledInitialRef.current === `${initialRead.id}:${initialRead.page ?? 0}`) return;
+    const doc = pdfDocuments.find((d) => d.id === initialRead.id);
+    if (!doc) return;
+    handledInitialRef.current = `${initialRead.id}:${initialRead.page ?? 0}`;
+    if (doc.category === "manuscript") {
+      setManuscriptDoc(doc);
+    } else {
+      setActiveDoc(doc);
+      setReaderPage(initialRead.page && initialRead.page > 1 ? initialRead.page : 1);
+    }
+  }, [initialRead]);
+
+  /* keep the reader in sync with browser back/forward */
+  useEffect(() => {
+    const syncFromUrl = () => {
+      const q = new URLSearchParams(window.location.search);
+      const id = q.get("read");
+      const num = Number(q.get("page"));
+      const page = Number.isFinite(num) && num > 1 ? Math.floor(num) : 1;
+      if (!id) {
+        setActiveDoc(null);
+        setReaderPage(1);
+        return;
+      }
+      const doc = pdfDocuments.find((d) => d.id === id);
+      if (!doc) return;
+      if (doc.category === "manuscript") {
+        setManuscriptDoc(doc);
+      } else {
+        setActiveDoc(doc);
+        setReaderPage(page);
+      }
+    };
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
+  }, []);
+
+  const completeBook = pdfDocuments.find((d) => d.id === COMPLETE_BOOK_ID) || pdfDocuments[0];
+
+  return (
+    <div className="max-w-6xl mx-auto px-5 py-16 md:py-20">
+      {manuscriptDoc && <PdfModal doc={manuscriptDoc} onClose={() => setManuscriptDoc(null)} />}
 
       <PageHead
-        kicker="ज्ञानालय एवं ई-पुस्तकालय"
-        title="साहित्य, दर्शन एवं प्रवचन"
-        sub="मूल ग्रंथ, जीवनी, शोध आलेख, कथाएं, संस्मरण एवं प्रवचन — संपूर्ण वैचारिक साहित्य एक ही स्थान पर।"
+        kicker={hi ? "पढ़ें — अनन्तानन्द मानव" : "Read — Anantanand Manav"}
+        title={hi ? "पूरा ग्रंथ, पूरी लाइब्रेरी — एक पृष्ठ पर" : "The complete book & library on one page"}
+        sub={
+          hi
+            ? "मूल ग्रंथ को पृष्ठ-दर-पृष्ठ ऑनलाइन पढ़ें, और नीचे लेखक की सम्पूर्ण रचनाएँ — सभी निःशुल्क, बिना किसी शर्त के।"
+            : "Read the complete book page by page, and explore every writing below — all free, no sign-up, no paywall."
+        }
       />
 
-      {/* Section 1: Digital PDF Library */}
-      <section className="mb-20">
-        <div className="flex items-center gap-3 mb-6">
-          <FileText className="w-6 h-6 text-saffron-deep" />
-          <h2 className="text-2xl md:text-3xl text-maroon font-serif">
-            {hi ? "डिजिटल ग्रंथ एवं PDF दस्तावेज़" : "Digital Books & PDF Documents"}
-          </h2>
-        </div>
-        <PdfRepository onSelectPdf={(doc) => setModalPdf(doc)} />
+      {/* ---- READING EXPERIENCE ---- */}
+      <section className="mb-24" ref={readerAnchorRef} aria-label={hi ? "पुस्तक पाठक" : "Book reader"}>
+        {activeDoc ? (
+          <PdfReader
+            doc={activeDoc}
+            initialPage={readerPage}
+            onClose={() => {
+              setActiveDoc(null);
+              setReaderPage(1);
+              window.history.replaceState({}, "", "/library");
+            }}
+            onPageChange={onPageChange}
+            onSwitchDoc={(doc) => {
+              setActiveDoc(doc);
+              setReaderPage(1);
+            }}
+            docs={pdfDocuments}
+          />
+        ) : (
+          <LibraryHero
+            doc={completeBook}
+            onStart={() => openDoc(completeBook, readStoredPage(completeBook.id, Number(completeBook.pages) || 60))}
+            onReadOthers={(doc) => (doc.category === "manuscript" ? setManuscriptDoc(doc) : openDoc(doc))}
+          />
+        )}
       </section>
 
-      <div className="gold-rule w-full my-16 opacity-50" />
+      <div className="gold-rule w-full my-4 opacity-50" />
 
-      {/* Section 2: Markdown Web Articles */}
-      <section>
+      {/* ---- FULL LIBRARY ---- */}
+      <section className="mb-24">
+        <div className="flex items-center gap-3 mb-6">
+          <FileText className="w-6 h-6 text-saffron-deep" />
+          <div>
+            <h2 className="text-2xl md:text-3xl text-maroon font-serif">
+              {hi ? "लेखक की सम्पूर्ण रचनाएँ" : "All writings by the author"}
+            </h2>
+            <p className="font-body text-sm text-ink-soft mt-1">
+              {hi
+                ? "हर रचना ऑनलाइन पढ़ें या PDF डाउनलोड करें — सब कुछ निःशुल्क।"
+                : "Read online or download every work as PDF — all free."}
+            </p>
+          </div>
+        </div>
+        <PdfRepository onRead={(doc) => openDoc(doc)} onManuscript={(doc) => setManuscriptDoc(doc)} />
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <DownloadAllZip docs={pdfDocuments} />
+          <p className="font-body text-xs text-ink-soft">
+            {hi ? "9 रचनाएँ · PDF प्रारूप — किसी भी डिवाइस पर खुलेंगी।" : "All 9 works · PDF format — opens on any device."}
+          </p>
+        </div>
+      </section>
+
+      <div className="gold-rule w-full my-4 opacity-50" />
+
+      {/* ---- ONLINE ESSAYS ---- */}
+      <section className="mb-24">
         <div className="flex items-center gap-3 mb-8">
           <ScrollText className="w-6 h-6 text-saffron-deep" />
           <div>
             <h2 className="text-2xl md:text-3xl text-maroon font-serif">
-              {hi ? "ऑनलाइन प्रवचन एवं विचार-लेख" : "Online Essays & Discourses"}
+              {hi ? "ऑनलाइन प्रवचन एवं विचार-लेख" : "Online essays & discourses"}
             </h2>
             <p className="font-body text-sm text-ink-soft mt-1">
-              {hi ? "ग्रंथ से लिए गए मुख्य विषयों पर केंद्रित वेब आलेख।" : "Focused web essays based on core book chapters."}
+              {hi ? "ग्रंथ से लिए गए मुख्य विषयों पर केंद्रित वेब आलेख।" : "Focused web essays based on core book themes."}
             </p>
           </div>
         </div>
@@ -1452,13 +1494,71 @@ export function Articles({ navigate }: { navigate: Nav }) {
                 </h3>
                 <p className="font-body text-ink-soft leading-relaxed mb-4">{a.excerpt}</p>
               </div>
-              <span className="link-arrow mt-2">पूरा पढ़ें <ArrowRight className="w-4 h-4" /></span>
+              <span className="link-arrow mt-2">{hi ? "पूरा पढ़ें" : "Read full"} <ArrowRight className="w-4 h-4" /></span>
             </motion.button>
           ))}
         </div>
       </section>
+
+      <div className="gold-rule w-full my-4 opacity-50" />
+
+      {/* ---- MEDIA (VIDEOS) ---- */}
+      <section className="mb-24">
+        <div className="flex items-center gap-3 mb-8">
+          <Video className="w-6 h-6 text-saffron-deep" />
+          <div>
+            <h2 className="text-2xl md:text-3xl text-maroon font-serif">
+              {hi ? "लेखक के वीडियो संदेश" : "Author's video messages"}
+            </h2>
+            <p className="font-body text-sm text-ink-soft mt-1">
+              {hi ? "ग्रंथ और जीवन-दर्शन पर लेखक के उद्बोधन — यहीं सुनें।" : "Listen to the author on the book and life's questions."}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {videoItems.map((vid, i) => (
+            <motion.div key={vid.id} {...fade} className="bg-paper-dark/40 border border-gold/25 rounded-sm overflow-hidden">
+              <div className="bg-black aspect-video">
+                <video src={vid.videoUrl} controls playsInline preload="metadata" className="w-full h-full object-contain" />
+              </div>
+              <div className="p-5">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="px-2 py-0.5 bg-saffron/15 text-saffron-deep text-[0.7rem] font-bold uppercase rounded-xs">
+                    {hi ? `भाग ${i + 1}` : `Part ${i + 1}`}
+                  </span>
+                  <span className="font-body text-xs text-ink-soft flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {vid.duration}</span>
+                </div>
+                <h3 className="font-serif text-lg text-maroon mb-1">{hi ? vid.titleHi : vid.titleEn}</h3>
+                <p className="font-body text-sm text-ink-soft line-clamp-2 mb-3">{hi ? vid.descriptionHi : vid.descriptionEn}</p>
+                <button onClick={() => navigate({ name: "gallery" })} className="link-arrow text-xs">
+                  {hi ? "कला दीर्घा व सभी मीडिया" : "Gallery & all media"} <ArrowUpRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <div className="gold-rule w-full my-4 opacity-50" />
+
+      {/* ---- REACH: SIGNUP + CONTACT ---- */}
+      <section className="mb-10">
+        <ReaderSignup />
+      </section>
+
+      {/* ---- BACK TO AUTHOR / HOME ---- */}
+      <div className="text-center mt-12">
+        <button onClick={() => navigate({ name: "about" })} className="link-arrow">
+          {hi ? "लेखक के बारे में जानें" : "Meet the author"} <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
+}
+
+export function Articles({ navigate }: { navigate: Nav }) {
+  return <LibraryHub navigate={navigate} />;
 }
 
 export function ArticleDetail({ article, navigate }: { article: Article; navigate: Nav }) {
@@ -1787,20 +1887,48 @@ export function Events({ navigate }: { navigate: Nav }) {
 /* ---------- CONTACT ---------- */
 
 export function Contact() {
+  const language = useLanguage();
+  const hi = language !== "en";
+  const [name, setName] = useState("");
+  const [contactValue, setContactValue] = useState("");
+  const [subject, setSubject] = useState(hi ? "ग्रंथ की प्रति चाहिए" : "Request a copy of the book");
+  const [message, setMessage] = useState("");
+
+  const compose = () => {
+    const parts = [
+      name && (hi ? `नाम: ${name}` : `Name: ${name}`),
+      contactValue && (hi ? `संपर्क: ${contactValue}` : `Contact: ${contactValue}`),
+      message,
+    ].filter(Boolean);
+    return parts.join("\n");
+  };
+
+  const waHref =
+    "https://wa.me/?text=" + encodeURIComponent(`${subject}\n\n${compose() || ""}`.trim());
+  const mailHref =
+    "mailto:sampark@praptasya.example?subject=" +
+    encodeURIComponent(subject) +
+    "&body=" +
+    encodeURIComponent(compose());
+
   return (
     <div className="max-w-5xl mx-auto px-5 py-20 md:py-24">
       <PageHead
-        kicker="संपर्क"
-        title="संपर्क एवं ग्रंथ अनुरोध"
-        sub="ग्रंथ की प्रति मँगाने, किसी व्याख्यान या पुस्तक-चर्चा हेतु आमंत्रण देने, अथवा विचार साझा करने के लिए संपर्क करें।"
+        kicker={hi ? "संपर्क" : "Contact"}
+        title={hi ? "संपर्क एवं ग्रंथ अनुरोध" : "Contact & book requests"}
+        sub={
+          hi
+            ? "ग्रंथ की प्रति मँगाने, किसी व्याख्यान या पुस्तक-चर्चा हेतु आमंत्रण देने, अथवा विचार साझा करने के लिए संपर्क करें।"
+            : "Request a copy, invite the author to speak, or share your thoughts."
+        }
       />
       <div className="grid md:grid-cols-2 gap-10">
         <div className="space-y-4">
           {[
-            { icon: Phone, label: "दूरभाष", value: "+91 00000 00000" },
-            { icon: MessageCircle, label: "व्हाट्सऐप", value: "+91 00000 00000" },
-            { icon: Mail, label: "ईमेल", value: "sampark@praptasya.example" },
-            { icon: MapPin, label: "पता", value: "विचार-कुटीर, [नगर], भारत" },
+            { icon: Phone, label: hi ? "दूरभाष" : "Phone", value: "+91 00000 00000" },
+            { icon: MessageCircle, label: "WhatsApp", value: "+91 00000 00000" },
+            { icon: Mail, label: hi ? "ईमेल" : "Email", value: "sampark@praptasya.example" },
+            { icon: MapPin, label: hi ? "पता" : "Address", value: hi ? "विचार-कुटीर, [नगर], भारत" : "Vichar-Kuteer, [City], India" },
           ].map((c) => (
             <div key={c.label} className="flex gap-4 items-center bg-paper-dark/40 border border-gold/25 rounded-sm p-5">
               <div className="w-11 h-11 rounded-sm bg-saffron/10 border border-saffron/30 flex items-center justify-center shrink-0">
@@ -1812,34 +1940,66 @@ export function Contact() {
               </div>
             </div>
           ))}
+          <div className="bg-paper-dark/50 border border-gold/25 rounded-sm p-5">
+            <p className="font-body text-sm text-ink-soft leading-relaxed">
+              {hi
+                ? "सभी पुस्तकें इसी वेबसाइट से निःशुल्क पढ़ी व डाउनलोड की जा सकती हैं — संपर्क केवल हार्डकॉपी या आमंत्रण हेतु आवश्यक है।"
+                : "All books are free to read and download on this site — contact is only for hard copies or invitations."}
+            </p>
+          </div>
         </div>
 
-        <form onSubmit={(e) => e.preventDefault()} className="paper-texture border border-gold/25 rounded-sm p-7 space-y-4">
-          <h3 className="text-2xl text-maroon mb-2">संदेश भेजें</h3>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            window.open(waHref, "_blank", "noopener");
+          }}
+          className="paper-texture border border-gold/25 rounded-sm p-7 space-y-4"
+        >
+          <h3 className="text-2xl text-maroon mb-2">{hi ? "संदेश भेजें" : "Send a message"}</h3>
           {[
-            { ph: "आपका नाम", type: "text" },
-            { ph: "ईमेल अथवा दूरभाष", type: "text" },
+            { ph: hi ? "आपका नाम" : "Your name", type: "text", set: setName, value: name },
+            { ph: hi ? "ईमेल अथवा दूरभाष" : "Email or phone", type: "text", set: setContactValue, value: contactValue },
           ].map((f) => (
             <input
               key={f.ph}
               type={f.type}
+              value={f.value}
+              onChange={(e) => f.set(e.target.value)}
               placeholder={f.ph}
               className="w-full font-body bg-paper border border-gold/30 rounded-sm px-4 py-3 text-ink placeholder-ink-soft/60 focus:outline-none focus:border-saffron"
             />
           ))}
-          <select className="w-full font-body bg-paper border border-gold/30 rounded-sm px-4 py-3 text-ink focus:outline-none focus:border-saffron">
-            <option>ग्रंथ की प्रति चाहिए</option>
-            <option>व्याख्यान हेतु आमंत्रण</option>
-            <option>पुस्तक-चर्चा / सत्संग</option>
-            <option>अन्य विचार / प्रश्न</option>
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="w-full font-body bg-paper border border-gold/30 rounded-sm px-4 py-3 text-ink focus:outline-none focus:border-saffron"
+          >
+            <option>{hi ? "ग्रंथ की प्रति चाहिए" : "Request a copy of the book"}</option>
+            <option>{hi ? "व्याख्यान हेतु आमंत्रण" : "Invitation for a lecture"}</option>
+            <option>{hi ? "पुस्तक-चर्चा / सत्संग" : "Book discussion / satsang"}</option>
+            <option>{hi ? "अन्य विचार / प्रश्न" : "Other thoughts / question"}</option>
           </select>
           <textarea
             rows={4}
-            placeholder="आपका संदेश"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder={hi ? "आपका संदेश" : "Your message"}
             className="w-full font-body bg-paper border border-gold/30 rounded-sm px-4 py-3 text-ink placeholder-ink-soft/60 focus:outline-none focus:border-saffron"
           />
-          <button type="submit" className="btn-primary w-full justify-center">संदेश भेजें</button>
-          <p className="font-body text-xs text-ink-soft text-center">यह एक प्रदर्शन प्रपत्र है। कृपया उपरोक्त माध्यमों से भी संपर्क कर सकते हैं।</p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button type="submit" className="btn-primary flex-1 justify-center">
+              <MessageCircle className="w-4 h-4" /> {hi ? "WhatsApp पर भेजें" : "Send via WhatsApp"}
+            </button>
+            <a href={mailHref} className="btn-ghost flex-1 justify-center">
+              <Mail className="w-4 h-4" /> {hi ? "ईमेल से भेजें" : "Send via email"}
+            </a>
+          </div>
+          <p className="font-body text-xs text-ink-soft text-center">
+            {hi
+              ? "आपके संदेश में नाम व संपर्क जुड़ते हैं — सीधे लेखक तक।"
+              : "Your name and contact are included in the message — it goes directly to the author."}
+          </p>
         </form>
       </div>
     </div>

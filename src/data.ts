@@ -1,3 +1,5 @@
+export const COMPLETE_BOOK_ID = "praptasya-prapti-complete";
+
 export type Article = {
   slug: string;
   title: string;
