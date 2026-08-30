@@ -16,4 +16,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  server: {
+    watch: {
+      ignored: ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.mp4", "**/*.pdf", "**/dist/**"],
+    },
+  },
 });
