@@ -169,7 +169,7 @@ html { scroll-behavior: smooth; }
   overflow: hidden;
   padding: clamp(2.25rem, 6vh, 4rem) 1.25rem clamp(3rem, 6vh, 4rem);
   background:
-    linear-gradient(180deg, rgba(247, 243, 234, 0.16) 0%, rgba(247, 243, 234, 0.4) 55%, rgba(247, 243, 234, 0.9) 92%),
+    linear-gradient(180deg, rgba(247, 243, 234, 0.1) 0%, rgba(247, 243, 234, 0.26) 55%, rgba(247, 243, 234, 0.8) 92%),
     url("/images/hero-background.png") center / cover no-repeat,
     var(--color-paper);
   color: var(--color-maroon-deep);
@@ -217,7 +217,7 @@ html { scroll-behavior: smooth; }
 .motif-bird {
   transform-box: fill-box;
   transform-origin: center;
-  animation: motif-bird 7s ease-in-out infinite alternate;
+  animation: motif-bird 5.5s ease-in-out infinite alternate;
 }
 .motif-leaves {
   transform-box: fill-box;
@@ -225,15 +225,15 @@ html { scroll-behavior: smooth; }
   animation: motif-sway 6s ease-in-out infinite alternate;
 }
 .motif-dots {
-  animation: motif-march 4.5s linear infinite;
+  animation: motif-march 7s linear infinite;
 }
 @keyframes motif-bird {
-  from { transform: translate(0, 0); }
-  to { transform: translate(20px, -7px); }
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
 }
 @keyframes motif-sway {
-  from { transform: rotate(-1.6deg); }
-  to { transform: rotate(1.6deg); }
+  from { transform: rotate(-1.2deg); }
+  to { transform: rotate(1.2deg); }
 }
 @keyframes motif-march {
   to { stroke-dashoffset: -280; }
@@ -268,30 +268,30 @@ html { scroll-behavior: smooth; }
   text-align: center;
 }
 .hero-panel {
-  background: rgba(247, 243, 234, 0.52);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  border: 1px solid rgba(247, 243, 234, 0.6);
+  background: rgba(247, 243, 234, 0.78);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  border: 1px solid rgba(247, 243, 234, 0.55);
   border-radius: var(--radius-md);
   box-shadow:
-    0 24px 60px -30px rgba(14, 40, 29, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    0 24px 60px -26px rgba(14, 40, 29, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
   padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3rem);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .hero-panel { background: rgba(247, 243, 234, 0.9); }
+  .hero-panel { background: rgba(247, 243, 234, 0.92); }
 }
 /* Frosted glass on the secondary CTAs; primary stays solid for hierarchy */
 .hero-panel .btn-ghost {
-  background: rgba(247, 243, 234, 0.34);
+  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(247, 243, 234, 0.75);
+  border: 1px solid rgba(23, 64, 47, 0.24);
   color: var(--color-maroon-deep);
 }
 .hero-panel .btn-ghost:hover {
-  background: rgba(247, 243, 234, 0.58);
-  border-color: rgba(247, 243, 234, 0.9);
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(23, 64, 47, 0.38);
 }
 .hero-eyebrow {
   font-family: var(--font-body);
