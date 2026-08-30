@@ -7,7 +7,25 @@ export type Article = {
   body: string[];
 };
 
-export type PdfCategory = "all" | "book" | "essay" | "story" | "biography" | "culture";
+export type PdfCategory = "all" | "book" | "manuscript" | "essay" | "story" | "biography" | "culture";
+
+export type ManuscriptPage = {
+  id: string;
+  pageNumber: number;
+  titleHi: string;
+  titleEn: string;
+  themeHi: string;
+  themeEn: string;
+  imagePath: string;
+  extractedTextHi: string[];
+  summaryHi: string;
+  summaryEn: string;
+  scriptureReferences?: {
+    nameHi: string;
+    nameEn: string;
+    verse?: string;
+  }[];
+};
 
 export type PdfDocument = {
   id: string;
@@ -45,7 +63,8 @@ export type VideoItem = {
 export const quotes: string[] = [
   "जो प्राप्त है, वही तो प्राप्तव्य है — बस दृष्टि खोलनी है।",
   "मनुष्य की सबसे बड़ी स्वतंत्रता है — अपने प्रश्नों के साथ जीने का साहस।",
-  "वसुधैव कुटुम्बकम् कोई आदर्श नहीं, यह मनुष्य होने की न्यूनतम शर्त है।",
+  "वसुधैव कुटुम्बकम् कोई आदर्श नहीं, यह मनुष्य होने की न्यूनतम शर्त है। (महोपनिषद् ६.७१)",
+  "सत्यमेव जयते नानृतम् — सत्य की ही विजय होती है। (मुण्डकोपनिषद् ३.१.६)",
   "धर्म वह नहीं जो बाँटे; धर्म वह है जो जोड़े।",
   "मुक्त मनुष्य वही है जो भय और लोभ दोनों से परे खड़ा हो सके।",
 ];
@@ -55,28 +74,44 @@ export const philosophyPillars = [
     id: "praptasya",
     sanskrit: "प्राप्तस्य प्राप्ति",
     title: "जो प्राप्त है, उसकी प्राप्ति",
-    text: "मनुष्य जीवन-भर उसे खोजता है जो पहले से उसके भीतर विद्यमान है। यह ग्रंथ उसी 'प्राप्त' की ओर लौटने की एक विचार-यात्रा है।",
+    sourceHi: "ईशावास्योपनिषद् / आदिशंकर वेदान्त भाष्य",
+    sourceEn: "Ishopanishad / Adi Shankaracharya Bhashya",
+    shlokRef: "ईशावास्योपनिषद् · वेदान्त महावाक्य",
+    fullSanskrit: "ईशा वास्यमिदं सर्वं यत्किञ्च जगत्यां जगत् । तेन त्यक्तेन भुञ्जीथा मा गृधः कस्यस्विद्धनम् ॥",
+    text: "मनुष्य जीवन-भर मोक्ष, शांति और बुद्धत्व को बाहर खोजता है, जबकि वह मूलतः उसके भीतर पहले से ही प्राप्त है। केवल अज्ञान की मुट्ठी खोलने की आवश्यकता है।",
     color: "saffron",
   },
   {
     id: "vasudhaiva",
     sanskrit: "वसुधैव कुटुम्बकम्",
     title: "सम्पूर्ण पृथ्वी एक परिवार",
-    text: "सीमाएँ, जातियाँ और मत मनुष्य के बनाए हैं। मूल में हम एक ही चेतना के भागीदार हैं — यही मानवता का आधार है।",
+    sourceHi: "महोपनिषद् (अध्याय ६, श्लोक ७१)",
+    sourceEn: "Maha Upanishad (Chapter 6, Verse 71)",
+    shlokRef: "महोपनिषद् ६.७१ · हितोपदेश १.३.७१",
+    fullSanskrit: "अयं निजः परो वेति गणना लघुचेतसाम् । उदारचरितानां तु वसुधैव कुटुम्बकम् ॥",
+    text: "यह मेरा है, वह पराया है—ऐसी संकीर्ण गणना छोटे मन वालों की होती है। निष्काम कर्म करने वाले उदार चेतना के लिए सम्पूर्ण पृथ्वी ही एक परिवार है।",
     color: "maroon",
+  },
+  {
+    id: "satyameva",
+    sanskrit: "सत्यमेव जयते",
+    title: "सत्य ही विजयी होता है",
+    sourceHi: "मुण्डकोपनिषद् (तृतीय मुण्डक, १.६)",
+    sourceEn: "Mundaka Upanishad (3.1.6)",
+    shlokRef: "मुण्डकोपनिषद् ३.१.६",
+    fullSanskrit: "सत्यमेव जयते नानृतं सत्येन पन्था विततो देवयानः । येनाक्रमन्त्यृषयो ह्याप्तकामा यत्र तत् सत्यस्य परमं निधानम् ॥",
+    text: "सत्य की ही सदा जय होती है, मिथ्या की नहीं। सत्य के ही द्वारा वह मार्ग प्रशस्त होता है जिस पर चलकर निष्काम मानव परम कल्याण को प्राप्त करते हैं।",
+    color: "gold",
   },
   {
     id: "mukt",
     sanskrit: "मुक्त मानवों का संसार",
-    title: "भय-मुक्त, विचार-स्वतंत्र समाज",
-    text: "एक ऐसा संसार जहाँ मनुष्य बिना भय, बिना दबाव, अपने विवेक से सोच और जी सके — यही स्वतंत्र चिंतन का स्वप्न है।",
-    color: "gold",
-  },
-  {
-    id: "vichar",
-    sanskrit: "धर्म · ईश्वर · गुरु · मानवता",
-    title: "मूल प्रश्नों पर विचार",
-    text: "धर्म क्या है? ईश्वर की खोज कहाँ ले जाती है? गुरु का अर्थ? इन शाश्वत प्रश्नों पर एक निर्भीक, स्वतंत्र दृष्टि।",
+    title: "भय-मुक्त, स्वाभाविक निष्काम जीवन",
+    sourceHi: "गोंडी जीवन दर्शन · श्रीमद्भगवद्गीता निष्काम कर्म",
+    sourceEn: "Indigenous Gondi Harmony & Gita Nishkam Karma",
+    shlokRef: "सहज जीवन शैली · भारत की सनातन मूल धारा",
+    fullSanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन । मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि ॥",
+    text: "एक ऐसा संसार जहाँ मनुष्य भय, लोभ और अंधविश्वास से मुक्त होकर अपने स्वभाव के अनुकूल सहज व निष्काम जीवन जी सके।",
     color: "ink",
   },
 ];
@@ -151,6 +186,69 @@ export const articles: Article[] = [
   },
 ];
 
+export const manuscriptPages: ManuscriptPage[] = [
+  {
+    id: "manuscript-page-1",
+    pageNumber: 1,
+    titleHi: "प्राप्तस्य प्राप्ति — महावाक्य एवं वेदान्त का रहस्य",
+    titleEn: "Praptasya Prapti — The Mahavakya & Vedantic Mystery",
+    themeHi: "ईशावास्योपनिषद्, मुट्ठी में बंद सिक्का एवं निष्काम कर्म",
+    themeEn: "Ishopanishad, The Coin in the Fist, and Nishkam Karma",
+    imagePath: "/manuscript/manuscript-page-1.jpg",
+    extractedTextHi: [
+      "प्राप्तस्य प्राप्ति — यह ईशावास्योपनिषद् से लिया गया महावाक्य है। इसकी व्याख्या करते हुए आदिशंकराचार्य ने कहा है कि जिस प्रकार तुम्हारी मुट्ठी में एक सिक्का है और तुम चारों तरफ ढिंढोरा पीट रहे हो कि मेरा सिक्का भूल गया है, तो तुम्हें ढिंढोरा पीटने की आवश्यकता नहीं है, तुम केवल अपनी मुट्ठी खोलो, सिक्का तुम्हारे हाथ में ही है।",
+      "ठीक इसी प्रकार जिस मोक्ष, जन्नत, बुद्धत्व, कैवल्य की प्राप्ति हेतु हम ईश्वरों, धर्मों, शास्त्रों, देवताओं का सहारा लेते हैं, उसकी कोई आवश्यकता नहीं है क्योंकि यह पहले से ही प्राप्त था। अब अगर ऐसा प्रतीत होता है कि यह मोक्ष, जन्नत या परम सत्य से हम दूर हो चुके हैं, तो इसकी प्राप्ति के लिये किसी के सहयोग की आवश्यकता नहीं है। गीता, स्मृति तथा उपनिषद् के सहज रास्ते यानी स्वाभाविक कर्म करने मात्र से हम इसे बिना प्रयास के ही प्राप्त कर सकते हैं।",
+      "अपने स्वभाव के अनुकूल किया गया कर्म ही निष्काम कर्म कहलाता है, इसके संस्कार नहीं बनते जो बंधन के कारण होते हैं। निष्काम कर्म करने वालों की दुनियाँ से ही 'वसुधैव कुटुम्बकम्' का विचार निकलता है, जिसमें ईश्वर, धर्म, देवता या सद्गुरु पैदा हो ही नहीं सकते। वस्तुतः देवताओं, ईश्वरों, धर्मों की उत्पत्ति सकाम कर्म करने वालों की दुनियाँ में होती है जो वस्तुतः अंधकार की दुनियाँ है, अज्ञान की दुनियाँ है, जिसका सच्चाई से कोई संबंध नहीं रहता है। भ्रान्तियों की दुनियाँ यानी मिथ्या ज्ञान की जमीन पर ही इन मिथ्या ईश्वरों, मिथ्या धर्मों, मिथ्या देवताओं, मिथ्या ज्ञानों की उत्पत्ति होती है। यह भी ध्यान देने की बात है कि निष्काम कर्म करने वालों की दुनियाँ में ये सब मिथ्या प्रपंच पैदा हो ही नहीं सकते।",
+      "इस संबंध में रामचरित मानस, श्रीमद्भगवद् गीता, श्रीमद्भागवत पुराण के मार्गदर्शित मेरी कतिपय जीवन राजयात्रा यही कह सकती है।"
+    ],
+    summaryHi: "मोक्ष व आत्म-स्वरूप पहले से प्राप्त है; केवल अज्ञान की मुट्ठी खोलनी है। निष्काम कर्म ही बंधनरहित जीवन और वसुधैव कुटुम्बकम् का मूल स्रोत है।",
+    summaryEn: "Enlightenment is already attained; one only needs to open the fist of ignorance. Pure spontaneous action (Nishkam Karma) dissolves bondage.",
+    scriptureReferences: [
+      { nameHi: "ईशावास्योपनिषद्", nameEn: "Isha Upanishad", verse: "वेदान्त महावाक्य" },
+      { nameHi: "महोपनिषद्", nameEn: "Maha Upanishad", verse: "६.७१ (वसुधैव कुटुम्बकम्)" },
+      { nameHi: "श्रीमद्भगवद्गीता", nameEn: "Bhagavad Gita", verse: "अध्याय २ (निष्काम कर्मयोग)" }
+    ]
+  },
+  {
+    id: "manuscript-page-2",
+    pageNumber: 2,
+    titleHi: "सहज जीवन यात्रा एवं गोंडी व सनातन दर्शन",
+    titleEn: "Sahaj Jeevan Yatra & Gondi / Sanatan Heritage",
+    themeHi: "भारत के मूल निवासियों की जीवन शैली, वसुधैव कुटुम्बकम् एवं विश्वगुरु",
+    themeEn: "Indigenous Gondi Way of Life, Universal Harmony & World Teacher India",
+    imagePath: "/manuscript/manuscript-page-2.jpg",
+    extractedTextHi: [
+      "इस सहज जीवन यात्रा को ही, भारत के मूल निवासियों की जीवन शैली, गोंडी जीवन शैली, या ऊँचा आदर्श उच्च विचार की जीवन शैली या सनातन धर्म की आदर्श जीवन शैली भी कहा जाता है।",
+      "इस शैली की जीवन यात्रा में सभी कर्म निष्काम होते हैं तथा ईश्वरों, धर्मों, सद्गुरुओं, ब्रह्म विचारों, बुद्धत्व आदि की उत्पत्ति नहीं होती है क्योंकि यह संसार 'वसुधैव कुटुम्बकम्' की आदर्श विचारधारा की उत्पत्ति करता है। इसी विचारधारा या जीवन शैली के बल पर भारत को विश्वगुरु भी कहा जाता है, क्योंकि इस विचारधारा या जीवन धारा की उत्पत्ति भारत में ही हुई है।",
+      "यह जीवन शैली मानव जाति को समस्याओं से स्वाभाविक रूप से मुक्त कर देती है, समस्त सुख प्रदान करती है, मृत्यु तथा जन्म से अलग करती है, अपने अविनाशी स्वरूप में स्थिर कर देती है, दिक्-कालातीत अवस्था में ला देती है, ईश्वरों, देवताओं, धर्मों, सद्गुरुओं की औकात बता देती है एवं प्रारब्ध की धार में मिलकर, प्रारब्ध बनकर, शरीर की गति को सम्पूर्ण चेतना की गति में समवेत करते हुए जीवन यात्रा की शुरुआत कर देती है।"
+    ],
+    summaryHi: "गोंडी व सनातन सहज जीवन शैली में प्रत्येक कर्म निष्काम है। यही विचारधारा भारत को विश्वगुरु बनाती है और मनुष्य को जन्म-मरण से परे अविनाशी स्वरूप में स्थित करती है।",
+    summaryEn: "The indigenous Gondi and ancient Sanatan ethos lives naturally in harmony without artificial dogmas, unifying the individual with cosmic consciousness.",
+    scriptureReferences: [
+      { nameHi: "गोंडी लोक दर्शन", nameEn: "Gondi Philosophy", verse: "प्रकृति सह-अस्तित्व व सहज धारा" },
+      { nameHi: "सनातन तत्व विचार", nameEn: "Sanatan Vedantic Stream", verse: "दिक्-कालातीत आत्म-स्वरूप" }
+    ]
+  },
+  {
+    id: "manuscript-page-3",
+    pageNumber: 3,
+    titleHi: "मानव जाति की समस्त समस्याओं का निदान",
+    titleEn: "Universal Resolution for Human Society",
+    themeHi: "आस्तिकों, नास्तिकों, ब्राह्मणवादियों, अम्बेडकरवादियों एवं सभी विचारकों का समागम",
+    themeEn: "Harmonizing Theists, Atheists, Thinkers and Ideologies through Natural Living",
+    imagePath: "/manuscript/manuscript-page-3.jpg",
+    extractedTextHi: [
+      "इस प्रकार इस पुस्तक में, दुनियाँ के समस्त नास्तिकों, समस्त आस्तिकों, ब्राह्मणवादियों, अम्बेडकरवादियों, सभी धर्मावलम्बियों, सभी विचारकों, जो अबतक सफलता हासिल नहीं कर सके हैं, और न भविष्य में दूसरे के जीवन पथ पर चलकर सफलता भी हासिल कर सकते हैं—",
+      "उनकी समस्याओं पर गंभीर रूप से विचार करके उनकी या मानव जाति की सभी समस्याओं का निदान सहज जीवन शैली से प्राप्त होने की बात बतायी गयी है।"
+    ],
+    summaryHi: "ग्रंथ का उद्देश्य किसी वाद या पंथ का खंडन करना नहीं, बल्कि हर विचार के व्यक्ति को उसकी आंतरिक सहज जीवन शैली द्वारा वास्तविक समाधान तक पहुँचाना है।",
+    summaryEn: "Addressing the existential queries of all seekers, theists, atheists, and social thinkers through the direct realization of natural, effortless living.",
+    scriptureReferences: [
+      { nameHi: "मुण्डकोपनिषद्", nameEn: "Mundaka Upanishad", verse: "३.१.६ (सत्यमेव जयते)" }
+    ]
+  }
+];
+
 export const pdfDocuments: PdfDocument[] = [
   {
     id: "praptasya-prapti-complete",
@@ -159,7 +257,7 @@ export const pdfDocuments: PdfDocument[] = [
     category: "book",
     categoryHi: "सम्पूर्ण ग्रंथ",
     categoryEn: "Core Book",
-    descriptionHi: "मानव जीवन, स्वतंत्रता, विवेक, ज्ञान, कर्म और आत्मा पर अनन्तानन्द मानव (श्री हरनारायण शाह) की संपूर्ण ग्रंथ रचना।",
+    descriptionHi: "मानव जीवन, स्वतंत्रता, विवेक, ज्ञान, कर्म और आत्मा पर अनन्तानन्द मानव (श्री हरनारायण साह) की संपूर्ण ग्रंथ रचना।",
     descriptionEn: "The complete definitive philosophical text exploring human life, freedom, intellect, knowledge, and inner truth.",
     pages: "सम्पूर्ण ग्रंथ",
     fileSize: "7.1 MB",
@@ -169,14 +267,30 @@ export const pdfDocuments: PdfDocument[] = [
     tagEn: "Core Book",
   },
   {
+    id: "original-manuscripts",
+    titleHi: "मूल हस्तलिखित पांडुलिपि (लेखक के मूल हस्तलिखित पृष्ठ)",
+    titleEn: "Original Handwritten Manuscript Pages",
+    category: "manuscript",
+    categoryHi: "मूल पांडुलिपि",
+    categoryEn: "Handwritten Scans",
+    descriptionHi: "लेखक श्री हरनारायण साह द्वारा स्वयं हस्तलिखित 3 मुख्य पृष्ठ — 'प्राप्तस्य प्राप्ति' का उद्भव, गोंडी-सनातन सहज जीवन शैली और सार्वभौमिक समाधान।",
+    descriptionEn: "Original handwritten manuscript leaves penned by Shri Harnarayan Sah detailing the core thesis and philosophy.",
+    pages: 3,
+    fileSize: "325 KB",
+    filePath: "/manuscript/manuscript-page-1.jpg",
+    featured: true,
+    tagHi: "हस्तलिखित पांडुलिपि",
+    tagEn: "Manuscript",
+  },
+  {
     id: "harnarayan-sah",
-    titleHi: "श्री हरनारायण शाह: व्यक्तित्व, साधना एवं कृतित्व",
-    titleEn: "Shri Harnarayan Shah: Life, Sadhana & Legacy",
+    titleHi: "श्री हरनारायण साह: व्यक्तित्व, साधना एवं कृतित्व",
+    titleEn: "Shri Harnarayan Sah: Life, Sadhana & Legacy",
     category: "biography",
     categoryHi: "जीवन-दर्शन",
     categoryEn: "Biography & Sadhana",
-    descriptionHi: "लेखक एवं साधक श्री हरनारायण शाह की 15 पृष्ठीय विस्तृत जीवन-गाथा, साधना, वैचारिक विकास और लोक-कल्याणकारी दृष्टि।",
-    descriptionEn: "A 15-page comprehensive biographical record of author and thinker Shri Harnarayan Shah.",
+    descriptionHi: "लेखक एवं साधक श्री हरनारायण साह की 15 पृष्ठीय विस्तृत जीवन-गाथा, साधना, वैचारिक विकास और लोक-कल्याणकारी दृष्टि।",
+    descriptionEn: "A 15-page comprehensive biographical record of author and thinker Shri Harnarayan Sah.",
     pages: 15,
     fileSize: "470 KB",
     filePath: "/pdfs/harnarayan-sah.pdf",
@@ -283,8 +397,8 @@ export const videoItems: VideoItem[] = [
     id: "pravachan-1",
     titleHi: "प्राप्तस्य प्राप्ति — लेखक का वैचारिक संदेश एवं ग्रंथ परिचय (भाग १)",
     titleEn: "Praptasya Prapti — Author's Message & Introduction (Part 1)",
-    speakerHi: "अनन्तानन्द मानव (श्री हरनारायण शाह)",
-    speakerEn: "Anantanand Manav (Shri Harnarayan Shah)",
+    speakerHi: "अनन्तानन्द मानव (श्री हरनारायण साह)",
+    speakerEn: "Anantanand Manav (Shri Harnarayan Sah)",
     duration: "2:51",
     videoUrl: "/videos/pravachan-1.mp4",
     descriptionHi: "जीवन के मूल प्रश्नों, 'प्राप्तस्य प्राप्ति' के मर्म और मनुष्य के आत्म-अन्वेषण पर लेखक का विशेष वीडियो संदेश।",
@@ -296,8 +410,8 @@ export const videoItems: VideoItem[] = [
     id: "pravachan-2",
     titleHi: "सत्य, स्वविवेक और मुक्त चेतना पर उद्बोधन (भाग २)",
     titleEn: "Reflections on Truth, Inner Discernment and Free Consciousness (Part 2)",
-    speakerHi: "अनन्तानन्द मानव (श्री हरनारायण शाह)",
-    speakerEn: "Anantanand Manav (Shri Harnarayan Shah)",
+    speakerHi: "अनन्तानन्द मानव (श्री हरनारायण साह)",
+    speakerEn: "Anantanand Manav (Shri Harnarayan Sah)",
     duration: "1:38",
     videoUrl: "/videos/pravachan-2.mp4",
     descriptionHi: "मानव स्वतंत्रता, मानसिक बंधनों से मुक्ति और भीतरी विवेक को जाग्रत करने पर प्रेरक चिंतन।",

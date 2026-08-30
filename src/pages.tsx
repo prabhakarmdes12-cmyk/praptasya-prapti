@@ -5,12 +5,12 @@ import {
   Quote, Phone, Mail, MapPin, MessageCircle, Calendar, Clock,
   ScrollText, Palette, Play, ExternalLink, Download, FileText,
   Video, Film, Eye, X, CheckCircle2, ChevronRight, User, BookCheck,
-  Search,
+  Search, ZoomIn, ZoomOut, RotateCcw, Layers, Bookmark,
 } from "lucide-react";
 import {
   quotes, philosophyPillars, chapters, articles, events, gallery,
-  pdfDocuments, videoItems,
-  type Article, type PdfDocument, type VideoItem, type PdfCategory,
+  pdfDocuments, videoItems, manuscriptPages,
+  type Article, type PdfDocument, type VideoItem, type PdfCategory, type ManuscriptPage,
 } from "./data";
 import { useLanguage } from "./i18n";
 
@@ -154,30 +154,36 @@ export function PdfModal({ doc, onClose }: { doc: PdfDocument; onClose: () => vo
           </div>
         </div>
 
-        {/* PDF Body */}
-        <div className="flex-1 bg-neutral-900 overflow-hidden relative min-h-[60vh]">
-          <object
-            data={`${doc.filePath}#toolbar=1&navpanes=1&view=FitH`}
-            type="application/pdf"
-            className="w-full h-full min-h-[60vh] border-0"
-            aria-label={hi ? doc.titleHi : doc.titleEn}
-          >
-            <div className="p-8 text-center text-paper flex flex-col items-center justify-center h-full gap-4">
-              <p className="font-body text-base">
-                {hi
-                  ? "इस ब्राउज़र में इनबिल्ट PDF रीडर उपलब्ध नहीं है। आप नीचे दिए गए बटन से PDF डाउनलोड कर सकते हैं या नई विंडो में देख सकते हैं।"
-                  : "PDF preview is not supported directly in this browser. Please download or open in a new tab."}
-              </p>
-              <div className="flex gap-4">
-                <a href={doc.filePath} download className="btn-primary">
-                  <Download className="w-4 h-4" /> {hi ? "PDF डाउनलोड करें" : "Download PDF"}
-                </a>
-                <a href={doc.filePath} target="_blank" rel="noreferrer" className="btn-ghost text-paper border-paper/40">
-                  <ExternalLink className="w-4 h-4" /> {hi ? "नई विंडो में देखें" : "Open in New Tab"}
-                </a>
-              </div>
+        {/* Modal Body */}
+        <div className="flex-1 bg-neutral-900 overflow-auto relative min-h-[65vh]">
+          {doc.category === "manuscript" ? (
+            <div className="p-4 md:p-6 bg-paper min-h-[65vh]">
+              <ManuscriptSection />
             </div>
-          </object>
+          ) : (
+            <object
+              data={`${doc.filePath}#toolbar=1&navpanes=1&view=FitH`}
+              type="application/pdf"
+              className="w-full h-full min-h-[65vh] border-0"
+              aria-label={hi ? doc.titleHi : doc.titleEn}
+            >
+              <div className="p-8 text-center text-paper flex flex-col items-center justify-center h-full gap-4">
+                <p className="font-body text-base">
+                  {hi
+                    ? "इस ब्राउज़र में इनबिल्ट PDF रीडर उपलब्ध नहीं है। आप नीचे दिए गए बटन से PDF डाउनलोड कर सकते हैं या नई विंडो में देख सकते हैं।"
+                    : "PDF preview is not supported directly in this browser. Please download or open in a new tab."}
+                </p>
+                <div className="flex gap-4">
+                  <a href={doc.filePath} download className="btn-primary">
+                    <Download className="w-4 h-4" /> {hi ? "PDF डाउनलोड करें" : "Download PDF"}
+                  </a>
+                  <a href={doc.filePath} target="_blank" rel="noreferrer" className="btn-ghost text-paper border-paper/40">
+                    <ExternalLink className="w-4 h-4" /> {hi ? "नई विंडो में देखें" : "Open in New Tab"}
+                  </a>
+                </div>
+              </div>
+            </object>
+          )}
         </div>
 
         {/* Footer */}
@@ -318,6 +324,220 @@ export function VideoSection({ className = "" }: { className?: string }) {
   );
 }
 
+/* ---------- ORIGINAL MANUSCRIPT VIEWER COMPONENT ---------- */
+
+export function ManuscriptSection({ className = "" }: { className?: string }) {
+  const language = useLanguage();
+  const hi = language !== "en";
+  const [selectedPageIndex, setSelectedPageIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"both" | "scan" | "extracted">("both");
+  const [zoomLevel, setZoomLevel] = useState(1);
+
+  const currentPage = manuscriptPages[selectedPageIndex];
+
+  return (
+    <div className={`manuscript-viewer-wrapper ${className}`}>
+      {/* Header controls & Page selector */}
+      <div className="bg-paper-dark/60 border border-gold/30 rounded-sm p-4 md:p-6 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="scripture-pill">
+                <ScrollText className="w-3.5 h-3.5" />
+                {hi ? "लेखक की मूल हस्तलिखित पांडुलिपि" : "Author's Original Handwritten Manuscript"}
+              </span>
+              <span className="text-xs font-body text-ink-soft">
+                {hi ? `पृष्ठ ${currentPage.pageNumber} / ${manuscriptPages.length}` : `Page ${currentPage.pageNumber} of ${manuscriptPages.length}`}
+              </span>
+            </div>
+            <h3 className="text-2xl md:text-3xl text-maroon font-serif">
+              {hi ? currentPage.titleHi : currentPage.titleEn}
+            </h3>
+            <p className="font-body text-sm text-saffron-deep font-medium mt-0.5">
+              {hi ? currentPage.themeHi : currentPage.themeEn}
+            </p>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1.5 p-1 bg-paper border border-gold/25 rounded-sm shrink-0">
+            <button
+              onClick={() => setViewMode("both")}
+              className={`px-3 py-1.5 text-xs font-body font-medium rounded-xs transition-colors ${
+                viewMode === "both" ? "manuscript-tab-active" : "manuscript-tab-inactive"
+              }`}
+            >
+              {hi ? "दोनों (तुलनात्मक)" : "Split View"}
+            </button>
+            <button
+              onClick={() => setViewMode("scan")}
+              className={`px-3 py-1.5 text-xs font-body font-medium rounded-xs transition-colors ${
+                viewMode === "scan" ? "manuscript-tab-active" : "manuscript-tab-inactive"
+              }`}
+            >
+              {hi ? "मूल स्कैन" : "Original Scan"}
+            </button>
+            <button
+              onClick={() => setViewMode("extracted")}
+              className={`px-3 py-1.5 text-xs font-body font-medium rounded-xs transition-colors ${
+                viewMode === "extracted" ? "manuscript-tab-active" : "manuscript-tab-inactive"
+              }`}
+            >
+              {hi ? "डिजिटल पाठ" : "Extracted Text"}
+            </button>
+          </div>
+        </div>
+
+        {/* Page Switcher Tabs */}
+        <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gold/20">
+          {manuscriptPages.map((page, idx) => (
+            <button
+              key={page.id}
+              onClick={() => {
+                setSelectedPageIndex(idx);
+                setZoomLevel(1);
+              }}
+              className={`p-2.5 text-left rounded-sm border transition-all ${
+                selectedPageIndex === idx
+                  ? "bg-maroon text-paper border-maroon shadow-xs"
+                  : "bg-paper border-gold/25 hover:border-saffron text-ink"
+              }`}
+            >
+              <div className="flex items-center justify-between text-[0.7rem] font-bold uppercase tracking-wider mb-0.5">
+                <span className={selectedPageIndex === idx ? "text-gold" : "text-saffron-deep"}>
+                  {hi ? `पृष्ठ ${idx + 1}` : `Page ${idx + 1}`}
+                </span>
+                <FileText className="w-3 h-3 opacity-70" />
+              </div>
+              <p className={`font-serif text-xs md:text-sm line-clamp-1 ${selectedPageIndex === idx ? "text-paper" : "text-maroon"}`}>
+                {hi ? page.titleHi.split("—")[0].trim() : page.titleEn.split("—")[0].trim()}
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Dual Area */}
+      <div className={`grid gap-6 items-start ${viewMode === "both" ? "lg:grid-cols-12" : "grid-cols-1"}`}>
+        {/* Left / Scan Side */}
+        {(viewMode === "both" || viewMode === "scan") && (
+          <div className={`${viewMode === "both" ? "lg:col-span-6" : "w-full"} space-y-3`}>
+            <div className="manuscript-scan-frame rounded-sm p-3 flex flex-col items-center">
+              <div className="w-full flex items-center justify-between px-2 py-1 text-paper/90 text-xs font-body mb-2">
+                <span className="flex items-center gap-1.5">
+                  <Feather className="w-3.5 h-3.5 text-gold" />
+                  {hi ? "हस्तलिखित मूल पांडुलिपि (स्कैन)" : "Original Handwritten Document (Scan)"}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setZoomLevel((z) => Math.min(2.5, z + 0.25))}
+                    className="p-1 hover:text-paper bg-white/10 rounded-xs"
+                    title="Zoom in"
+                  >
+                    <ZoomIn className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => setZoomLevel((z) => Math.max(1, z - 0.25))}
+                    className="p-1 hover:text-paper bg-white/10 rounded-xs"
+                    title="Zoom out"
+                  >
+                    <ZoomOut className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => setZoomLevel(1)}
+                    className="p-1 hover:text-paper bg-white/10 rounded-xs"
+                    title="Reset Zoom"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </button>
+                  <a
+                    href={currentPage.imagePath}
+                    download={`praptasya-prapti-manuscript-page-${currentPage.pageNumber}.jpg`}
+                    className="px-2 py-0.5 hover:text-gold bg-white/10 rounded-xs flex items-center gap-1 text-[0.7rem]"
+                    title={hi ? "मूल स्कैन डाउनलोड करें" : "Download Scan"}
+                  >
+                    <Download className="w-3.5 h-3.5" /> {hi ? "स्कैन" : "Scan"}
+                  </a>
+                </div>
+              </div>
+
+              {/* Image Viewport */}
+              <div className="w-full max-h-[650px] overflow-auto rounded-xs bg-black/40 flex items-center justify-center p-2">
+                <img
+                  src={currentPage.imagePath}
+                  alt={`हस्तलिखित पांडुलिपि पृष्ठ ${currentPage.pageNumber}`}
+                  style={{ transform: `scale(${zoomLevel})`, transformOrigin: "top center", transition: "transform 0.2s ease" }}
+                  className="max-w-full h-auto object-contain rounded-xs shadow-md cursor-zoom-in"
+                  onClick={() => setZoomLevel((z) => (z >= 1.75 ? 1 : 1.75))}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Right / Extracted Text Side */}
+        {(viewMode === "both" || viewMode === "extracted") && (
+          <div className={`${viewMode === "both" ? "lg:col-span-6" : "w-full"} space-y-6`}>
+            <div className="manuscript-paper-extracted rounded-sm p-6 md:p-8 space-y-6">
+              {/* Scripture references badge list */}
+              {currentPage.scriptureReferences && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-body font-semibold text-saffron-deep">
+                    {hi ? "ग्रन्थ सन्दर्भ:" : "Scripture Citations:"}
+                  </span>
+                  {currentPage.scriptureReferences.map((ref, idx) => (
+                    <span key={idx} className="scripture-pill">
+                      <BookOpen className="w-3 h-3" />
+                      {hi ? ref.nameHi : ref.nameEn} {ref.verse && `(${ref.verse})`}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Extracted Text Content */}
+              <div className="space-y-4">
+                {currentPage.extractedTextHi.map((paragraph, pIdx) => (
+                  <p
+                    key={pIdx}
+                    className="font-serif text-base md:text-lg text-ink leading-[1.85] text-justify tracking-wide"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+
+              {/* Key Essence & Takeaway Box */}
+              <div className="pt-4 border-t border-gold/30 bg-maroon/5 rounded-sm p-4 space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-saffron-deep">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {hi ? "दार्शनिक सार एवं निष्कर्ष" : "Core Philosophical Essence"}
+                </div>
+                <p className="font-body text-sm md:text-base text-maroon font-medium leading-relaxed">
+                  {hi ? currentPage.summaryHi : currentPage.summaryEn}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <a
+                  href={currentPage.imagePath}
+                  download={`praptasya-prapti-manuscript-page-${currentPage.pageNumber}.jpg`}
+                  className="inline-flex items-center gap-1.5 text-xs font-body font-semibold text-saffron-deep hover:underline"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  {hi ? `पृष्ठ ${currentPage.pageNumber} का हाई-रेज़ोल्यूशन स्कैन डाउनलोड करें` : `Download High-Res Page ${currentPage.pageNumber}`}
+                </a>
+                <span className="font-body text-xs text-ink-soft italic">
+                  — श्री हरनारायण साह (अनन्तानन्द मानव)
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ---------- PDF REPOSITORY COMPONENT ---------- */
 
 export function PdfRepository({ onSelectPdf }: { onSelectPdf: (doc: PdfDocument) => void }) {
@@ -327,8 +547,9 @@ export function PdfRepository({ onSelectPdf }: { onSelectPdf: (doc: PdfDocument)
   const [searchQuery, setSearchQuery] = useState("");
 
   const categories: { key: PdfCategory; hi: string; en: string }[] = [
-    { key: "all", hi: "सभी दस्तावेज (8)", en: "All (8)" },
+    { key: "all", hi: "सभी दस्तावेज (9)", en: "All (9)" },
     { key: "book", hi: "मूल ग्रंथ (2)", en: "Books (2)" },
+    { key: "manuscript", hi: "मूल पांडुलिपि (1)", en: "Manuscript (1)" },
     { key: "biography", hi: "जीवन-दर्शन (1)", en: "Biography (1)" },
     { key: "culture", hi: "संस्कृति (1)", en: "Culture (1)" },
     { key: "essay", hi: "विचार-लेख (1)", en: "Essays (1)" },
@@ -374,7 +595,7 @@ export function PdfRepository({ onSelectPdf }: { onSelectPdf: (doc: PdfDocument)
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={hi ? "PDF खोजें..." : "Search PDFs..."}
+            placeholder={hi ? "ग्रंथ व PDF खोजें..." : "Search Library..."}
             className="w-full pl-9 pr-4 py-2 bg-paper border border-gold/30 rounded-sm font-body text-xs text-ink placeholder-ink-soft/60 focus:outline-none focus:border-saffron"
           />
           <Search className="w-3.5 h-3.5 text-ink-soft absolute left-3 top-1/2 -translate-y-1/2" />
@@ -452,15 +673,24 @@ export function Home({ navigate }: { navigate: Nav }) {
   const pillars = [
     {
       title: "प्राप्तस्य प्राप्ति",
-      text: "Understanding what already exists within human life, rather than chasing fulfillment as something outside the self.",
+      ref: hi ? "ईशावास्योपनिषद् · वेदान्त" : "Isha Upanishad · Vedanta",
+      text: hi
+        ? "जो पहले से भीतर विद्यमान है, उसे बाहर न खोजकर अज्ञान के आवरण को हटाना ही सत्य की प्राप्ति है।"
+        : "Understanding what already exists within human life, rather than chasing fulfillment as something outside the self.",
     },
     {
       title: "वसुधैव कुटुम्बकम्",
-      text: "Humanity as one family, rooted in shared ecological, social, and cultural memory.",
+      ref: hi ? "महोपनिषद् ६.७१ · हितोपदेश" : "Maha Upanishad 6.71",
+      text: hi
+        ? "यह मेरा है, वह पराया है—ऐसी संकीर्णता से मुक्त होकर सम्पूर्ण मानवता को एक परिवार रूप में देखना।"
+        : "Humanity as one family, rooted in shared ecological, social, and cultural memory.",
     },
     {
       title: "सत्यमेव जयते",
-      text: "Truth approached through inquiry, experience, and understanding instead of inherited certainty.",
+      ref: hi ? "मुण्डकोपनिषद् ३.१.६" : "Mundaka Upanishad 3.1.6",
+      text: hi
+        ? "सत्य की ही सदा विजय होती है, असत्य की नहीं। निष्काम कर्म द्वारा विवेक-सम्मत जीवन जीना।"
+        : "Truth approached through inquiry, experience, and understanding instead of inherited certainty.",
     },
   ];
 
@@ -553,16 +783,61 @@ export function Home({ navigate }: { navigate: Nav }) {
         </div>
       </section>
 
-      {/* Three Pillars */}
+      {/* Three Pillars with Scripture Citations */}
       <section className="idea-section muted-band">
-        <Kicker>The Three Pillars</Kicker>
-        <div className="pillar-grid">
-          {pillars.map((pillar) => (
-            <motion.button key={pillar.title} {...fade} onClick={() => navigate({ name: "philosophy" })} className="museum-card">
-              <h3>{pillar.title}</h3>
-              <p>{pillar.text}</p>
-            </motion.button>
-          ))}
+        <div className="max-w-6xl mx-auto px-5">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <Kicker>{hi ? "मूल वैचारिक स्तम्भ" : "The Core Pillars"}</Kicker>
+            <h2 className="text-3xl md:text-4xl text-maroon">{hi ? "वैदिक महावाक्य एवं दार्शनिक आधार" : "Vedic Mahavakyas & Philosophical Roots"}</h2>
+            <p className="font-body text-ink-soft text-base mt-2">
+              {hi
+                ? "प्राचीन उपनिषदों के शाश्वत सूत्रों पर आधारित निष्काम एवं स्वाभाविक मानव जीवन का मार्ग।"
+                : "Foundational ancient verses reflecting the path of spontaneous, truthful living."}
+            </p>
+          </div>
+
+          <div className="pillar-grid">
+            {pillars.map((pillar) => (
+              <motion.button key={pillar.title} {...fade} onClick={() => navigate({ name: "philosophy" })} className="museum-card text-left flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="scripture-pill">
+                      <BookOpen className="w-3 h-3" />
+                      {pillar.ref}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl text-maroon mb-2">{pillar.title}</h3>
+                  <p className="text-sm font-body text-ink-soft leading-relaxed">{pillar.text}</p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-gold/20 flex items-center text-xs font-semibold text-saffron-deep">
+                  <span>{hi ? "विस्तृत ग्रन्थ सन्दर्भ पढ़ें" : "Read Full Citation & Meaning"}</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Spotlight: Original Handwritten Manuscript */}
+      <section className="idea-section bg-paper-dark/30 border-b border-gold/25">
+        <div className="max-w-6xl mx-auto px-5">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
+            <div>
+              <Kicker>{hi ? "मूल हस्तलिखित दस्तावेज़" : "Original Manuscript"}</Kicker>
+              <h2 className="text-3xl md:text-4xl text-maroon">{hi ? "लेखक की मूल हस्तलिखित पांडुलिपि" : "Original Handwritten Leaves"}</h2>
+              <p className="font-body text-ink-soft text-base mt-2">
+                {hi
+                  ? "लेखक श्री हरनारायण साह द्वारा स्वयं लिखित मूल पृष्ठ — उच्च-गुणवत्ता स्कैन एवं सुगम डिजिटल पाठ।"
+                  : "Handwritten manuscript pages penned by the author — high-res scans with extracted digital text."}
+              </p>
+            </div>
+            <button onClick={() => navigate({ name: "philosophy" })} className="link-arrow mt-4 md:mt-0 shrink-0">
+              {hi ? "पांडुलिपि वाचनालय खोलें" : "Open Full Manuscript Reader"} <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <ManuscriptSection />
         </div>
       </section>
 
@@ -580,7 +855,7 @@ export function Home({ navigate }: { navigate: Nav }) {
               </p>
             </div>
             <button onClick={() => navigate({ name: "articles" })} className="link-arrow mt-4 md:mt-0 shrink-0">
-              {hi ? "सम्पूर्ण ई-पुस्तकालय (8 दस्तावेज)" : "View Complete Library (8 PDFs)"} <ArrowRight className="w-4 h-4" />
+              {hi ? "सम्पूर्ण ई-पुस्तकालय (9 दस्तावेज)" : "View Complete Library (9 PDFs)"} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
@@ -672,10 +947,10 @@ export function Home({ navigate }: { navigate: Nav }) {
       {/* Author Section */}
       <section className="idea-section">
         <div className="author-feature">
-          <img src="/images/harnarayan-shah.jpg" alt="Harnarayan Shah" />
+          <img src="/images/harnarayan-shah.jpg" alt="Harnarayan Sah" />
           <div>
             <Kicker>{hi ? "लेखक परिचय" : "About the Author"}</Kicker>
-            <h2 className="museum-title">हरनारायण शाह</h2>
+            <h2 className="museum-title">{hi ? "हरनारायण साह" : "Harnarayan Sah"}</h2>
             <p className="author-role">{hi ? "लेखकीय नाम: अनन्तानन्द मानव · मानव मुक्ति मंच" : "Pen name: Anantanand Manav · Manav Mukti Manch"}</p>
             <p className="museum-copy">
               The website presents the author's journey, writings, and philosophy without making it only about personality. The focus remains on ideas, inquiry, and the human questions behind the work.
@@ -984,6 +1259,25 @@ export function Book({ navigate }: { navigate: Nav }) {
           </div>
         </motion.div>
       </div>
+
+      <div className="gold-rule w-full my-16 opacity-50" />
+
+      {/* Original Manuscript Spotlight in Book Page */}
+      <section className="mt-12">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <Kicker>{hi ? "हस्तलिखित पांडुलिपि" : "Original Manuscript"}</Kicker>
+          <h2 className="text-3xl md:text-4xl text-maroon font-serif">
+            {hi ? "लेखक की मूल हस्तलिखित पांडुलिपि के पृष्ठ" : "Original Handwritten Manuscript Pages"}
+          </h2>
+          <p className="font-body text-ink-soft text-base mt-2">
+            {hi
+              ? "ग्रंथ के प्रथम तीन आधार स्तम्भों पर लेखक श्री हरनारायण साह की मूल हस्तलिखित पांडुलिपि एवं उसका सुगम डिजिटल पाठ।"
+              : "Examine the original handwritten pages of the foundational thesis alongside verified text."}
+          </p>
+        </div>
+
+        <ManuscriptSection />
+      </section>
     </div>
   );
 }
@@ -991,34 +1285,80 @@ export function Book({ navigate }: { navigate: Nav }) {
 /* ---------- PHILOSOPHY ---------- */
 
 export function Philosophy({ navigate }: { navigate: Nav }) {
+  const language = useLanguage();
+  const hi = language !== "en";
+
   return (
     <div>
-      <div className="max-w-5xl mx-auto px-5 py-20 md:py-24">
+      <div className="max-w-6xl mx-auto px-5 py-20 md:py-24">
         <PageHead
           kicker="विचार-दर्शन"
-          title="लेखक के विचार"
-          sub="नीचे प्रस्तुत विचार लेखक की स्वतंत्र दृष्टि हैं। यह किसी मत, संप्रदाय अथवा संस्था का आधिकारिक सिद्धांत नहीं — यह चिंतन का निमंत्रण है।"
+          title="वैचारिक स्तम्भ एवं शास्त्र सन्दर्भ"
+          sub="नीचे प्रस्तुत विचार उपनिषदों, वेदान्त एवं सहज जीवन दर्शन पर आधारित लेखक की स्वतंत्र दृष्टि हैं। यह किसी मत का प्रचार नहीं — विवेक जगाने का निमंत्रण है।"
         />
 
-        <div className="space-y-6">
+        {/* Pillars with Scripture Citations and Sanskrit Shlokas */}
+        <div className="space-y-8 mb-20">
           {philosophyPillars.map((p, i) => (
             <motion.div
               key={p.id}
               {...fade}
-              className={`grid md:grid-cols-3 gap-6 items-center rounded-sm overflow-hidden border border-gold/25 ${
+              className={`rounded-sm overflow-hidden border border-gold/30 ${
                 i % 2 === 0 ? "paper-texture" : "bg-paper-dark/50"
               }`}
             >
-              <div className="p-8 md:p-10 flex flex-col items-center justify-center text-center bg-maroon/5 md:h-full">
-                <span className="font-serif text-3xl md:text-4xl text-saffron-deep leading-snug">{p.sanskrit}</span>
-              </div>
-              <div className="md:col-span-2 p-8 md:p-10">
-                <h3 className="text-2xl text-maroon mb-3">{p.title}</h3>
-                <p className="font-body text-lg text-ink-soft leading-relaxed">{p.text}</p>
+              <div className="p-6 md:p-8 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gold/20 pb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="font-serif text-2xl md:text-3xl text-saffron-deep font-bold">
+                      {p.sanskrit}
+                    </span>
+                    <span className="scripture-pill">
+                      <BookOpen className="w-3.5 h-3.5" />
+                      {hi ? p.shlokRef : p.sourceEn}
+                    </span>
+                  </div>
+                  <span className="text-xs font-body font-semibold text-ink-soft bg-paper px-3 py-1 rounded-sm border border-gold/20">
+                    {hi ? p.sourceHi : p.sourceEn}
+                  </span>
+                </div>
+
+                {/* Sanskrit Full Verse Box */}
+                {p.fullSanskrit && (
+                  <div className="bg-maroon/5 border-l-3 border-saffron rounded-xs p-4 my-2">
+                    <p className="font-serif text-lg md:text-xl text-maroon leading-relaxed">
+                      “{p.fullSanskrit}”
+                    </p>
+                  </div>
+                )}
+
+                <div>
+                  <h3 className="text-xl md:text-2xl text-maroon font-serif mb-2">{p.title}</h3>
+                  <p className="font-body text-base md:text-lg text-ink-soft leading-relaxed">{p.text}</p>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        <div className="gold-rule w-full my-16 opacity-50" />
+
+        {/* Interactive Original Manuscript Section */}
+        <section className="mb-20">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <Kicker>{hi ? "पांडुलिपि वाचनालय" : "Manuscript Archives"}</Kicker>
+            <h2 className="text-3xl md:text-4xl text-maroon font-serif">
+              {hi ? "लेखक की मूल हस्तलिखित पांडुलिपि एवं दार्शनिक आलेख" : "Original Handwritten Manuscript & Discourse"}
+            </h2>
+            <p className="font-body text-ink-soft text-base mt-2">
+              {hi
+                ? "लेखक श्री हरनारायण साह द्वारा स्वयं लिखित मूल पृष्ठों का अवलोकन करें तथा सुगम डिजिटल पाठ पढ़ें।"
+                : "Explore the original handwritten manuscript leaves penned by Shri Harnarayan Sah along with extracted text."}
+            </p>
+          </div>
+
+          <ManuscriptSection />
+        </section>
       </div>
 
       {/* Quote wall */}
