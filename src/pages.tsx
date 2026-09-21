@@ -999,19 +999,91 @@ export function Home({ navigate }: { navigate: Nav }) {
       </section>
 
       {/* Author Section */}
-      <section className="idea-section">
-        <div className="author-feature">
-          <img src="/images/harnarayan-shah.jpg" alt="Harnarayan Sah" />
+      <section className="idea-section" id="about-author">
+        <div className="author-feature items-start">
+          <div className="space-y-4">
+            <img
+              src="/images/harnarayan-shah.jpg"
+              alt={hi ? "श्री हरनारायण साह (अनन्तानन्द मानव)" : "Shri Harnarayan Sah (Anantanand Manav)"}
+              className="w-full rounded-sm border border-ink/10 shadow-sm"
+            />
+            <div className="bg-paper-dark/60 border border-ink/10 rounded-sm p-4 text-center">
+              <span className="font-serif text-lg text-maroon block font-semibold">
+                {hi ? "श्री हरनारायण साह" : "Shri Harnarayan Sah"}
+              </span>
+              <span className="font-body text-xs text-saffron-deep tracking-wider uppercase font-medium">
+                {hi ? "उर्फ अनन्तानन्द मानव" : "alias Anantanand Manav"}
+              </span>
+              <div className="mt-3 pt-3 border-t border-ink/10 space-y-1 text-xs font-body text-ink-soft">
+                <p><strong>12.58 Cr</strong> {hi ? "राम नाम जप" : "Rama Nama Chants"}</p>
+                <p><strong>40 Lakh+</strong> {hi ? "गायत्री व पंचाक्षर मंत्र" : "Sacred Mantras"}</p>
+                <p><strong>12 {hi ? "घंटे" : "Hours"}</strong> {hi ? "दैनिक साधना (1984 से)" : "Daily Sadhana"}</p>
+                <p><strong>8 {hi ? "दिन" : "Days"}</strong> {hi ? "लातेहार वन में मृत्यु-साधना" : "Latehar Forest Fast"}</p>
+              </div>
+            </div>
+          </div>
+
           <div>
             <Kicker>{hi ? "लेखक परिचय" : "About the Author"}</Kicker>
-            <h2 className="museum-title">{hi ? "हरनारायण साह" : "Harnarayan Sah"}</h2>
-            <p className="author-role">{hi ? "लेखकीय नाम: अनन्तानन्द मानव · मानव मुक्ति मंच" : "Pen name: Anantanand Manav · Manav Mukti Manch"}</p>
-            <p className="museum-copy">
-              The website presents the author's journey, writings, and philosophy without making it only about personality. The focus remains on ideas, inquiry, and the human questions behind the work.
+            <h2 className="museum-title mb-1">
+              {hi ? "हरनारायण साह (अनन्तानन्द मानव)" : "Harnarayan Sah (Anantanand Manav)"}
+            </h2>
+            <p className="author-role mb-6">
+              {hi ? "विगत 30 वर्षों के सहकर्मी एवं साक्षी द्वारा लिखित संस्मरण" : "30-Year Companion & Eyewitness Account"}
             </p>
-            <div className="flex flex-wrap gap-4 items-center mt-5">
-              <button onClick={() => navigate({ name: "about" })} className="link-arrow">
-                {hi ? "जीवन-यात्रा पढ़ें" : "Read the Journey"} <ArrowRight className="w-4 h-4" />
+
+            <div className="space-y-4 font-body text-ink-soft text-base leading-relaxed">
+              <p className="font-serif text-lg text-maroon font-medium border-l-3 border-saffron pl-4 bg-saffron/5 py-2 rounded-r-xs">
+                {hi
+                  ? "हरनारायण साह, उर्फ अनन्तानन्द मानव को विगत 30 वर्षों से मैं जानता हूँ। वर्ष 1984 में मैट्रिक की परीक्षा देने के पश्चात ये आध्यात्मिक चिन्तन शुरू किये।"
+                  : "I have known Harnarayan Sah, alias Anantanand Manav, for the past 30 years. After completing matriculation examinations in the year 1984, he commenced his profound spiritual contemplation."}
+              </p>
+
+              <p>
+                {hi
+                  ? "इनकी मुख्य साधना इनका राम नाम जप है। इन्होंने 12 करोड़ 58 लाख राम नाम जप किया है। इसके बावजूद भी परम सत्य का ज्ञान न होने पर ये निराश रहने लगे। ये प्रतिदिन 12 घंटा साधना में व्यतीत करते थे। साधना के क्रम में इन्होंने 40 लाख से अधिक गायत्री मंत्र, 40 लाख से अधिक पंचाक्षर मंत्र, षडाक्षर मंत्र, आदि कई मंत्रों का मानसिक जप किया है। इन्होंने कठिन श्मशान साधना भी की है।"
+                  : "His primary sadhana was the repetition of Rama Nama. He accomplished 125.8 million (12 crore 58 lakh) chants of Rama Nama. Even so, not attaining the direct realization of the Supreme Truth, he fell into deep anguish. He dedicated 12 hours every day to rigorous practice. Along this path, he mentally chanted over 4 million Gayatri Mantras, over 4 million Panchakshara Mantras, the Shadakshara Mantra, and numerous other sacred formulas, alongside severe cremation-ground (smashana) sadhana."}
+              </p>
+
+              <p>
+                {hi
+                  ? "इनका कई देवताओं, ईश्वरों से सीधा संबंध भी रहा है। साधना के क्रम में इन्होंने भगवान शिव, भगवान राम, भगवान श्री कृष्ण, हनुमान जी, पितामह भीष्म आदि का कई बार साक्षात दर्शन किया है। भगवान राम के साथ तो इनका रहना, सहना, खाना भी हुआ था। लेकिन जब भगवान राम ने कहा था कि—“मैं तेरे अज्ञान का परिणाम था”, तो ये काफी निराश होकर मूर्छित हो गये थे। इन सभी ने यहाँ तक कह दिया कि मैं तेरे अज्ञान का परिणाम था। साधना की प्रारंभिक अवस्था में पितामह भीष्म तथा श्री हनुमान जी ने इन्हें न तो गृहस्थ आश्रम से बाहर जाने दिया और न आत्महत्या ही करने दिया।"
+                  : "He maintained direct communion with many deities and divine forms. In his spiritual discipline, he repeatedly experienced direct visions of Lord Shiva, Lord Rama, Lord Krishna, Hanuman Ji, and Pitamaha Bhishma. In divine vision, he even lived, dwelt, and dined with Lord Rama. But when Lord Rama revealed—\"I was merely the outcome of your own ignorance\", he fell into extreme despair and collapsed unconscious. The divine forms revealed that all such manifestations were products of devotional projection. In his early stages, Pitamaha Bhishma and Shri Hanuman Ji prevented him from leaving the householder life and safeguarded him against despair."}
+              </p>
+
+              <p>
+                {hi
+                  ? "उपरोक्त सभी साधना से परम सत्य का ज्ञान नहीं होने के फलस्वरूप इन्होंने पक्षियों की भांति मृत्यु साधना करके (जिसमें इन्होंने झारखण्ड के लातेहार जिले के करमडीह जंगल में आठ दिनों तक अन्न-जल छोड़ दिया था) शरीर को छोड़ना चाहा। लेकिन शरीर छोड़ने के कुछ क्षण पहले स्वतः उत्पन्न एक प्रकाश पुंज में खो गये।"
+                  : "Failing to attain the Supreme Non-Dual Truth through all these traditional practices, he resolved to drop the body in the manner of birds (pakshi-mrityu sadhana). In the deep forests of Karamdeeh, Latehar district, Jharkhand, he completely renounced food and water for eight continuous days to release the physical shell. But moments before the dissolution of the body, he was absorbed into a spontaneously emerging luminous beam of pure light."}
+              </p>
+
+              <p>
+                {hi
+                  ? "होश आने पर इन्होंने पाया कि यही अवस्था परम सत्य या प्रारब्ध की अवस्था है। इन्होंने पाया कि इनके जीवन की गाड़ी प्रारब्ध की धार में बहते जा रही है, वे दिक्कालातीत हो चुके हैं, संस्कार समाप्त हो चुके हैं, सर्वोच्च लक्ष्य मिल चुका है, चेतना अपने स्वरूप में स्थित हो चुकी है।"
+                  : "Upon returning to consciousness, he discovered that this natural state is itself the Supreme Truth—the state of spontaneous Prarabdha. He observed that the stream of his life was now effortlessly flowing in the current of destiny: he had transcended space and time, past latent impressions (samskaras) had ceased, the supreme goal was fulfilled, and consciousness had firmly established itself in its own eternal nature."}
+              </p>
+
+              <p className="font-medium text-ink bg-maroon/5 border-l-3 border-maroon pl-4 py-3 rounded-r-xs">
+                {hi
+                  ? "इस स्वयंप्रकाशित जीवन पथ की प्रेरणा से इन्होंने 'प्राप्तस्य प्राप्ति' नाम किताब लिखी जो आपके सामने है। यह स्वयंप्रकाशित जीवन पथ ही शिवत्व है, पूर्णमानवता है, पूर्णतः संतुष्ट जीवन पथ है, सहज जीवन है, निष्काम कर्म करने वाले का जीवन है, जिसमें संस्कार नहीं बनते हैं। इसी प्रकार के जीवन पथ से स्वतः वसुधैव कुटुम्बकम् पैदा होता है, जो सनातन धर्म का स्वाभाविक लक्ष्य है, जो अपने आप में भारत के मूल निवासियों का जीवन पथ है।"
+                  : "Inspired by this self-luminous path of life, he authored the scripture 'Praptasya Prapti' that rests before you. This self-luminous path is Shivattva, complete humanity, absolute contentment, effortless natural living, and the path of desireless action where no new karmic bonds are forged. From this state alone spontaneously arises Vasudhaiva Kutumbakam (the entire universe as one family)—the organic culmination of Sanatana Dharma and the primal heritage of the original people of Bharat."}
+              </p>
+            </div>
+
+            {/* Added contact lines */}
+            <div className="mt-6 pt-4 border-t border-ink/15 space-y-1.5 bg-paper-dark/40 p-4 rounded-sm">
+              <p className="font-serif text-base text-maroon font-semibold flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-saffron" />
+                {hi ? "प्रभाकर कुमार (M.Des IIT Delhi) - 9972934937" : "Prabhakar Kumar (M.Des IIT Delhi) - +91 9972934937"}
+              </p>
+              <p className="font-body text-xs text-ink-soft">
+                {hi ? "विशेष सम्पर्क / संस्मरण लेखक: कौशल किशोर झा - 9431369111" : "Biographer & Coordinator: Kaushal Kishore Jha - +91 9431369111"}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4 items-center mt-6">
+              <button onClick={() => navigate({ name: "about" })} className="btn-primary">
+                {hi ? "मूल हस्तलिखित पांडुलिपि एवं विस्तृत विवरण पढ़ें" : "View Original Handwritten Scans & Detailed Bio"} <ArrowRight className="w-4 h-4" />
               </button>
               <a
                 href="/pdfs/sanskriti-ka-khel.pdf"
@@ -1245,6 +1317,10 @@ export function About({ navigate }: { navigate: Nav }) {
                 ? "इस स्वयंप्रकाशित जीवन पथ की प्रेरणा से इन्होंने 'प्राप्तस्य प्राप्ति' नाम किताब लिखी जो आपके सामने है। यह स्वयंप्रकाशित जीवन पथ ही शिवत्व है, पूर्णमानवता है, पूर्णतः संतुष्ट जीवन पथ है, सहज जीवन है, निष्काम कर्म करने वाले का जीवन है, जिसमें संस्कार नहीं बनते हैं। इसी प्रकार के जीवन पथ से स्वतः वसुधैव कुटुम्बकम् पैदा होता है, जो सनातन धर्म का स्वाभाविक लक्ष्य है, जो अपने आप में भारत के मूल निवासियों का जीवन पथ है।"
                 : "Inspired by this self-luminous path of life, he authored the scripture 'Praptasya Prapti' that rests before you. This self-luminous path is Shivattva, complete humanity, absolute contentment, effortless natural living, and the path of desireless action where no new karmic bonds are forged. From this state alone spontaneously arises Vasudhaiva Kutumbakam (the entire universe as one family)—the organic culmination of Sanatana Dharma and the primal heritage of the original people of Bharat."}
             </p>
+            <div className="mt-4 pt-3 border-t border-maroon/20 text-sm font-serif text-maroon font-semibold flex items-center justify-between flex-wrap gap-2">
+              <span>{hi ? "प्रभाकर कुमार (M.Des IIT Delhi) - 9972934937" : "Prabhakar Kumar (M.Des IIT Delhi) - +91 9972934937"}</span>
+              <span className="font-body text-xs text-ink-soft">{hi ? "विशेष सम्पर्क: कौशल किशोर झा - 9431369111" : "Special Contact: Kaushal Kishore Jha - +91 9431369111"}</span>
+            </div>
           </div>
 
           {/* Contact & Attribution Card */}
