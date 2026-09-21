@@ -1077,52 +1077,314 @@ export function Home({ navigate }: { navigate: Nav }) {
 export function About({ navigate }: { navigate: Nav }) {
   const language = useLanguage();
   const hi = language !== "en";
+  const [activeScanModal, setActiveScanModal] = useState<number | null>(null);
 
-  const blocks = [
-    { icon: ScrollText, title: "जीवन यात्रा", text: "एक साधारण जीवन से आरंभ हुई यह यात्रा प्रश्नों से भरी रही। हर अनुभव, हर संघर्ष ने चिंतन को गहराई दी और लेखक को मूल प्रश्नों की ओर मोड़ा।" },
-    { icon: Sparkles, title: "साधना / शोध यात्रा", text: "वर्षों तक शास्त्रों का अध्ययन, विभिन्न परंपराओं का सत्संग, मौन साधना और आत्म-निरीक्षण — इसी तपस्या से इस ग्रंथ के विचार परिपक्व हुए।" },
-    { icon: Feather, title: "क्यों लिखा यह ग्रंथ", text: "लेखक ने अनुभव किया कि आज मनुष्य को तैयार उत्तरों की नहीं, स्वयं सोचने के साहस की आवश्यकता है। यही आवश्यकता इस ग्रंथ का बीज बनी।" },
+  const stats = [
+    { num: "12.58 Cr", numHi: "१२.५८ करोड़", label: hi ? "राम नाम जप" : "Rama Nama Chants" },
+    { num: "40 Lakh+", numHi: "४० लाख+", label: hi ? "गायत्री एवं पंचाक्षर मंत्र" : "Gayatri & Sacred Mantras" },
+    { num: "12 Hours", numHi: "१२ घंटे", label: hi ? "दैनिक तपस्या (1984 से)" : "Daily Sadhana (since 1984)" },
+    { num: "8 Days", numHi: "८ दिन", label: hi ? "करमडीह वन में मृत्यु-साधना" : "Latehar Forest Fast" },
+  ];
+
+  const manuscriptScans = [
+    {
+      page: 1,
+      title: hi ? "हस्तलिखित परिचय — पृष्ठ १ (साधना, जप एवं साक्षात्कार)" : "Handwritten Bio — Page 1 (Sadhana & Visions)",
+      image: "/images/author-intro-p1.png",
+      desc: hi ? "श्री कौशल किशोर झा द्वारा हस्तलिखित प्रथम पृष्ठ" : "First page penned by Shri Kaushal Kishore Jha",
+    },
+    {
+      page: 2,
+      title: hi ? "हस्तलिखित परिचय — पृष्ठ २ (आत्मज्ञान, प्रारब्ध एवं सन्देश)" : "Handwritten Bio — Page 2 (Awakening & Message)",
+      image: "/images/author-intro-p2.png",
+      desc: hi ? "श्री कौशल किशोर झा द्वारा हस्तलिखित द्वितीय पृष्ठ" : "Second page penned by Shri Kaushal Kishore Jha",
+    },
   ];
 
   return (
     <div className="max-w-5xl mx-auto px-5 py-20 md:py-24">
       <PageHead
-        kicker="लेखक परिचय"
-        title="लेखक की विचार-यात्रा"
-        sub="एक स्वतंत्र चिंतक, साधक एवं कलाकार — जिनकी लेखनी किसी मत का प्रचार नहीं, विवेक का आह्वान करती है।"
+        kicker={hi ? "लेखक परिचय" : "About the Author"}
+        title={hi ? "श्री हरनारायण साह (अनन्तानन्द मानव)" : "Shri Harnarayan Sah (Anantanand Manav)"}
+        sub={
+          hi
+            ? "विगत 30 वर्षों के सहकर्मी एवं साक्षी द्वारा लिखित संस्मरण, कठिन साधना-यात्रा एवं ग्रंथ अवतरण की गाथा।"
+            : "A 30-year companion and eyewitness account of his spiritual journey, rigorous sadhana, and realization."
+        }
       />
 
-      <motion.div {...fade} className="grid md:grid-cols-5 gap-10 items-start mb-20">
+      {/* Hero: Portrait + Overview Card */}
+      <motion.div {...fade} className="grid md:grid-cols-5 gap-10 items-start mb-16">
         <div className="md:col-span-2 space-y-6">
-          <figure className="m-0">
+          <figure className="m-0 bg-paper-dark/40 border border-ink/10 rounded-sm p-2 shadow-sm">
             <img
               src="/images/harnarayan-shah.jpg"
               alt={hi ? "लेखक श्री हरनारायण साह (अनन्तानन्द मानव)" : "Author Shri Harnarayan Sah (Anantanand Manav)"}
-              className="w-full aspect-[4/5] object-cover rounded-md border border-ink/10"
+              className="w-full aspect-[4/5] object-cover rounded-sm border border-ink/10"
               width={1170}
               height={1170}
               loading="eager"
             />
-            <figcaption className="font-body text-sm text-ink-soft mt-3">
-              {hi ? "श्री हरनारायण साह · अनन्तानन्द मानव" : "Shri Harnarayan Sah · Anantanand Manav"}
+            <figcaption className="p-3 text-center">
+              <span className="font-serif text-lg text-maroon block font-semibold">
+                {hi ? "श्री हरनारायण साह" : "Shri Harnarayan Sah"}
+              </span>
+              <span className="font-body text-xs text-saffron-deep tracking-wider uppercase font-medium">
+                {hi ? "उर्फ अनन्तानन्द मानव" : "alias Anantanand Manav"}
+              </span>
             </figcaption>
           </figure>
+
+          {/* Key Milestones Pill Grid */}
+          <div className="grid grid-cols-2 gap-3">
+            {stats.map((st, i) => (
+              <div key={i} className="bg-paper-dark/60 border border-ink/10 rounded-sm p-3 text-center">
+                <span className="font-serif text-lg md:text-xl font-bold text-maroon block">
+                  {hi ? st.numHi : st.num}
+                </span>
+                <span className="font-body text-[0.72rem] text-ink-soft leading-tight block mt-1">
+                  {st.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="md:col-span-3 space-y-8">
-          {blocks.map((b) => (
-            <div key={b.title} className="flex gap-4">
-              <div className="shrink-0 w-11 h-11 rounded-sm bg-saffron/10 border border-saffron/30 flex items-center justify-center">
-                <b.icon className="w-5 h-5 text-saffron-deep" />
+        {/* Narrative Memoir: Exact Provided Text */}
+        <div className="md:col-span-3 space-y-6">
+          {/* Eyewitness Intro Badge */}
+          <div className="flex items-center gap-3 p-4 rounded-sm bg-saffron/10 border-l-3 border-saffron">
+            <Quote className="w-5 h-5 text-saffron-deep shrink-0" />
+            <p className="font-serif text-sm md:text-base text-maroon leading-relaxed italic">
+              {hi
+                ? "“हरनारायण साह, उर्फ अनन्तानन्द मानव को विगत 30 वर्षों से मैं जानता हूँ। वर्ष 1984 में मैट्रिक की परीक्षा देने के पश्चात ये आध्यात्मिक चिन्तन शुरू किये।”"
+                : "“I have known Harnarayan Sah, alias Anantanand Manav, for the past 30 years. After completing matriculation examinations in the year 1984, he commenced his profound spiritual contemplation.”"}
+            </p>
+          </div>
+
+          {/* Section 1: Tapasya & Japa */}
+          <div className="paper-texture border border-ink/10 rounded-sm p-6 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-full bg-saffron/10 text-saffron-deep flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </span>
+              <h3 className="font-serif text-lg md:text-xl text-maroon">
+                {hi ? "मुख्य साधना एवं मंत्र जप" : "Core Sadhana & Mantra Japa"}
+              </h3>
+            </div>
+            <p className="font-body text-ink-soft leading-relaxed text-sm md:text-base">
+              {hi
+                ? "इनकी मुख्य साधना इनका राम नाम जप है। इन्होंने 12 करोड़ 58 लाख राम नाम जप किया है। इसके बावजूद भी परम सत्य का ज्ञान न होने पर ये निराश रहने लगे। ये प्रतिदिन 12 घंटा साधना में व्यतीत करते थे। साधना के क्रम में इन्होंने 40 लाख से अधिक गायत्री मंत्र, 40 लाख से अधिक पंचाक्षर मंत्र, षडाक्षर मंत्र, आदि कई मंत्रों का मानसिक जप किया है। इन्होंने कठिन श्मशान साधना भी की है।"
+                : "His primary sadhana was the repetition of Rama Nama. He accomplished 125.8 million (12 crore 58 lakh) chants of Rama Nama. Even so, not attaining the direct realization of the Supreme Truth, he fell into deep anguish. He dedicated 12 hours every day to rigorous practice. Along this path, he mentally chanted over 4 million Gayatri Mantras, over 4 million Panchakshara Mantras, the Shadakshara Mantra, and numerous other sacred formulas, alongside severe cremation-ground (smashana) sadhana."}
+            </p>
+          </div>
+
+          {/* Section 2: Visions & Ignorance Revelation */}
+          <div className="paper-texture border border-ink/10 rounded-sm p-6 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-full bg-maroon/10 text-maroon flex items-center justify-center shrink-0">
+                <Eye className="w-4 h-4" />
+              </span>
+              <h3 className="font-serif text-lg md:text-xl text-maroon">
+                {hi ? "साक्षात्कार एवं 'अज्ञान का परिणाम' का उद्घोष" : "Divine Visions & Revelation of Dualism"}
+              </h3>
+            </div>
+            <p className="font-body text-ink-soft leading-relaxed text-sm md:text-base">
+              {hi
+                ? "इनका कई देवताओं, ईश्वरों से सीधा संबंध भी रहा है। साधना के क्रम में इन्होंने भगवान शिव, भगवान राम, भगवान श्री कृष्ण, हनुमान जी, पितामह भीष्म आदि का कई बार साक्षात दर्शन किया है। भगवान राम के साथ तो इनका रहना, सहना, खाना भी हुआ था। लेकिन जब भगवान राम ने कहा था कि—“मैं तेरे अज्ञान का परिणाम था”, तो ये काफी निराश होकर मूर्छित हो गये थे। इन सभी ने यहाँ तक कह दिया कि मैं तेरे अज्ञान का परिणाम था। साधना की प्रारंभिक अवस्था में पितामह भीष्म तथा श्री हनुमान जी ने इन्हें न तो गृहस्थ आश्रम से बाहर जाने दिया और न आत्महत्या ही करने दिया।"
+                : "He maintained direct communion with many deities and divine forms. In his spiritual discipline, he repeatedly experienced direct visions of Lord Shiva, Lord Rama, Lord Krishna, Hanuman Ji, and Pitamaha Bhishma. In divine vision, he even lived, dwelt, and dined with Lord Rama. But when Lord Rama revealed—\"I was merely the outcome of your own ignorance\", he fell into extreme despair and collapsed unconscious. The divine forms revealed that all such manifestations were products of devotional projection. In his early stages, Pitamaha Bhishma and Shri Hanuman Ji prevented him from leaving the householder life and safeguarded him against despair."}
+            </p>
+          </div>
+
+          {/* Section 3: Latehar Forest & Death Sadhana */}
+          <div className="paper-texture border border-ink/10 rounded-sm p-6 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-full bg-saffron/10 text-saffron-deep flex items-center justify-center shrink-0">
+                <ScrollText className="w-4 h-4" />
+              </span>
+              <h3 className="font-serif text-lg md:text-xl text-maroon">
+                {hi ? "करमडीह वन (लातेहार) में मृत्यु-साधना व प्रकाश पुंज" : "Death-Sadhana in Latehar Forest & The Flash of Light"}
+              </h3>
+            </div>
+            <p className="font-body text-ink-soft leading-relaxed text-sm md:text-base">
+              {hi
+                ? "उपरोक्त सभी साधना से परम सत्य का ज्ञान नहीं होने के फलस्वरूप इन्होंने पक्षियों की भांति मृत्यु साधना करके (जिसमें इन्होंने झारखण्ड के लातेहार जिले के करमडीह जंगल में आठ दिनों तक अन्न-जल छोड़ दिया था) शरीर को छोड़ना चाहा। लेकिन शरीर छोड़ने के कुछ क्षण पहले स्वतः उत्पन्न एक प्रकाश पुंज में खो गये।"
+                : "Failing to attain the Supreme Non-Dual Truth through all these traditional practices, he resolved to drop the body in the manner of birds (pakshi-mrityu sadhana). In the deep forests of Karamdeeh, Latehar district, Jharkhand, he completely renounced food and water for eight continuous days to release the physical shell. But moments before the dissolution of the body, he was absorbed into a spontaneously emerging luminous beam of pure light."}
+            </p>
+          </div>
+
+          {/* Section 4: Awakening & Prarabdha */}
+          <div className="paper-texture border border-ink/10 rounded-sm p-6 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-full bg-gold/20 text-maroon flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </span>
+              <h3 className="font-serif text-lg md:text-xl text-maroon">
+                {hi ? "परम सत्य, प्रारब्ध एवं चेतना का स्वरूप" : "Supreme Truth, Prarabdha & Consciousness"}
+              </h3>
+            </div>
+            <p className="font-body text-ink-soft leading-relaxed text-sm md:text-base">
+              {hi
+                ? "होश आने पर इन्होंने पाया कि यही अवस्था परम सत्य या प्रारब्ध की अवस्था है। इन्होंने पाया कि इनके जीवन की गाड़ी प्रारब्ध की धार में बहते जा रही है, वे दिक्कालातीत हो चुके हैं, संस्कार समाप्त हो चुके हैं, सर्वोच्च लक्ष्य मिल चुका है, चेतना अपने स्वरूप में स्थित हो चुकी है।"
+                : "Upon returning to consciousness, he discovered that this natural state is itself the Supreme Truth—the state of spontaneous Prarabdha. He observed that the stream of his life was now effortlessly flowing in the current of destiny: he had transcended space and time, past latent impressions (samskaras) had ceased, the supreme goal was fulfilled, and consciousness had firmly established itself in its own eternal nature."}
+            </p>
+          </div>
+
+          {/* Section 5: Praptasya Prapti & Vasudhaiva Kutumbakam */}
+          <div className="bg-maroon/5 border-l-4 border-maroon rounded-sm p-6 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-full bg-maroon/10 text-maroon flex items-center justify-center shrink-0">
+                <BookOpen className="w-4 h-4" />
+              </span>
+              <h3 className="font-serif text-lg md:text-xl text-maroon">
+                {hi ? "'प्राप्तस्य प्राप्ति' एवं वसुधैव कुटुम्बकम्" : "'Praptasya Prapti' & Vasudhaiva Kutumbakam"}
+              </h3>
+            </div>
+            <p className="font-body text-ink leading-relaxed text-sm md:text-base">
+              {hi
+                ? "इस स्वयंप्रकाशित जीवन पथ की प्रेरणा से इन्होंने 'प्राप्तस्य प्राप्ति' नाम किताब लिखी जो आपके सामने है। यह स्वयंप्रकाशित जीवन पथ ही शिवत्व है, पूर्णमानवता है, पूर्णतः संतुष्ट जीवन पथ है, सहज जीवन है, निष्काम कर्म करने वाले का जीवन है, जिसमें संस्कार नहीं बनते हैं। इसी प्रकार के जीवन पथ से स्वतः वसुधैव कुटुम्बकम् पैदा होता है, जो सनातन धर्म का स्वाभाविक लक्ष्य है, जो अपने आप में भारत के मूल निवासियों का जीवन पथ है।"
+                : "Inspired by this self-luminous path of life, he authored the scripture 'Praptasya Prapti' that rests before you. This self-luminous path is Shivattva, complete humanity, absolute contentment, effortless natural living, and the path of desireless action where no new karmic bonds are forged. From this state alone spontaneously arises Vasudhaiva Kutumbakam (the entire universe as one family)—the organic culmination of Sanatana Dharma and the primal heritage of the original people of Bharat."}
+            </p>
+          </div>
+
+          {/* Contact & Attribution Card */}
+          <div className="paper-dark-texture text-paper rounded-sm p-6 space-y-4">
+            <div className="flex items-center gap-2 text-gold-soft text-xs tracking-widest uppercase font-semibold">
+              <User className="w-4 h-4" /> {hi ? "संस्मरण लेखक एवं विशेष सम्पर्क" : "Memoir Author & Key Contacts"}
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4 pt-2">
+              <div className="bg-black/20 border border-paper/10 rounded-sm p-4">
+                <span className="text-xs text-gold-soft block font-body">
+                  {hi ? "संस्मरण लेखक / सम्पर्क प्रतिनिधि:" : "Biographer & Coordinator:"}
+                </span>
+                <span className="font-serif text-lg text-paper font-semibold block mt-1">
+                  {hi ? "कौशल किशोर झा" : "Kaushal Kishore Jha"}
+                </span>
+                <a
+                  href="tel:9431369111"
+                  className="font-mono text-sm text-gold-soft hover:underline block mt-1 flex items-center gap-1.5"
+                >
+                  <Phone className="w-3.5 h-3.5" /> +91 9431369111
+                </a>
               </div>
-              <div>
-                <h3 className="text-xl text-maroon mb-2">{b.title}</h3>
-                <p className="font-body text-ink-soft leading-relaxed">{b.text}</p>
+              <div className="bg-black/20 border border-paper/10 rounded-sm p-4">
+                <span className="text-xs text-gold-soft block font-body">
+                  {hi ? "डिजिटल संपादन एवं तकनीकी सम्पर्क:" : "Digital Edition & Technical Support:"}
+                </span>
+                <span className="font-serif text-lg text-paper font-semibold block mt-1">
+                  {hi ? "प्रभाकर कुमार (M.Des IIT Delhi)" : "Prabhakar Kumar (M.Des IIT Delhi)"}
+                </span>
+                <a
+                  href="tel:9972934937"
+                  className="font-mono text-sm text-gold-soft hover:underline block mt-1 flex items-center gap-1.5"
+                >
+                  <Phone className="w-3.5 h-3.5" /> +91 9972934937
+                </a>
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </motion.div>
+
+      {/* Original Handwritten Scans Section */}
+      <section className="mb-20">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <Kicker>{hi ? "मूल हस्तलिखित दस्तावेज" : "Original Handwritten Document"}</Kicker>
+          <h2 className="text-2xl md:text-3xl text-maroon font-serif">
+            {hi ? "लेखक परिचय का मूल हस्तलिखित पांडुलिपि पत्र" : "Facsimile of Original Handwritten Memoir"}
+          </h2>
+          <p className="font-body text-sm text-ink-soft mt-2">
+            {hi
+              ? "श्री कौशल किशोर झा द्वारा स्वयं हस्तलिखित मूल परिचय पत्रों का उच्च-गुणवत्ता स्कैन देखें।"
+              : "View the authentic high-resolution scans of the handwritten memoir penned by Shri Kaushal Kishore Jha."}
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {manuscriptScans.map((scan) => (
+            <motion.div
+              key={scan.page}
+              {...fade}
+              className="bg-paper-dark/40 border border-ink/10 rounded-sm overflow-hidden p-4 group cursor-pointer hover:border-saffron/50 transition-all"
+              onClick={() => setActiveScanModal(scan.page)}
+            >
+              <div className="relative aspect-[3/4] bg-neutral-900 rounded-xs overflow-hidden flex items-center justify-center">
+                <img
+                  src={scan.image}
+                  alt={scan.title}
+                  className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-paper">
+                  <span className="px-3 py-1.5 rounded-sm bg-black/70 font-body text-xs font-medium flex items-center gap-1.5">
+                    <ZoomIn className="w-4 h-4 text-gold-soft" />
+                    {hi ? "बड़ा करके देखें" : "Click to Enlarge"}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <div>
+                  <h4 className="font-serif text-sm font-semibold text-maroon">{scan.title}</h4>
+                  <p className="font-body text-xs text-ink-soft mt-0.5">{scan.desc}</p>
+                </div>
+                <button
+                  type="button"
+                  className="p-2 text-saffron-deep hover:text-maroon transition-colors"
+                  aria-label={hi ? "ज़ूम करें" : "Zoom"}
+                >
+                  <Eye className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Modal for full size scan preview */}
+      {activeScanModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setActiveScanModal(null)}
+        >
+          <div
+            className="relative w-full max-w-4xl max-h-[92vh] bg-paper rounded-sm border border-ink/20 shadow-2xl flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-3.5 bg-paper-dark border-b border-ink/10">
+              <h3 className="font-serif text-base md:text-lg text-maroon font-semibold">
+                {activeScanModal === 1
+                  ? (hi ? "मूल हस्तलिखित परिचय — पृष्ठ १" : "Original Handwritten Memoir — Page 1")
+                  : (hi ? "मूल हस्तलिखित परिचय — पृष्ठ २" : "Original Handwritten Memoir — Page 2")}
+              </h3>
+              <div className="flex items-center gap-2">
+                <a
+                  href={activeScanModal === 1 ? "/images/author-intro-p1.png" : "/images/author-intro-p2.png"}
+                  download
+                  className="btn-ghost py-1 px-3 text-xs"
+                >
+                  <Download className="w-3.5 h-3.5" /> {hi ? "डाउनलोड" : "Download"}
+                </a>
+                <button
+                  onClick={() => setActiveScanModal(null)}
+                  className="p-1.5 text-ink-soft hover:text-maroon rounded-sm"
+                  aria-label="Close"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 bg-neutral-950 p-4 overflow-auto flex items-center justify-center min-h-[60vh]">
+              <img
+                src={activeScanModal === 1 ? "/images/author-intro-p1.png" : "/images/author-intro-p2.png"}
+                alt="Original Scan"
+                className="max-h-[80vh] w-auto object-contain shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Author video messages */}
       <section className="mb-16">
@@ -2018,6 +2280,46 @@ export function Contact() {
                 <span className="text-ink-soft">•</span>
                 <a href="tel:9431369111" className="text-ink-soft hover:text-maroon">
                   कॉल करें
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Digital Edition & Tech Support */}
+          <div className="flex gap-4 items-center bg-paper-dark/50 border border-ink/10 rounded-sm p-5 hover:border-saffron/50 transition-colors">
+            <div className="w-12 h-12 rounded-sm bg-saffron/10 border border-saffron/30 flex items-center justify-center shrink-0">
+              <User className="w-5 h-5 text-saffron-deep" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-body text-xs tracking-widest uppercase text-saffron-deep font-semibold">
+                  {hi ? "डिजिटल संपादन एवं तकनीकी संपर्क" : "Digital Edition & Technical Support"}
+                </p>
+                <span className="text-[0.65rem] px-2 py-0.5 rounded-full bg-saffron/10 text-saffron-deep font-medium">
+                  {hi ? "आईआईटी दिल्ली" : "IIT Delhi"}
+                </span>
+              </div>
+              <p className="font-serif text-lg text-maroon font-semibold mt-0.5">
+                {hi ? "प्रभाकर कुमार (M.Des IIT Delhi)" : "Prabhakar Kumar (M.Des IIT Delhi)"}
+              </p>
+              <a
+                href="tel:9972934937"
+                className="font-serif text-xl text-maroon hover:text-saffron-deep transition-colors block font-semibold"
+              >
+                +91 9972934937
+              </a>
+              <div className="flex items-center gap-3 mt-1.5 text-xs font-body">
+                <a
+                  href="https://wa.me/919972934937"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-emerald-700 hover:underline flex items-center gap-1 font-medium"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                </a>
+                <span className="text-ink-soft">•</span>
+                <a href="tel:9972934937" className="text-ink-soft hover:text-maroon">
+                  {hi ? "कॉल करें" : "Call"}
                 </a>
               </div>
             </div>
