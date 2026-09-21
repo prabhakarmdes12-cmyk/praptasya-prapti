@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import {
   Home, About, Book, Philosophy, LibraryHub, ArticleDetail,
   Gallery, Events, Contact, GondCulture, type Route, type Nav,
@@ -75,6 +75,29 @@ export default function App() {
     setRoute(r);
     window.history.pushState({}, "", routePath(r));
     setMenuOpen(false);
+  };
+
+  const [soundOn, setSoundOn] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.25;
+    }
+  }, []);
+
+  const toggleSound = () => {
+    if (!audioRef.current) return;
+    if (soundOn) {
+      audioRef.current.pause();
+      setSoundOn(false);
+    } else {
+      audioRef.current.play().then(() => {
+        setSoundOn(true);
+      }).catch((err) => {
+        console.warn("Audio play blocked:", err);
+      });
+    }
   };
 
   const changeLanguage = (nextLanguage: Language) => {
@@ -196,9 +219,36 @@ export default function App() {
                 </button>
               ))}
               <LanguageSelect value={language} onChange={changeLanguage} />
+              <button
+                type="button"
+                onClick={toggleSound}
+                className={`p-2 rounded-full border transition-all flex items-center gap-1.5 text-xs font-body ${
+                  soundOn
+                    ? "bg-maroon text-paper border-maroon shadow-sm"
+                    : "text-maroon/80 border-maroon/20 hover:border-maroon/50"
+                }`}
+                aria-label={soundOn ? "Mute ambient music" : "Play ambient music"}
+                title={soundOn ? (language === "en" ? "Mute ambient music" : "संगीत बंद करें") : (language === "en" ? "Play ambient music" : "शांत संगीत सुनें")}
+              >
+                {soundOn ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+                <span className="hidden xl:inline">{soundOn ? (language === "en" ? "Music On" : "संगीत चालू") : (language === "en" ? "Music" : "संगीत")}</span>
+              </button>
             </nav>
 
             <div className="mobile-actions lg:hidden flex items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleSound}
+                className={`p-2 rounded-full border transition-all ${
+                  soundOn
+                    ? "bg-maroon text-paper border-maroon shadow-sm"
+                    : "text-maroon/80 border-maroon/20"
+                }`}
+                aria-label={soundOn ? "Mute ambient music" : "Play ambient music"}
+                title={soundOn ? (language === "en" ? "Mute ambient music" : "संगीत बंद करें") : (language === "en" ? "Play ambient music" : "शांत संगीत सुनें")}
+              >
+                {soundOn ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+              </button>
               <LanguageSelect value={language} onChange={changeLanguage} />
               <button className="text-maroon p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open navigation">
                 {menuOpen ? <X /> : <Menu />}
@@ -295,6 +345,18 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      {/* Floating Ambient Music Toggle */}
+      <button
+        type="button"
+        className={`sound-toggle ${soundOn ? "is-on" : ""}`}
+        onClick={toggleSound}
+        aria-label={soundOn ? "Mute ambient music" : "Play ambient music"}
+        title={soundOn ? (language === "en" ? "Mute ambient music" : "संगीत बंद करें") : (language === "en" ? "Play ambient music" : "शांत संगीत सुनें")}
+      >
+        {soundOn ? <Volume2 /> : <VolumeX />}
+      </button>
+      <audio ref={audioRef} src="/audio/sanctuary-music.mp3" loop preload="auto" playsInline />
     </div>
     </LanguageProvider>
   );

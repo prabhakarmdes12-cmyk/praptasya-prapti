@@ -1080,7 +1080,7 @@ export function Home({ navigate }: { navigate: Nav }) {
 
             <div className="flex flex-wrap gap-4 items-center mt-6">
               <button onClick={() => navigate({ name: "about" })} className="btn-primary">
-                {hi ? "मूल हस्तलिखित पांडुलिपि एवं विस्तृत विवरण पढ़ें" : "View Original Handwritten Scans & Detailed Bio"} <ArrowRight className="w-4 h-4" />
+                {hi ? "लेखक की जीवन-यात्रा एवं विस्तृत विवरण पढ़ें" : "Read the Author's Detailed Journey"} <ArrowRight className="w-4 h-4" />
               </button>
               <a
                 href="/pdfs/sanskriti-ka-khel.pdf"
@@ -1146,28 +1146,12 @@ export function Home({ navigate }: { navigate: Nav }) {
 export function About({ navigate }: { navigate: Nav }) {
   const language = useLanguage();
   const hi = language !== "en";
-  const [activeScanModal, setActiveScanModal] = useState<number | null>(null);
 
   const stats = [
     { num: "12.58 Cr", numHi: "१२.५८ करोड़", label: hi ? "राम नाम जप" : "Rama Nama Chants" },
     { num: "40 Lakh+", numHi: "४० लाख+", label: hi ? "गायत्री एवं पंचाक्षर मंत्र" : "Gayatri & Sacred Mantras" },
     { num: "12 Hours", numHi: "१२ घंटे", label: hi ? "दैनिक तपस्या (1984 से)" : "Daily Sadhana (since 1984)" },
     { num: "8 Days", numHi: "८ दिन", label: hi ? "करमडीह वन में मृत्यु-साधना" : "Latehar Forest Fast" },
-  ];
-
-  const manuscriptScans = [
-    {
-      page: 1,
-      title: hi ? "हस्तलिखित परिचय — पृष्ठ १ (साधना, जप एवं साक्षात्कार)" : "Handwritten Bio — Page 1 (Sadhana & Visions)",
-      image: "/images/author-intro-p1.png",
-      desc: hi ? "श्री कौशल किशोर झा द्वारा हस्तलिखित प्रथम पृष्ठ" : "First page penned by Shri Kaushal Kishore Jha",
-    },
-    {
-      page: 2,
-      title: hi ? "हस्तलिखित परिचय — पृष्ठ २ (आत्मज्ञान, प्रारब्ध एवं सन्देश)" : "Handwritten Bio — Page 2 (Awakening & Message)",
-      image: "/images/author-intro-p2.png",
-      desc: hi ? "श्री कौशल किशोर झा द्वारा हस्तलिखित द्वितीय पृष्ठ" : "Second page penned by Shri Kaushal Kishore Jha",
-    },
   ];
 
   return (
@@ -1343,106 +1327,6 @@ export function About({ navigate }: { navigate: Nav }) {
           </div>
         </div>
       </motion.div>
-
-      {/* Original Handwritten Scans Section */}
-      <section className="mb-20">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <Kicker>{hi ? "मूल हस्तलिखित दस्तावेज" : "Original Handwritten Document"}</Kicker>
-          <h2 className="text-2xl md:text-3xl text-maroon font-serif">
-            {hi ? "लेखक परिचय का मूल हस्तलिखित पांडुलिपि पत्र" : "Facsimile of Original Handwritten Memoir"}
-          </h2>
-          <p className="font-body text-sm text-ink-soft mt-2">
-            {hi
-              ? "श्री कौशल किशोर झा द्वारा स्वयं हस्तलिखित मूल परिचय पत्रों का उच्च-गुणवत्ता स्कैन देखें।"
-              : "View the authentic high-resolution scans of the handwritten memoir penned by Shri Kaushal Kishore Jha."}
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {manuscriptScans.map((scan) => (
-            <motion.div
-              key={scan.page}
-              {...fade}
-              className="bg-paper-dark/40 border border-ink/10 rounded-sm overflow-hidden p-4 group cursor-pointer hover:border-saffron/50 transition-all"
-              onClick={() => setActiveScanModal(scan.page)}
-            >
-              <div className="relative aspect-[3/4] bg-neutral-900 rounded-xs overflow-hidden flex items-center justify-center">
-                <img
-                  src={scan.image}
-                  alt={scan.title}
-                  className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-paper">
-                  <span className="px-3 py-1.5 rounded-sm bg-black/70 font-body text-xs font-medium flex items-center gap-1.5">
-                    <ZoomIn className="w-4 h-4 text-gold-soft" />
-                    {hi ? "बड़ा करके देखें" : "Click to Enlarge"}
-                  </span>
-                </div>
-              </div>
-              <div className="mt-3 flex items-center justify-between">
-                <div>
-                  <h4 className="font-serif text-sm font-semibold text-maroon">{scan.title}</h4>
-                  <p className="font-body text-xs text-ink-soft mt-0.5">{scan.desc}</p>
-                </div>
-                <button
-                  type="button"
-                  className="p-2 text-saffron-deep hover:text-maroon transition-colors"
-                  aria-label={hi ? "ज़ूम करें" : "Zoom"}
-                >
-                  <Eye className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Modal for full size scan preview */}
-      {activeScanModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm animate-fade-in"
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setActiveScanModal(null)}
-        >
-          <div
-            className="relative w-full max-w-4xl max-h-[92vh] bg-paper rounded-sm border border-ink/20 shadow-2xl flex flex-col overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-5 py-3.5 bg-paper-dark border-b border-ink/10">
-              <h3 className="font-serif text-base md:text-lg text-maroon font-semibold">
-                {activeScanModal === 1
-                  ? (hi ? "मूल हस्तलिखित परिचय — पृष्ठ १" : "Original Handwritten Memoir — Page 1")
-                  : (hi ? "मूल हस्तलिखित परिचय — पृष्ठ २" : "Original Handwritten Memoir — Page 2")}
-              </h3>
-              <div className="flex items-center gap-2">
-                <a
-                  href={activeScanModal === 1 ? "/images/author-intro-p1.png" : "/images/author-intro-p2.png"}
-                  download
-                  className="btn-ghost py-1 px-3 text-xs"
-                >
-                  <Download className="w-3.5 h-3.5" /> {hi ? "डाउनलोड" : "Download"}
-                </a>
-                <button
-                  onClick={() => setActiveScanModal(null)}
-                  className="p-1.5 text-ink-soft hover:text-maroon rounded-sm"
-                  aria-label="Close"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 bg-neutral-950 p-4 overflow-auto flex items-center justify-center min-h-[60vh]">
-              <img
-                src={activeScanModal === 1 ? "/images/author-intro-p1.png" : "/images/author-intro-p2.png"}
-                alt="Original Scan"
-                className="max-h-[80vh] w-auto object-contain shadow-lg"
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Author video messages */}
       <section className="mb-16">

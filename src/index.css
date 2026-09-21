@@ -1500,3 +1500,40 @@ html { scroll-behavior: smooth; }
   .culture-section { grid-template-columns: 1fr; gap: 0.6rem; padding-block: 2.1rem; }
   .gondi-draft-note { align-items: flex-start; flex-direction: column; }
 }
+
+/* Ambient music floating toggle */
+.sound-toggle {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 60;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(215, 174, 112, 0.35);
+  border-radius: 50%;
+  color: #efe7d6;
+  background: rgba(43, 17, 24, 0.92);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.sound-toggle:hover {
+  transform: scale(1.08);
+  border-color: rgba(215, 174, 112, 0.7);
+  background: rgba(43, 17, 24, 0.98);
+}
+
+.sound-toggle.is-on {
+  color: #d7ae70;
+  border-color: #d7ae70;
+  box-shadow: 0 0 16px rgba(215, 174, 112, 0.35);
+}
+
+.sound-toggle svg {
+  width: 20px;
+  height: 20px;
+}
