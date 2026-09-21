@@ -555,7 +555,7 @@ export function ManuscriptSection({ className = "", initialVolumeId }: { classNa
                     : `Download High-Res Vol ${currentVolume.volumeNumber} Page ${currentPage.pageNumber}`}
                 </a>
                 <span className="font-body text-xs text-ink-soft italic">
-                  — श्री हरनारायण साह (अनन्तानन्द मानव)
+                  — श्री हर नारायण साह (अनन्तानन्द मानव)
                 </span>
               </div>
             </div>
@@ -874,7 +874,7 @@ export function Home({ navigate }: { navigate: Nav }) {
               <h2 className="text-3xl md:text-4xl text-maroon">{hi ? "लेखक की मूल हस्तलिखित पांडुलिपि" : "Original Handwritten Leaves"}</h2>
               <p className="font-body text-ink-soft text-base mt-2">
                 {hi
-                  ? "लेखक श्री हरनारायण साह द्वारा स्वयं लिखित मूल पृष्ठ — उच्च-गुणवत्ता स्कैन एवं सुगम डिजिटल पाठ।"
+                  ? "लेखक श्री हर नारायण साह द्वारा स्वयं लिखित मूल पृष्ठ — उच्च-गुणवत्ता स्कैन एवं सुगम डिजिटल पाठ।"
                   : "Handwritten manuscript pages penned by the author — high-res scans with extracted digital text."}
               </p>
             </div>
@@ -1004,12 +1004,12 @@ export function Home({ navigate }: { navigate: Nav }) {
           <div className="space-y-4">
             <img
               src="/images/harnarayan-shah.jpg"
-              alt={hi ? "श्री हरनारायण साह (अनन्तानन्द मानव)" : "Shri Harnarayan Sah (Anantanand Manav)"}
+              alt={hi ? "श्री हर नारायण साह (अनन्तानन्द मानव)" : "Shri Har Narayan Sah (Anantanand Manav)"}
               className="w-full rounded-sm border border-ink/10 shadow-sm"
             />
             <div className="bg-paper-dark/60 border border-ink/10 rounded-sm p-4 text-center">
               <span className="font-serif text-lg text-maroon block font-semibold">
-                {hi ? "श्री हरनारायण साह" : "Shri Harnarayan Sah"}
+                {hi ? "श्री हर नारायण साह" : "Shri Har Narayan Sah"}
               </span>
               <span className="font-body text-xs text-saffron-deep tracking-wider uppercase font-medium">
                 {hi ? "उर्फ अनन्तानन्द मानव" : "alias Anantanand Manav"}
@@ -1026,7 +1026,7 @@ export function Home({ navigate }: { navigate: Nav }) {
           <div>
             <Kicker>{hi ? "लेखक परिचय" : "About the Author"}</Kicker>
             <h2 className="museum-title mb-1">
-              {hi ? "हरनारायण साह (अनन्तानन्द मानव)" : "Harnarayan Sah (Anantanand Manav)"}
+              {hi ? "श्री हर नारायण साह (अनन्तानन्द मानव)" : "Shri Har Narayan Sah (Anantanand Manav)"}
             </h2>
             <p className="author-role mb-6">
               {hi ? "विगत 30 वर्षों के सहकर्मी एवं साक्षी द्वारा लिखित संस्मरण" : "30-Year Companion & Eyewitness Account"}
@@ -1035,8 +1035,8 @@ export function Home({ navigate }: { navigate: Nav }) {
             <div className="space-y-4 font-body text-ink-soft text-base leading-relaxed">
               <p className="font-serif text-lg text-maroon font-medium border-l-3 border-saffron pl-4 bg-saffron/5 py-2 rounded-r-xs">
                 {hi
-                  ? "हरनारायण साह, उर्फ अनन्तानन्द मानव को विगत 30 वर्षों से मैं जानता हूँ। वर्ष 1984 में मैट्रिक की परीक्षा देने के पश्चात ये आध्यात्मिक चिन्तन शुरू किये।"
-                  : "I have known Harnarayan Sah, alias Anantanand Manav, for the past 30 years. After completing matriculation examinations in the year 1984, he commenced his profound spiritual contemplation."}
+                  ? "हर नारायण साह, उर्फ अनन्तानन्द मानव को विगत 30 वर्षों से मैं जानता हूँ। वर्ष 1984 में मैट्रिक की परीक्षा देने के पश्चात ये आध्यात्मिक चिन्तन शुरू किये।"
+                  : "I have known Har Narayan Sah, alias Anantanand Manav, for the past 30 years. After completing matriculation examinations in the year 1984, he commenced his profound spiritual contemplation."}
               </p>
 
               <p>
@@ -1174,7 +1174,7 @@ export function About({ navigate }: { navigate: Nav }) {
     <div className="max-w-5xl mx-auto px-5 py-20 md:py-24">
       <PageHead
         kicker={hi ? "लेखक परिचय" : "About the Author"}
-        title={hi ? "श्री हरनारायण साह (अनन्तानन्द मानव)" : "Shri Harnarayan Sah (Anantanand Manav)"}
+        title={hi ? "श्री हर नारायण साह (अनन्तानन्द मानव)" : "Shri Har Narayan Sah (Anantanand Manav)"}
         sub={
           hi
             ? "विगत 30 वर्षों के सहकर्मी एवं साक्षी द्वारा लिखित संस्मरण, कठिन साधना-यात्रा एवं ग्रंथ अवतरण की गाथा।"
@@ -1188,7 +1188,7 @@ export function About({ navigate }: { navigate: Nav }) {
           <figure className="m-0 bg-paper-dark/40 border border-ink/10 rounded-sm p-2 shadow-sm">
             <img
               src="/images/harnarayan-shah.jpg"
-              alt={hi ? "लेखक श्री हरनारायण साह (अनन्तानन्द मानव)" : "Author Shri Harnarayan Sah (Anantanand Manav)"}
+              alt={hi ? "लेखक श्री हर नारायण साह (अनन्तानन्द मानव)" : "Author Shri Har Narayan Sah (Anantanand Manav)"}
               className="w-full aspect-[4/5] object-cover rounded-sm border border-ink/10"
               width={1170}
               height={1170}
@@ -1196,7 +1196,7 @@ export function About({ navigate }: { navigate: Nav }) {
             />
             <figcaption className="p-3 text-center">
               <span className="font-serif text-lg text-maroon block font-semibold">
-                {hi ? "श्री हरनारायण साह" : "Shri Harnarayan Sah"}
+                {hi ? "श्री हर नारायण साह" : "Shri Har Narayan Sah"}
               </span>
               <span className="font-body text-xs text-saffron-deep tracking-wider uppercase font-medium">
                 {hi ? "उर्फ अनन्तानन्द मानव" : "alias Anantanand Manav"}
@@ -1226,8 +1226,8 @@ export function About({ navigate }: { navigate: Nav }) {
             <Quote className="w-5 h-5 text-saffron-deep shrink-0" />
             <p className="font-serif text-sm md:text-base text-maroon leading-relaxed italic">
               {hi
-                ? "“हरनारायण साह, उर्फ अनन्तानन्द मानव को विगत 30 वर्षों से मैं जानता हूँ। वर्ष 1984 में मैट्रिक की परीक्षा देने के पश्चात ये आध्यात्मिक चिन्तन शुरू किये।”"
-                : "“I have known Harnarayan Sah, alias Anantanand Manav, for the past 30 years. After completing matriculation examinations in the year 1984, he commenced his profound spiritual contemplation.”"}
+                ? "“हर नारायण साह, उर्फ अनन्तानन्द मानव को विगत 30 वर्षों से मैं जानता हूँ। वर्ष 1984 में मैट्रिक की परीक्षा देने के पश्चात ये आध्यात्मिक चिन्तन शुरू किये।”"
+                : "“I have known Har Narayan Sah, alias Anantanand Manav, for the past 30 years. After completing matriculation examinations in the year 1984, he commenced his profound spiritual contemplation.”"}
             </p>
           </div>
 
@@ -1561,7 +1561,7 @@ export function Philosophy({ navigate }: { navigate: Nav }) {
             </h2>
             <p className="font-body text-ink-soft text-base mt-2">
               {hi
-                ? "लेखक श्री हरनारायण साह द्वारा स्वयं लिखित मूल पृष्ठों का अवलोकन करें तथा सुगम डिजिटल पाठ पढ़ें।"
+                ? "लेखक श्री हर नारायण साह द्वारा स्वयं लिखित मूल पृष्ठों का अवलोकन करें तथा सुगम डिजिटल पाठ पढ़ें।"
                 : "Explore the original handwritten manuscript leaves penned by Shri Harnarayan Sah along with extracted text."}
             </p>
           </div>
@@ -2481,7 +2481,7 @@ export function Contact() {
 
           <p className="font-body text-[0.75rem] text-ink-soft text-center pt-1">
             {hi
-              ? "संदेश सीधे श्री हरनारायण साह (8051526077) एवं anantanandmanav@gmail.com पर प्रेषित होगा।"
+              ? "संदेश सीधे श्री हर नारायण साह (8051526077) एवं anantanandmanav@gmail.com पर प्रेषित होगा।"
               : "Directly connects to Shri Harnarayan Sah (8051526077) & anantanandmanav@gmail.com."}
           </p>
         </form>
