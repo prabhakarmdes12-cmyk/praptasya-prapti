@@ -1923,96 +1923,243 @@ export function Contact() {
   const [subject, setSubject] = useState(hi ? "ग्रंथ की प्रति चाहिए" : "Request a copy of the book");
   const [message, setMessage] = useState("");
 
+  const handleWhatsApp = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = `*प्राप्तस्य प्राप्ति — संपर्क अनुरोध*\n\n*नाम:* ${name || "अतिथि"}\n*संपर्क विवरण:* ${contactValue || "—"}\n*विषय:* ${subject}\n\n*संदेश:*\n${message || "सादर प्रणाम।"}`;
+    window.open(`https://wa.me/918051526077?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  const handleEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    const body = `प्राप्तस्य प्राप्ति — संपर्क अनुरोध\n\nनाम: ${name || "अतिथि"}\nसंपर्क विवरण: ${contactValue || "—"}\nविषय: ${subject}\n\nसंदेश:\n${message || "सादर प्रणाम।"}`;
+    window.open(`mailto:anantanandmanav@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-5 py-20 md:py-24">
       <PageHead
         kicker={hi ? "संपर्क" : "Contact"}
-        title={hi ? "संपर्क एवं ग्रंथ अनुरोध" : "Contact & book requests"}
+        title={hi ? "संपर्क एवं ग्रंथ अनुरोध" : "Contact & Book Requests"}
         sub={
           hi
-            ? "ग्रंथ की प्रति मँगाने, किसी व्याख्यान या पुस्तक-चर्चा हेतु आमंत्रण देने, अथवा विचार साझा करने के लिए संपर्क करें।"
-            : "Request a copy, invite the author to speak, or share your thoughts."
+            ? "ग्रंथ की प्रति मँगाने, व्याख्यान या विचार-चर्चा हेतु आमंत्रण देने, अथवा अपने विचार साझा करने के लिए लेखक एवं संपर्क प्रतिनिधि से जुड़ें।"
+            : "Request a hardcopy, invite the author for discourses, or connect directly."
         }
       />
-      <div className="grid md:grid-cols-2 gap-10">
+      <div className="grid md:grid-cols-2 gap-10 items-start">
+        {/* Contact Info Cards */}
         <div className="space-y-4">
-          {[
-            { icon: Phone, label: hi ? "दूरभाष" : "Phone", value: hi ? "अभी उपलब्ध नहीं" : "Not available yet" },
-            { icon: MessageCircle, label: "WhatsApp", value: hi ? "अभी उपलब्ध नहीं" : "Not available yet" },
-            { icon: Mail, label: hi ? "ईमेल" : "Email", value: hi ? "अभी उपलब्ध नहीं" : "Not available yet" },
-            { icon: MapPin, label: hi ? "पता" : "Address", value: hi ? "अभी उपलब्ध नहीं" : "Not available yet" },
-          ].map((c) => (
-            <div key={c.label} className="flex gap-4 items-center bg-paper-dark/40 border border-ink/10 rounded-sm p-5">
-              <div className="w-11 h-11 rounded-sm bg-saffron/10 border border-saffron/30 flex items-center justify-center shrink-0">
-                <c.icon className="w-5 h-5 text-saffron-deep" />
+          {/* Author Personal Phone / WhatsApp */}
+          <div className="flex gap-4 items-center bg-paper-dark/50 border border-ink/10 rounded-sm p-5 hover:border-saffron/50 transition-colors">
+            <div className="w-12 h-12 rounded-sm bg-saffron/10 border border-saffron/30 flex items-center justify-center shrink-0">
+              <Phone className="w-5 h-5 text-saffron-deep" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-body text-xs tracking-widest uppercase text-saffron-deep font-semibold">
+                  {hi ? "व्यक्तिगत दूरभाष (लेखक)" : "Personal Phone (Author)"}
+                </p>
+                <span className="text-[0.65rem] px-2 py-0.5 rounded-full bg-saffron/10 text-saffron-deep font-medium">
+                  {hi ? "व्यक्तिगत" : "Personal"}
+                </span>
               </div>
-              <div>
-                <p className="font-body text-xs tracking-widest uppercase text-saffron-deep">{c.label}</p>
-                <p className="font-body text-lg text-ink">{c.value}</p>
+              <a
+                href="tel:8051526077"
+                className="font-serif text-xl text-maroon hover:text-saffron-deep transition-colors block font-semibold mt-0.5"
+              >
+                +91 8051526077
+              </a>
+              <div className="flex items-center gap-3 mt-1.5 text-xs font-body">
+                <a
+                  href="https://wa.me/918051526077"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-emerald-700 hover:underline flex items-center gap-1 font-medium"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" /> WhatsApp चैट
+                </a>
+                <span className="text-ink-soft">•</span>
+                <a href="tel:8051526077" className="text-ink-soft hover:text-maroon">
+                  सीधा कॉल करें
+                </a>
               </div>
             </div>
-          ))}
-          <div className="bg-paper-dark/50 border border-ink/10 rounded-sm p-5">
+          </div>
+
+          {/* Contact Person */}
+          <div className="flex gap-4 items-center bg-paper-dark/50 border border-ink/10 rounded-sm p-5 hover:border-saffron/50 transition-colors">
+            <div className="w-12 h-12 rounded-sm bg-maroon/10 border border-maroon/30 flex items-center justify-center shrink-0">
+              <User className="w-5 h-5 text-maroon" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-body text-xs tracking-widest uppercase text-saffron-deep font-semibold">
+                  {hi ? "संपर्क प्रतिनिधि (समन्वयक)" : "Contact Person (Coordinator)"}
+                </p>
+                <span className="text-[0.65rem] px-2 py-0.5 rounded-full bg-maroon/10 text-maroon font-medium">
+                  {hi ? "प्रतिनिधि" : "Contact Person"}
+                </span>
+              </div>
+              <a
+                href="tel:9431369111"
+                className="font-serif text-xl text-maroon hover:text-saffron-deep transition-colors block font-semibold mt-0.5"
+              >
+                +91 9431369111
+              </a>
+              <div className="flex items-center gap-3 mt-1.5 text-xs font-body">
+                <a
+                  href="https://wa.me/919431369111"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-emerald-700 hover:underline flex items-center gap-1 font-medium"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                </a>
+                <span className="text-ink-soft">•</span>
+                <a href="tel:9431369111" className="text-ink-soft hover:text-maroon">
+                  कॉल करें
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Email */}
+          <div className="flex gap-4 items-center bg-paper-dark/50 border border-ink/10 rounded-sm p-5 hover:border-saffron/50 transition-colors">
+            <div className="w-12 h-12 rounded-sm bg-gold/15 border border-gold/40 flex items-center justify-center shrink-0">
+              <Mail className="w-5 h-5 text-saffron-deep" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-body text-xs tracking-widest uppercase text-saffron-deep font-semibold">
+                {hi ? "आधिकारिक ईमेल" : "Official Email"}
+              </p>
+              <a
+                href="mailto:anantanandmanav@gmail.com"
+                className="font-body text-base md:text-lg text-maroon hover:text-saffron-deep transition-colors block font-medium mt-0.5 truncate"
+              >
+                anantanandmanav@gmail.com
+              </a>
+              <p className="font-body text-xs text-ink-soft mt-1">
+                {hi ? "पत्र-व्यवहार एवं ग्रंथ अनुरोध हेतु" : "For correspondence & book inquiries"}
+              </p>
+            </div>
+          </div>
+
+          {/* Location / Note */}
+          <div className="bg-paper-dark/60 border border-ink/10 rounded-sm p-5 space-y-2">
+            <div className="flex items-center gap-2 text-saffron-deep text-xs font-body font-semibold uppercase tracking-wider">
+              <MapPin className="w-4 h-4" />
+              <span>{hi ? "स्थान एवं उपलब्धता" : "Location & Availability"}</span>
+            </div>
             <p className="font-body text-sm text-ink-soft leading-relaxed">
               {hi
-                ? "सभी पुस्तकें इसी वेबसाइट से निःशुल्क पढ़ी व डाउनलोड की जा सकती हैं — संपर्क केवल हार्डकॉपी या आमंत्रण हेतु आवश्यक है।"
-                : "All books are free to read and download on this site — contact is only for hard copies or invitations."}
+                ? "सभी ग्रंथ व शोध आलेख इसी वेबसाइट पर पूर्णतः निःशुल्क उपलब्ध हैं। हार्डकॉपी डाक द्वारा मँगाने या लेखक को परिचर्चा हेतु आमंत्रित करने के लिए ऊपर दिए गए नंबरों पर संपर्क करें।"
+                : "All books and essays are completely free to read online and download. Contact directly for hardcopy mailing or speaking invitations."}
             </p>
           </div>
         </div>
 
+        {/* Message / Request Form */}
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-          className="paper-texture border border-ink/10 rounded-sm p-7 space-y-4"
+          onSubmit={handleWhatsApp}
+          className="paper-texture border border-ink/15 rounded-sm p-6 md:p-8 space-y-4 shadow-sm"
         >
-          <h3 className="text-2xl text-maroon mb-2">{hi ? "सीधा संपर्क अभी उपलब्ध नहीं" : "Direct contact is not available yet"}</h3>
-          <fieldset disabled className="space-y-4 opacity-60">
-          {[
-            { ph: hi ? "आपका नाम" : "Your name", type: "text", set: setName, value: name },
-            { ph: hi ? "ईमेल अथवा दूरभाष" : "Email or phone", type: "text", set: setContactValue, value: contactValue },
-          ].map((f) => (
-            <input
-              key={f.ph}
-              type={f.type}
-              value={f.value}
-              onChange={(e) => f.set(e.target.value)}
-              placeholder={f.ph}
-              className="w-full font-body bg-paper border border-ink/10 rounded-sm px-4 py-3 text-ink placeholder-ink-soft/60 focus:outline-none focus:border-saffron"
-            />
-          ))}
-          <select
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            className="w-full font-body bg-paper border border-ink/10 rounded-sm px-4 py-3 text-ink focus:outline-none focus:border-saffron"
-          >
-            <option>{hi ? "ग्रंथ की प्रति चाहिए" : "Request a copy of the book"}</option>
-            <option>{hi ? "व्याख्यान हेतु आमंत्रण" : "Invitation for a lecture"}</option>
-            <option>{hi ? "पुस्तक-चर्चा / सत्संग" : "Book discussion / satsang"}</option>
-            <option>{hi ? "अन्य विचार / प्रश्न" : "Other thoughts / question"}</option>
-          </select>
-          <textarea
-            rows={4}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={hi ? "आपका संदेश" : "Your message"}
-            className="w-full font-body bg-paper border border-ink/10 rounded-sm px-4 py-3 text-ink placeholder-ink-soft/60 focus:outline-none focus:border-saffron"
-          />
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button type="submit" className="btn-primary flex-1 justify-center">
-              <MessageCircle className="w-4 h-4" /> {hi ? "WhatsApp पर भेजें" : "Send via WhatsApp"}
+          <div>
+            <h3 className="text-2xl text-maroon font-serif mb-1">
+              {hi ? "संदेश अथवा ग्रंथ अनुरोध भेजें" : "Send Message / Book Request"}
+            </h3>
+            <p className="font-body text-xs text-ink-soft">
+              {hi
+                ? "विवरण भरें और सीधे WhatsApp अथवा ईमेल द्वारा प्रेषित करें।"
+                : "Fill details and dispatch directly via WhatsApp or Email."}
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-body text-ink-soft mb-1">
+                {hi ? "आपका नाम *" : "Your Name *"}
+              </label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={hi ? "जैसे: विवेक शर्मा" : "e.g. Vivek Sharma"}
+                className="w-full font-body bg-paper border border-ink/15 rounded-sm px-4 py-2.5 text-sm text-ink placeholder-ink-soft/50 focus:outline-none focus:border-saffron"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-body text-ink-soft mb-1">
+                {hi ? "आपका फोन अथवा ईमेल *" : "Your Phone or Email *"}
+              </label>
+              <input
+                type="text"
+                required
+                value={contactValue}
+                onChange={(e) => setContactValue(e.target.value)}
+                placeholder={hi ? "जैसे: +91 9876543210 या your@email.com" : "e.g. +91 9876543210 or your@email.com"}
+                className="w-full font-body bg-paper border border-ink/15 rounded-sm px-4 py-2.5 text-sm text-ink placeholder-ink-soft/50 focus:outline-none focus:border-saffron"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-body text-ink-soft mb-1">
+                {hi ? "अनुरोध का विषय" : "Subject"}
+              </label>
+              <select
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="w-full font-body bg-paper border border-ink/15 rounded-sm px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-saffron"
+              >
+                <option>{hi ? "ग्रंथ की हार्डकॉपी चाहिए" : "Request a hardcopy of the book"}</option>
+                <option>{hi ? "व्याख्यान / संगोष्ठी हेतु आमंत्रण" : "Invitation for a discourse / seminar"}</option>
+                <option>{hi ? "पुस्तक-चर्चा / सत्संग विचार" : "Book discussion / philosophical inquiry"}</option>
+                <option>{hi ? "अन्य विचार / संदेश" : "Other thoughts / general message"}</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-body text-ink-soft mb-1">
+                {hi ? "आपका संदेश / पता (हार्डकॉपी हेतु)" : "Your Message / Postal Address"}
+              </label>
+              <textarea
+                rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={
+                  hi
+                    ? "कृपया अपना संदेश या डाक पता यहाँ लिखें..."
+                    : "Please enter your message or postal address here..."
+                }
+                className="w-full font-body bg-paper border border-ink/15 rounded-sm px-4 py-2.5 text-sm text-ink placeholder-ink-soft/50 focus:outline-none focus:border-saffron"
+              />
+            </div>
+          </div>
+
+          <div className="pt-2 flex flex-col sm:flex-row gap-3">
+            <button
+              type="submit"
+              className="btn-primary flex-1 justify-center py-2.5 text-sm cursor-pointer shadow-xs"
+            >
+              <MessageCircle className="w-4 h-4" />
+              {hi ? "WhatsApp पर भेजें" : "Send via WhatsApp"}
             </button>
-            <button type="button" disabled className="btn-ghost flex-1 justify-center">
-              <Mail className="w-4 h-4" /> {hi ? "ईमेल से भेजें" : "Send via email"}
+            <button
+              type="button"
+              onClick={handleEmail}
+              className="btn-ghost flex-1 justify-center py-2.5 text-sm cursor-pointer"
+            >
+              <Mail className="w-4 h-4" />
+              {hi ? "ईमेल से भेजें" : "Send via Email"}
             </button>
           </div>
-          <p className="font-body text-xs text-ink-soft text-center">
+
+          <p className="font-body text-[0.75rem] text-ink-soft text-center pt-1">
             {hi
-              ? "लेखक के सत्यापित संपर्क विवरण आने पर यह सुविधा उपलब्ध होगी। अभी कोई संदेश नहीं भेजा जाता है।"
-              : "This form will be available when verified contact details are added. No messages are sent yet."}
+              ? "संदेश सीधे श्री हरनारायण साह (8051526077) एवं anantanandmanav@gmail.com पर प्रेषित होगा।"
+              : "Directly connects to Shri Harnarayan Sah (8051526077) & anantanandmanav@gmail.com."}
           </p>
-          </fieldset>
         </form>
       </div>
     </div>

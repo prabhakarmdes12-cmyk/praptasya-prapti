@@ -270,10 +270,22 @@ export default function App() {
               </div>
             </div>
             <div>
-              <h4 className="font-body text-xs tracking-[0.3em] uppercase text-gold-soft mb-4">{language === "en" ? "Contact" : "संपर्क"}</h4>
-              <p className="font-body text-sm text-paper/70">WhatsApp · Email · Post</p>
-              <button onClick={() => navigate({ name: "contact" })} className="mt-4 font-body text-sm text-gold-soft hover:text-paper transition-colors underline underline-offset-4">
-                {language === "en" ? "Reach the author →" : "लेखक से जुड़ें →"}
+              <h4 className="font-body text-xs tracking-[0.3em] uppercase text-gold-soft mb-3">{language === "en" ? "Contact" : "संपर्क"}</h4>
+              <div className="space-y-1.5 font-body text-sm text-paper/80">
+                <a href="tel:8051526077" className="hover:text-gold-soft transition-colors flex items-center gap-1.5">
+                  <span>+91 8051526077</span>
+                  <span className="text-[0.65rem] text-gold-soft">({language === "en" ? "Personal" : "व्यक्तिगत"})</span>
+                </a>
+                <a href="tel:9431369111" className="hover:text-gold-soft transition-colors flex items-center gap-1.5">
+                  <span>+91 9431369111</span>
+                  <span className="text-[0.65rem] text-gold-soft">({language === "en" ? "Coordinator" : "प्रतिनिधि"})</span>
+                </a>
+                <a href="mailto:anantanandmanav@gmail.com" className="hover:text-gold-soft transition-colors block text-xs truncate">
+                  anantanandmanav@gmail.com
+                </a>
+              </div>
+              <button onClick={() => navigate({ name: "contact" })} className="mt-3 font-body text-xs text-gold-soft hover:text-paper transition-colors underline underline-offset-4 block">
+                {language === "en" ? "Full contact & requests →" : "संपूर्ण संपर्क विवरण →"}
               </button>
             </div>
           </div>
