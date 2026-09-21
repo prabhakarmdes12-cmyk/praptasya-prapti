@@ -276,9 +276,9 @@ export default function App() {
                   <span>+91 8051526077</span>
                   <span className="text-[0.65rem] text-gold-soft">({language === "en" ? "Personal" : "व्यक्तिगत"})</span>
                 </a>
-                <a href="tel:9431369111" className="hover:text-gold-soft transition-colors flex items-center gap-1.5">
-                  <span>+91 9431369111</span>
-                  <span className="text-[0.65rem] text-gold-soft">({language === "en" ? "Coordinator" : "प्रतिनिधि"})</span>
+                <a href="tel:9972934937" className="hover:text-gold-soft transition-colors flex items-center gap-1.5">
+                  <span>+91 9972934937</span>
+                  <span className="text-[0.65rem] text-gold-soft">({language === "en" ? "M.Des IIT Delhi" : "डिजिटल संपादन"})</span>
                 </a>
                 <a href="mailto:anantanandmanav@gmail.com" className="hover:text-gold-soft transition-colors block text-xs truncate">
                   anantanandmanav@gmail.com

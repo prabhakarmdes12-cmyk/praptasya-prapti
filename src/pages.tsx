@@ -1053,8 +1053,8 @@ export function Home({ navigate }: { navigate: Nav }) {
 
               <p>
                 {hi
-                  ? "उपरोक्त सभी साधना से परम सत्य का ज्ञान नहीं होने के फलस्वरूप इन्होंने पक्षियों की भांति मृत्यु साधना करके (जिसमें इन्होंने झारखण्ड के लातेहार जिले के करमडीह जंगल में आठ दिनों तक अन्न-जल छोड़ दिया था) शरीर को छोड़ना चाहा। लेकिन शरीर छोड़ने के कुछ क्षण पहले स्वतः उत्पन्न एक प्रकाश पुंज में खो गये।"
-                  : "Failing to attain the Supreme Non-Dual Truth through all these traditional practices, he resolved to drop the body in the manner of birds (pakshi-mrityu sadhana). In the deep forests of Karamdeeh, Latehar district, Jharkhand, he completely renounced food and water for eight continuous days to release the physical shell. But moments before the dissolution of the body, he was absorbed into a spontaneously emerging luminous beam of pure light."}
+                  ? "उपरोक्त सभी साधना से परम सत्य का ज्ञान नहीं होने के फलस्वरूप इन्होंने पार्वती की भांति मृत्यु साधना करके (जिसमें इन्होंने झारखण्ड के लातेहार जिले के करमडीह जंगल में आठ दिनों तक अन्न-जल छोड़ दिया था) शरीर को छोड़ना चाहा। लेकिन शरीर छोड़ने के कुछ क्षण पहले स्वतः उत्पन्न एक प्रकाश पुंज में खो गये।"
+                  : "Failing to attain the Supreme Non-Dual Truth through all these traditional practices, he resolved to drop the body in the manner of Parvati's rigorous tapasya (renouncing food and water in the deep forests of Karamdeeh, Latehar district, Jharkhand for eight continuous days). But moments before the dissolution of the body, he was absorbed into a spontaneously emerging luminous beam of pure light."}
               </p>
 
               <p>
@@ -1070,14 +1070,11 @@ export function Home({ navigate }: { navigate: Nav }) {
               </p>
             </div>
 
-            {/* Added contact lines */}
-            <div className="mt-6 pt-4 border-t border-ink/15 space-y-1.5 bg-paper-dark/40 p-4 rounded-sm">
+            {/* Added contact line */}
+            <div className="mt-6 pt-4 border-t border-ink/15 bg-paper-dark/40 p-4 rounded-sm">
               <p className="font-serif text-base text-maroon font-semibold flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-saffron" />
                 {hi ? "प्रभाकर कुमार (M.Des IIT Delhi) - 9972934937" : "Prabhakar Kumar (M.Des IIT Delhi) - +91 9972934937"}
-              </p>
-              <p className="font-body text-xs text-ink-soft">
-                {hi ? "विशेष सम्पर्क / संस्मरण लेखक: कौशल किशोर झा - 9431369111" : "Biographer & Coordinator: Kaushal Kishore Jha - +91 9431369111"}
               </p>
             </div>
 
@@ -1280,8 +1277,8 @@ export function About({ navigate }: { navigate: Nav }) {
             </div>
             <p className="font-body text-ink-soft leading-relaxed text-sm md:text-base">
               {hi
-                ? "उपरोक्त सभी साधना से परम सत्य का ज्ञान नहीं होने के फलस्वरूप इन्होंने पक्षियों की भांति मृत्यु साधना करके (जिसमें इन्होंने झारखण्ड के लातेहार जिले के करमडीह जंगल में आठ दिनों तक अन्न-जल छोड़ दिया था) शरीर को छोड़ना चाहा। लेकिन शरीर छोड़ने के कुछ क्षण पहले स्वतः उत्पन्न एक प्रकाश पुंज में खो गये।"
-                : "Failing to attain the Supreme Non-Dual Truth through all these traditional practices, he resolved to drop the body in the manner of birds (pakshi-mrityu sadhana). In the deep forests of Karamdeeh, Latehar district, Jharkhand, he completely renounced food and water for eight continuous days to release the physical shell. But moments before the dissolution of the body, he was absorbed into a spontaneously emerging luminous beam of pure light."}
+                ? "उपरोक्त सभी साधना से परम सत्य का ज्ञान नहीं होने के फलस्वरूप इन्होंने पार्वती की भांति मृत्यु साधना करके (जिसमें इन्होंने झारखण्ड के लातेहार जिले के करमडीह जंगल में आठ दिनों तक अन्न-जल छोड़ दिया था) शरीर को छोड़ना चाहा। लेकिन शरीर छोड़ने के कुछ क्षण पहले स्वतः उत्पन्न एक प्रकाश पुंज में खो गये।"
+                : "Failing to attain the Supreme Non-Dual Truth through all these traditional practices, he resolved to drop the body in the manner of Parvati's rigorous tapasya (renouncing food and water in the deep forests of Karamdeeh, Latehar district, Jharkhand for eight continuous days). But moments before the dissolution of the body, he was absorbed into a spontaneously emerging luminous beam of pure light."}
             </p>
           </div>
 
@@ -1319,44 +1316,29 @@ export function About({ navigate }: { navigate: Nav }) {
             </p>
             <div className="mt-4 pt-3 border-t border-maroon/20 text-sm font-serif text-maroon font-semibold flex items-center justify-between flex-wrap gap-2">
               <span>{hi ? "प्रभाकर कुमार (M.Des IIT Delhi) - 9972934937" : "Prabhakar Kumar (M.Des IIT Delhi) - +91 9972934937"}</span>
-              <span className="font-body text-xs text-ink-soft">{hi ? "विशेष सम्पर्क: कौशल किशोर झा - 9431369111" : "Special Contact: Kaushal Kishore Jha - +91 9431369111"}</span>
             </div>
           </div>
 
           {/* Contact & Attribution Card */}
           <div className="paper-dark-texture text-paper rounded-sm p-6 space-y-4">
             <div className="flex items-center gap-2 text-gold-soft text-xs tracking-widest uppercase font-semibold">
-              <User className="w-4 h-4" /> {hi ? "संस्मरण लेखक एवं विशेष सम्पर्क" : "Memoir Author & Key Contacts"}
+              <User className="w-4 h-4" /> {hi ? "डिजिटल संपादन एवं तकनीकी सम्पर्क" : "Digital Edition & Technical Contact"}
             </div>
-            <div className="grid sm:grid-cols-2 gap-4 pt-2">
-              <div className="bg-black/20 border border-paper/10 rounded-sm p-4">
-                <span className="text-xs text-gold-soft block font-body">
-                  {hi ? "संस्मरण लेखक / सम्पर्क प्रतिनिधि:" : "Biographer & Coordinator:"}
-                </span>
-                <span className="font-serif text-lg text-paper font-semibold block mt-1">
-                  {hi ? "कौशल किशोर झा" : "Kaushal Kishore Jha"}
-                </span>
-                <a
-                  href="tel:9431369111"
-                  className="font-mono text-sm text-gold-soft hover:underline block mt-1 flex items-center gap-1.5"
-                >
-                  <Phone className="w-3.5 h-3.5" /> +91 9431369111
-                </a>
-              </div>
-              <div className="bg-black/20 border border-paper/10 rounded-sm p-4">
+            <div className="bg-black/20 border border-paper/10 rounded-sm p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
                 <span className="text-xs text-gold-soft block font-body">
                   {hi ? "डिजिटल संपादन एवं तकनीकी सम्पर्क:" : "Digital Edition & Technical Support:"}
                 </span>
-                <span className="font-serif text-lg text-paper font-semibold block mt-1">
+                <span className="font-serif text-lg text-paper font-semibold block mt-0.5">
                   {hi ? "प्रभाकर कुमार (M.Des IIT Delhi)" : "Prabhakar Kumar (M.Des IIT Delhi)"}
                 </span>
-                <a
-                  href="tel:9972934937"
-                  className="font-mono text-sm text-gold-soft hover:underline block mt-1 flex items-center gap-1.5"
-                >
-                  <Phone className="w-3.5 h-3.5" /> +91 9972934937
-                </a>
               </div>
+              <a
+                href="tel:9972934937"
+                className="font-mono text-base text-gold-soft hover:underline flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-sm border border-paper/10 shrink-0"
+              >
+                <Phone className="w-4 h-4" /> +91 9972934937
+              </a>
             </div>
           </div>
         </div>
@@ -2324,42 +2306,6 @@ export function Contact() {
             </div>
           </div>
 
-          {/* Contact Person */}
-          <div className="flex gap-4 items-center bg-paper-dark/50 border border-ink/10 rounded-sm p-5 hover:border-saffron/50 transition-colors">
-            <div className="w-12 h-12 rounded-sm bg-maroon/10 border border-maroon/30 flex items-center justify-center shrink-0">
-              <User className="w-5 h-5 text-maroon" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between gap-2">
-                <p className="font-body text-xs tracking-widest uppercase text-saffron-deep font-semibold">
-                  {hi ? "संपर्क प्रतिनिधि (समन्वयक)" : "Contact Person (Coordinator)"}
-                </p>
-                <span className="text-[0.65rem] px-2 py-0.5 rounded-full bg-maroon/10 text-maroon font-medium">
-                  {hi ? "प्रतिनिधि" : "Contact Person"}
-                </span>
-              </div>
-              <a
-                href="tel:9431369111"
-                className="font-serif text-xl text-maroon hover:text-saffron-deep transition-colors block font-semibold mt-0.5"
-              >
-                +91 9431369111
-              </a>
-              <div className="flex items-center gap-3 mt-1.5 text-xs font-body">
-                <a
-                  href="https://wa.me/919431369111"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-emerald-700 hover:underline flex items-center gap-1 font-medium"
-                >
-                  <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
-                </a>
-                <span className="text-ink-soft">•</span>
-                <a href="tel:9431369111" className="text-ink-soft hover:text-maroon">
-                  कॉल करें
-                </a>
-              </div>
-            </div>
-          </div>
 
           {/* Digital Edition & Tech Support */}
           <div className="flex gap-4 items-center bg-paper-dark/50 border border-ink/10 rounded-sm p-5 hover:border-saffron/50 transition-colors">
