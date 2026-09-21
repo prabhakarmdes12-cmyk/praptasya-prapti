@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import {
   quotes, philosophyPillars, chapters, articles, events, gallery,
-  pdfDocuments, videoItems, manuscriptPages, COMPLETE_BOOK_ID,
-  type Article, type PdfDocument, type VideoItem, type PdfCategory,
+  pdfDocuments, videoItems, manuscriptPages, manuscriptVolumes, COMPLETE_BOOK_ID,
+  type Article, type PdfDocument, type VideoItem, type PdfCategory, type ManuscriptVolume,
 } from "./data";
 import { PdfReader, ShareButtons, DownloadAllZip, readStoredPage } from "./reader";
 import { useLanguage } from "./i18n";
@@ -149,7 +149,7 @@ export function PdfModal({ doc, onClose }: { doc: PdfDocument; onClose: () => vo
         <div className="flex-1 bg-neutral-900 overflow-auto relative min-h-[65vh]">
           {doc.category === "manuscript" ? (
             <div className="p-4 md:p-6 bg-paper min-h-[65vh]">
-              <ManuscriptSection />
+              <ManuscriptSection initialVolumeId={doc.id === "original-manuscripts-vol2" ? "volume-2" : "volume-1"} />
             </div>
           ) : (
             <object
@@ -317,19 +317,52 @@ export function VideoSection({ className = "" }: { className?: string }) {
 
 /* ---------- ORIGINAL MANUSCRIPT VIEWER COMPONENT ---------- */
 
-export function ManuscriptSection({ className = "" }: { className?: string }) {
+export function ManuscriptSection({ className = "", initialVolumeId }: { className?: string; initialVolumeId?: string }) {
   const language = useLanguage();
   const hi = language !== "en";
+  const defaultVolIdx = initialVolumeId ? manuscriptVolumes.findIndex((v) => v.id === initialVolumeId) : 0;
+  const [selectedVolumeIndex, setSelectedVolumeIndex] = useState(defaultVolIdx >= 0 ? defaultVolIdx : 0);
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"both" | "scan" | "extracted">("both");
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  const currentPage = manuscriptPages[selectedPageIndex];
+  const currentVolume = manuscriptVolumes[selectedVolumeIndex] || manuscriptVolumes[0];
+  const pages = currentVolume.pages;
+  const currentPage = pages[selectedPageIndex] || pages[0];
 
   return (
     <div className={`manuscript-viewer-wrapper ${className}`}>
       {/* Header controls & Page selector */}
       <div className="bg-paper-dark/60 border border-ink/10 rounded-sm p-4 md:p-6 mb-6">
+        {/* Volume Selection Tabs */}
+        <div className="flex flex-wrap items-center gap-2 mb-4 pb-3 border-b border-ink/10">
+          <span className="text-xs font-serif font-semibold text-ink-soft mr-1">
+            {hi ? "पांडुलिपि खण्ड:" : "Manuscript Series:"}
+          </span>
+          {manuscriptVolumes.map((vol, vIdx) => (
+            <button
+              key={vol.id}
+              onClick={() => {
+                setSelectedVolumeIndex(vIdx);
+                setSelectedPageIndex(0);
+                setZoomLevel(1);
+              }}
+              className={`px-3 py-1.5 rounded-xs text-xs font-serif transition-all flex items-center gap-2 ${
+                selectedVolumeIndex === vIdx
+                  ? "bg-maroon text-paper font-semibold shadow-xs"
+                  : "bg-paper border border-ink/15 hover:border-saffron text-maroon"
+              }`}
+            >
+              <span>{hi ? vol.titleHi : vol.titleEn}</span>
+              <span className={`px-1.5 py-0.5 text-[0.65rem] rounded-full ${
+                selectedVolumeIndex === vIdx ? "bg-gold text-ink font-bold" : "bg-paper-dark text-ink-soft"
+              }`}>
+                {vol.pageCount} {hi ? "पृष्ठ" : "pp"}
+              </span>
+            </button>
+          ))}
+        </div>
+
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -338,7 +371,7 @@ export function ManuscriptSection({ className = "" }: { className?: string }) {
                 {hi ? "लेखक की मूल हस्तलिखित पांडुलिपि" : "Author's Original Handwritten Manuscript"}
               </span>
               <span className="text-xs font-body text-ink-soft">
-                {hi ? `पृष्ठ ${currentPage.pageNumber} / ${manuscriptPages.length}` : `Page ${currentPage.pageNumber} of ${manuscriptPages.length}`}
+                {hi ? `खण्ड ${currentVolume.volumeNumber} • पृष्ठ ${currentPage.pageNumber} / ${currentVolume.pageCount}` : `Vol ${currentVolume.volumeNumber} • Page ${currentPage.pageNumber} of ${currentVolume.pageCount}`}
               </span>
             </div>
             <h3 className="text-2xl md:text-3xl text-maroon font-serif">
@@ -379,8 +412,10 @@ export function ManuscriptSection({ className = "" }: { className?: string }) {
         </div>
 
         {/* Page Switcher Tabs */}
-        <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-ink/10">
-          {manuscriptPages.map((page, idx) => (
+        <div className={`grid gap-2 mt-4 pt-4 border-t border-ink/10 ${
+          pages.length <= 3 ? "grid-cols-3" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-5"
+        }`}>
+          {pages.map((page, idx) => (
             <button
               key={page.id}
               onClick={() => {
@@ -395,7 +430,7 @@ export function ManuscriptSection({ className = "" }: { className?: string }) {
             >
               <div className="flex items-center justify-between text-[0.7rem] font-bold uppercase tracking-wider mb-0.5">
                 <span className={selectedPageIndex === idx ? "text-gold" : "text-saffron-deep"}>
-                  {hi ? `पृष्ठ ${idx + 1}` : `Page ${idx + 1}`}
+                  {hi ? `पृष्ठ ${page.pageNumber}` : `Page ${page.pageNumber}`}
                 </span>
                 <FileText className="w-3 h-3 opacity-70" />
               </div>
@@ -442,7 +477,7 @@ export function ManuscriptSection({ className = "" }: { className?: string }) {
                   </button>
                   <a
                     href={currentPage.imagePath}
-                    download={`praptasya-prapti-manuscript-page-${currentPage.pageNumber}.jpg`}
+                    download={`praptasya-prapti-vol${currentVolume.volumeNumber}-page-${currentPage.pageNumber}.jpg`}
                     className="px-2 py-0.5 hover:text-gold bg-white/10 rounded-xs flex items-center gap-1 text-[0.7rem]"
                     title={hi ? "मूल स्कैन डाउनलोड करें" : "Download Scan"}
                   >
@@ -511,11 +546,13 @@ export function ManuscriptSection({ className = "" }: { className?: string }) {
               <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                 <a
                   href={currentPage.imagePath}
-                  download={`praptasya-prapti-manuscript-page-${currentPage.pageNumber}.jpg`}
+                  download={`praptasya-prapti-vol${currentVolume.volumeNumber}-page-${currentPage.pageNumber}.jpg`}
                   className="inline-flex items-center gap-1.5 text-xs font-body font-semibold text-saffron-deep hover:underline"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  {hi ? `पृष्ठ ${currentPage.pageNumber} का हाई-रेज़ोल्यूशन स्कैन डाउनलोड करें` : `Download High-Res Page ${currentPage.pageNumber}`}
+                  {hi
+                    ? `खण्ड ${currentVolume.volumeNumber} • पृष्ठ ${currentPage.pageNumber} का हाई-रेज़ोल्यूशन स्कैन डाउनलोड करें`
+                    : `Download High-Res Vol ${currentVolume.volumeNumber} Page ${currentPage.pageNumber}`}
                 </a>
                 <span className="font-body text-xs text-ink-soft italic">
                   — श्री हरनारायण साह (अनन्तानन्द मानव)

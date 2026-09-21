@@ -29,6 +29,19 @@ export type ManuscriptPage = {
   }[];
 };
 
+export type ManuscriptVolume = {
+  id: string;
+  volumeNumber: number;
+  titleHi: string;
+  titleEn: string;
+  shortTitleHi: string;
+  shortTitleEn: string;
+  descriptionHi: string;
+  descriptionEn: string;
+  pageCount: number;
+  pages: ManuscriptPage[];
+};
+
 export type PdfDocument = {
   id: string;
   titleHi: string;
@@ -188,7 +201,7 @@ export const articles: Article[] = [
   },
 ];
 
-export const manuscriptPages: ManuscriptPage[] = [
+export const manuscriptVolume1Pages: ManuscriptPage[] = [
   {
     id: "manuscript-page-1",
     pageNumber: 1,
@@ -251,6 +264,140 @@ export const manuscriptPages: ManuscriptPage[] = [
   }
 ];
 
+export const manuscriptVolume2Pages: ManuscriptPage[] = [
+  {
+    id: "manuscript-karma-1",
+    pageNumber: 1,
+    titleHi: "निष्काम कर्म — गीता, मोक्ष एवं वसुधैव कुटुम्बकम्",
+    titleEn: "Nishkam Karma — The Gita, Liberation & Global Family",
+    themeHi: "गीता का निष्काम कर्म, अज्ञान व दुःख का अंत एवं परम सुख",
+    themeEn: "The Gita's Nishkam Karma, Dissolution of Ignorance & Supreme Joy",
+    imagePath: "/manuscript/manuscript-karma-1.jpg",
+    extractedTextHi: [
+      "श्रीमद्भगवद्गीता के द्वारा बताये गये निष्काम कर्म के आरंभ होते ही आप स्वतः मोक्ष, या सन्न्यास या परम सत्य को स्वतः प्राप्त हो जायेंगे।",
+      "अगर सभी लोग निष्काम कर्म करने लगे तो यह दुनियाँ स्वतः 'वसुधैव कुटुम्बकम्' के रूप में परिणत हो जायेगी। ऐसी स्थिति में ईश्वर, धर्म, सद्गुरु, बंधन, मोक्ष, जन्नत, नरक आदि की चर्चा भी दुनियाँ से समाप्त हो जायेगी क्योंकि मानव परम सुख की स्थिति में स्वतः चला जाता है और सीमित चेतना पूर्ण चेतना में बदल जाती है, अपूर्ण मानव पूर्ण मानव में बदल जाता है।",
+      "दिक्-काल का अस्तित्व समाप्त हो जाता है तथा सब कुछ प्रारब्ध संभाल लेता है, प्रकृति संभाल लेती है, मानव का व्यक्तिगत जीवन समाप्त हो जाता है। निष्काम कर्म ही मानव को स्वाभाविक जीवन (सहज) प्रदान करता है।",
+      "निष्काम कर्म के प्रभाव से प्रश्नों और उत्तरों की दुनियाँ समाप्त हो जाती है, मानव जीवन के मध्य या दुःख हमेशा के लिये समाप्त हो जाता है क्योंकि अज्ञान या दुःख का कारण अपने आप को कर्ता मानना ही है। माया, ईश्वर, ब्रह्म, देवता आदि का सारा प्रपंच समाप्त हो जाता है क्योंकि मानव की सर्वोच्च पहुँच, सर्वोच्च सुख प्राप्त कर पूर्णता को प्राप्त हो जाता है। वस्तुतः यह अवस्था मानव को जन्मजात मिलती है लेकिन माया या ईश्वर, देवता, धर्म आदि के प्रभाव से लोग..."
+    ],
+    summaryHi: "निष्काम कर्म आरंभ होते ही कर्तापन का भ्रम और दुःख मिट जाता है। जब कर्म बिना फल की आसक्ति के होता है, तो पूरा संसार स्वाभाविक रूप से वसुधैव कुटुम्बकम् बन जाता है।",
+    summaryEn: "As Nishkam Karma dawns, the illusion of doership and sorrow dissolves. Living in harmony naturally transforms the world into Vasudhaiva Kutumbakam.",
+    scriptureReferences: [
+      { nameHi: "श्रीमद्भगवद्गीता", nameEn: "Bhagavad Gita", verse: "निष्काम कर्मयोग" },
+      { nameHi: "महोपनिषद्", nameEn: "Maha Upanishad", verse: "६.७१ (वसुधैव कुटुम्बकम्)" }
+    ]
+  },
+  {
+    id: "manuscript-karma-2",
+    pageNumber: 2,
+    titleHi: "गीता ३.२७ एवं स्वभावानुकूल कर्म का रहस्य",
+    titleEn: "Gita 3.27 & The Secret of Spontaneous Natural Action",
+    themeHi: "प्रकृति के गुणों द्वारा कर्म, कर्तापन का अहंकार एवं सहज स्वभाव",
+    themeEn: "Actions by Modes of Nature, Ego of Doership, and Innate Living",
+    imagePath: "/manuscript/manuscript-karma-2.jpg",
+    extractedTextHi: [
+      "...वह अपने स्वरूप को भूल जाता है। निष्काम कर्म आरंभ होते ही वह अपने स्वरूप में पुनः स्थित हो जाता है तथा माया, ईश्वर, देवता, ब्रह्म, धर्मादि का मिथ्या होना स्वतः सामने आ जाता है।",
+      "निष्काम कर्म की शुरुआत ही उसके व्यक्तित्व को दिव्य व्यक्तित्व प्रदान कर उसकी दुनियाँ को ही बदल देती है जो उसकी स्वाभाविक दुनियाँ थी वो सहज जीवन शैली प्राप्त हो जाती है। निष्काम कर्म की शुरुआत सहज जीवन को जन्म देती है जो सर्वोच्च सुख और सर्वोच्च ज्ञान का मालिक बना देती है, और दुःखों का अस्तित्व ही समाप्त हो जाता है।",
+      "वास्तव में निष्काम कर्म क्या है? इसे कैसे किया जाय? गीता के अनुसार मानव कर्म का कर्ता नहीं होता, क्योंकि कर्म प्रकृति के गुणों के द्वारा किये जाते हैं, फिर अज्ञान या अहंकार से विमोहित होने के कारण मानव अपने आप को कर्ता मान लेता है (गीता - ३/२७)।",
+      "अपने स्वभाव के अनुसार किया गया कर्म ही निष्काम कर्म कहलाता है। जैसे हम भूख लगने पर खाना खा लें, प्यास लगने पर पानी पी लें तथा नींद लगने पर सो जायें, यानी हमारे कोई भी कर्म स्वभाव के अनुसार किये जायें तो वह निष्काम कर्म कहलाता है। अगर हमारा कोई भी कर्म किसी धर्म के अनुसार, या ईश्वर के अनुसार या गुरु के आदेशानुसार किये जायें तो..."
+    ],
+    summaryHi: "गीता ३.२७ के अनुसार कर्म प्रकृति के गुणों द्वारा होता है। भूख, प्यास, नींद जैसी स्वाभाविक प्रवृत्तियों के अनुसार सहज जीना ही निष्काम कर्म है; किसी बाहरी विधान के दबाव में कर्म करना बंधन है।",
+    summaryEn: "According to Gita 3.27, nature performs all actions. Pure action aligned with innate human nature (eating when hungry, drinking when thirsty) is Nishkam Karma.",
+    scriptureReferences: [
+      { nameHi: "श्रीमद्भगवद्गीता", nameEn: "Bhagavad Gita", verse: "अध्याय ३, श्लोक २७" }
+    ]
+  },
+  {
+    id: "manuscript-karma-3",
+    pageNumber: 3,
+    titleHi: "सकाम बनाम निष्काम कर्म एवं सहज जीवन का ढलान",
+    titleEn: "Sakam vs Nishkam Karma & The Sloping Pathway of Natural Life",
+    themeHi: "उपवास का दृष्टांत, कर्म-संस्कार एवं सत्य-असत्य की दुनियाँ",
+    themeEn: "The Tuesday Fasting Parable, Karmic Impressions & Truth vs Illusion",
+    imagePath: "/manuscript/manuscript-karma-3.jpg",
+    extractedTextHi: [
+      "...वह सकाम कर्म कहलायेगा। जैसे हमें भूख लगी है और धर्म और ईश्वर बताते हैं कि आज मंगलवार है तुम उपवास रहना है तो यह सकाम कर्म कहलायेगा और इसके कर्ता तुम होगे तथा इसका संस्कार भी बनेगा, जो तुम्हें अज्ञान की दुनियाँ में ढकेल देगा, माया की दुनियाँ में फेंक देगा, जो सब मिथ्या है।",
+      "दूसरे के द्वारा बताया गया कर्म चाहे नैतिक रूप से जितना अच्छा हो वह फलदायी होता है, अज्ञान की दुनियाँ में ले जाता है। लेकिन निष्काम कर्म के संस्कार नहीं बनते, वह फलदायी नहीं होता और वह स्वतः सत्य की दुनियाँ में बनाये रखता है।",
+      "इस प्रकार सहज जीवन जीने, या निष्काम कर्म करने की स्थिति में हमारी दुनियाँ सत्य होती है तथा असहज जीवन जीने, या सकाम कर्म करने की स्थिति में हमारी दुनियाँ असत्य होती है। सत्य की दुनियाँ में ईश्वर, देवता, ब्रह्म, सद्गुरु आदि नहीं पाये जाते जबकि असत्य दुनियाँ में ये सब स्वतः पैदा हो जाते हैं, और इसी दुनियाँ को माया या मिथ्या जगत् कहा जाता है।",
+      "सहज जीवन या निष्काम कर्म का जीवन पथ ढलान वाली उच्च पथ रास्ता है जिसपर जीवन की गाड़ी स्वाभाविक रूप में बढ़ते चलती है। इसी प्रकार इसी उच्च पथ की नाली भी बनी के समानान्तर चलती है, जिसमें ढलान समान रूप में पाया जाता है..."
+    ],
+    summaryHi: "स्वाभाविक भूख को दबाकर किसी धार्मिक नियम से उपवास करना सकाम कर्म है जो संस्कार और बंधन बनाता है। सहज जीवन ढलान वाले सहज मार्ग की तरह है जो व्यक्ति को स्वतः सत्य में स्थित रखता है।",
+    summaryEn: "Imposed religious rituals create mental bondage and karmic impressions. Natural living is like a smooth downhill slope where life flows effortlessly.",
+    scriptureReferences: [
+      { nameHi: "वेदान्त विचार", nameEn: "Vedanta Inquiries", verse: "सकाम-निष्काम विवेक" }
+    ]
+  },
+  {
+    id: "manuscript-karma-4",
+    pageNumber: 4,
+    titleHi: "सूर्योदय एवं अज्ञान के अंधकार की स्वतः समाप्ति",
+    titleEn: "Sunrise & The Spontaneous Dissolution of Darkness",
+    themeHi: "कंपन की दुनियाँ से मुक्ति एवं सत्य के प्रकाश का उदय",
+    themeEn: "Freedom from Vibrational Turmoil & Dawn of Living Truth",
+    imagePath: "/manuscript/manuscript-karma-4.jpg",
+    extractedTextHi: [
+      "कंपन की दुनियाँ में ढकेला हुआ दुःखी विचार का...",
+      "...की दुनियाँ में प्रवेश कराती है। ईश्वर, देवता, धर्म, सद्गुरु आदि की अंधभक्त दुनियाँ स्वतः समाप्त हो जाती है। जैसे ही सूर्योदय होते ही अंधकार और उसका साम्राज्य समाप्त हो जाता है।"
+    ],
+    summaryHi: "जैसे सूर्योदय होते ही रात्रि का समस्त अंधकार बिना किसी संघर्ष के मिट जाता है, वैसे ही स्वभाव-चेतना के जाग्रत होते ही अज्ञान और भय का साम्राज्य स्वतः समाप्त हो जाता है।",
+    summaryEn: "Just as darkness vanishes effortlessly at sunrise, fear and blind dogmas disappear completely upon the dawn of self-awareness.",
+    scriptureReferences: [
+      { nameHi: "उपनिषद् दर्शन", nameEn: "Upanishadic Wisdom", verse: "तमसो मा ज्योतिर्गमय" }
+    ]
+  },
+  {
+    id: "manuscript-karma-5",
+    pageNumber: 5,
+    titleHi: "दिक्-कालातीत अवस्था एवं अरस्तू के विचार का विश्लेषण",
+    titleEn: "Timeless Transcendence & Critical Analysis of Aristotle",
+    themeHi: "साधना से परे सहज स्थिति, साक्षी भाव एवं स्वार्थ का परमार्थ में रूपांतरण",
+    themeEn: "State Beyond Rituals, Witness Consciousness & Transformation of Self-Interest",
+    imagePath: "/manuscript/manuscript-karma-5.jpg",
+    extractedTextHi: [
+      "निष्काम कर्म करने वाला व्यक्ति जन्म और मृत्यु से परे हो जाता है, वह इसकी चर्चा भी नहीं करना चाहता है क्योंकि इसका संबंध शरीर से है, उससे कुछ भी लेना देना नहीं है, वह शीघ्र ही दिक्-कालातीत होकर परम धाम में, या अपने असली रूप में अवस्थित हो जाता है तथा शरीर की गति का संचालन प्रारब्ध करते रहता है, वह इसे द्रष्टा बनकर देख सकता है, लेकिन प्रभावित नहीं हो सकता है। इसकी दुनियाँ के मायिके तत्व, ईश्वर, देवता, ब्रह्म, धर्मादि पैदा हो ही नहीं सकते क्योंकि यह अज्ञान की दुनियाँ के ऊपर है। अज्ञान की दुनियाँ में उनकी कल्पना या जीवन संभव नहीं है।",
+      "निष्काम कर्म शुरू होने के पश्चात, किसी साधना, तपस्या, त्याग, पूजा-पाठ, व्रत-त्योहार, धर्म, ईश्वर, सद्गुरु, ब्रह्म आदि की कोई जरूरत नहीं रह जाती—क्योंकि जिस चीज की प्राप्ति हेतु इन सबसे सहयोग लिया जाता है, निष्काम कर्म करने वाले को वह चीज स्वतः प्राप्त हो जाती है।",
+      "अरस्तू ने कहा था कि मानव स्वभावतः स्वार्थी होता है, लेकिन निष्काम कर्म करने वाला व्यक्ति स्वार्थी नहीं होता, वह स्वभावतः स्वार्थ को परमार्थ की दुनियाँ में बदल देता है, क्योंकि उसकी चेतना पूर्णता को प्राप्त होती है। स्वार्थी होने का आरोप केवल सकाम कर्म करने वालों पर ही लगाया जा सकता है।"
+    ],
+    summaryHi: "निष्काम कर्म में व्यक्ति द्रष्टा बन जाता है और किसी बाह्य साधना की आवश्यकता नहीं रहती। अरस्तू का यह कथन कि 'मनुष्य स्वार्थी है' केवल सकाम चेतना पर लागू होता है; निष्काम साधक में स्वार्थ स्वतः परमार्थ बन जाता है।",
+    summaryEn: "Transcendence eliminates the need for outer austerity. Aristotle's claim that man is inherently selfish applies only to Sakam actors; in Nishkam Karma, self-interest merges into universal benevolence.",
+    scriptureReferences: [
+      { nameHi: "पाश्चात्य दर्शन", nameEn: "Western Philosophy", verse: "अरस्तू (Aristotle) की मीमांसा" },
+      { nameHi: "वेदान्त", nameEn: "Vedanta", verse: "साक्षी भाव व प्रारब्ध" }
+    ]
+  }
+];
+
+export const manuscriptVolumes: ManuscriptVolume[] = [
+  {
+    id: "volume-1",
+    volumeNumber: 1,
+    titleHi: "खण्ड १: प्राप्तस्य प्राप्ति — मूल महावाक्य एवं दर्शन",
+    titleEn: "Volume 1: Praptasya Prapti — The Core Mahavakya & Philosophy",
+    shortTitleHi: "खण्ड १: प्राप्तस्य प्राप्ति",
+    shortTitleEn: "Vol 1: Praptasya Prapti",
+    descriptionHi: "ईशावास्योपनिषद्, मुट्ठी में बंद सिक्के का दृष्टांत, गोंडी व सनातन सहज दर्शन और सार्वभौमिक निदान (३ पृष्ठ)।",
+    descriptionEn: "The core Mahavakya, the coin parable, Gondi & Sanatan natural living, and universal inquiry resolution (3 pages).",
+    pageCount: 3,
+    pages: manuscriptVolume1Pages,
+  },
+  {
+    id: "volume-2",
+    volumeNumber: 2,
+    titleHi: "खण्ड २: निष्काम कर्म एवं सहज जीवन",
+    titleEn: "Volume 2: Nishkam Karma & Natural Living",
+    shortTitleHi: "खण्ड २: निष्काम कर्म",
+    shortTitleEn: "Vol 2: Nishkam Karma",
+    descriptionHi: "श्रीमद्भगवद्गीता (३.२७), सकाम बनाम निष्काम कर्म, उपवास दृष्टांत, वसुधैव कुटुम्बकम्, दिक्-कालातीत चेतना एवं अरस्तू के स्वार्थ-विचार का विश्लेषण (५ पृष्ठ)।",
+    descriptionEn: "Bhagavad Gita 3.27, natural spontaneous action vs dogmatic ritualism, universal family, and critical reflection on Aristotle (5 pages).",
+    pageCount: 5,
+    pages: manuscriptVolume2Pages,
+  },
+];
+
+export const manuscriptPages: ManuscriptPage[] = [
+  ...manuscriptVolume1Pages,
+  ...manuscriptVolume2Pages,
+];
+
 export const pdfDocuments: PdfDocument[] = [
   {
     id: "praptasya-prapti-complete",
@@ -270,19 +417,35 @@ export const pdfDocuments: PdfDocument[] = [
   },
   {
     id: "original-manuscripts",
-    titleHi: "मूल हस्तलिखित पांडुलिपि (लेखक के मूल हस्तलिखित पृष्ठ)",
-    titleEn: "Original Handwritten Manuscript Pages",
+    titleHi: "मूल हस्तलिखित पांडुलिपि — खण्ड १: प्राप्तस्य प्राप्ति",
+    titleEn: "Original Manuscript — Vol 1: Praptasya Prapti",
     category: "manuscript",
     categoryHi: "मूल पांडुलिपि",
     categoryEn: "Handwritten Scans",
-    descriptionHi: "लेखक श्री हरनारायण साह द्वारा स्वयं हस्तलिखित 3 मुख्य पृष्ठ — 'प्राप्तस्य प्राप्ति' का उद्भव, गोंडी-सनातन सहज जीवन शैली और सार्वभौमिक समाधान।",
-    descriptionEn: "Original handwritten manuscript leaves penned by Shri Harnarayan Sah detailing the core thesis and philosophy.",
+    descriptionHi: "लेखक श्री हरनारायण साह द्वारा स्वयं हस्तलिखित ३ मुख्य पृष्ठ — 'प्राप्तस्य प्राप्ति' का उद्भव, गोंडी-सनातन सहज जीवन शैली और सार्वभौमिक निदान।",
+    descriptionEn: "Original handwritten manuscript leaves penned by Shri Harnarayan Sah detailing the core thesis and philosophy (3 pages).",
     pages: 3,
     fileSize: "325 KB",
     filePath: "/manuscript/manuscript-page-1.jpg",
     featured: true,
-    tagHi: "हस्तलिखित पांडुलिपि",
-    tagEn: "Manuscript",
+    tagHi: "पांडुलिपि खण्ड १",
+    tagEn: "Manuscript Vol 1",
+  },
+  {
+    id: "original-manuscripts-vol2",
+    titleHi: "मूल हस्तलिखित पांडुलिपि — खण्ड २: निष्काम कर्म एवं सहज जीवन",
+    titleEn: "Original Manuscript — Vol 2: Nishkam Karma & Natural Living",
+    category: "manuscript",
+    categoryHi: "मूल पांडुलिपि",
+    categoryEn: "Handwritten Scans",
+    descriptionHi: "लेखक श्री हरनारायण साह द्वारा हस्तलिखित ५ नवीन पृष्ठ — गीता ३.२७, सकाम बनाम निष्काम कर्म, उपवास दृष्टांत, दिक्-कालातीत चेतना एवं अरस्तू के विचार का विश्लेषण।",
+    descriptionEn: "Five handwritten manuscript pages by Shri Harnarayan Sah on Gita 3.27, spontaneous natural action, and transcending dogmas.",
+    pages: 5,
+    fileSize: "890 KB",
+    filePath: "/manuscript/manuscript-karma-1.jpg",
+    featured: true,
+    tagHi: "पांडुलिपि खण्ड २",
+    tagEn: "Manuscript Vol 2",
   },
   {
     id: "sanskriti-ka-khel",
